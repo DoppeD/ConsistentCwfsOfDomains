@@ -8,6 +8,9 @@ private
   variable
     x y z w : NbhSys.Nbh 𝒟
 
+conRefl : ∀ {x} → NbhSys.Con 𝒟 x x
+conRefl = NbhSys.Con-⊔ 𝒟 (NbhSys.⊑-refl 𝒟) (NbhSys.⊑-refl 𝒟)
+
 ⊑-⊔-lemma₁ : (con : NbhSys.Con 𝒟 y z) → [ 𝒟 ] ([ 𝒟 ] y ⊔ z [ con ]) ⊑ x →
              [ 𝒟 ] y ⊑ x
 ⊑-⊔-lemma₁ con y⊔z⊑x =
