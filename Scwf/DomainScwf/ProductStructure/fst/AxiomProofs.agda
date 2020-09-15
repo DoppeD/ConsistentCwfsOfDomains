@@ -78,3 +78,17 @@ fst↦-↑directed {𝑥 = 𝑥} (fst-intro₂ _ y₁ y₂ 𝑡𝑥↦y₁y₂)
   where 𝑡𝑥↦⊔ = Appmap.↦-↑directed 𝑡 𝑡𝑥↦y₁y₂ 𝑡𝑥↦z₁z₂
                (con-tup < y₁ , y₂ > < z₁ , z₂ > (con-pair _ cony₂z₂)
                ⟪⟫ ⟪⟫ con-nil)
+
+fst↦-con : ∀ {𝑥 𝑦 𝑥′ 𝑦′} → fst↦ 𝑡 𝑥 𝑦 → fst↦ 𝑡 𝑥′ 𝑦′ → ValCon Γ 𝑥 𝑥′ →
+           ValCon [ 𝐴 ] 𝑦 𝑦′
+fst↦-con (fst-intro₁ _ y y⊑⊥) (fst-intro₁ _ y′ y′⊑⊥) _
+  = toValCon (NbhSys.Con-⊔ 𝐴 y⊑⊥ y′⊑⊥)
+fst↦-con (fst-intro₁ _ y y⊑⊥) (fst-intro₂ _ y′₁ y′₂ _) _
+  = toValCon (NbhSys.Con-⊔ 𝐴 y⊑y′₁ (NbhSys.⊑-refl 𝐴))
+  where y⊑y′₁ = NbhSys.⊑-trans 𝐴 y⊑⊥ (NbhSys.⊑-⊥ 𝐴)
+fst↦-con (fst-intro₂ _ y₁ y₂ _) (fst-intro₁ _ y′ y′⊑⊥) _
+  = toValCon (NbhSys.Con-⊔ 𝐴 (NbhSys.⊑-refl 𝐴) y′₁⊑y)
+  where y′₁⊑y = NbhSys.⊑-trans 𝐴 y′⊑⊥ (NbhSys.⊑-⊥ 𝐴)
+fst↦-con (fst-intro₂ _ y₁ y₂ 𝑡𝑥↦y₁y₂) (fst-intro₂ _ y′₁ y′₂ 𝑡𝑥′↦y′₁y′₂) con
+  with (Appmap.↦-con 𝑡 𝑡𝑥↦y₁y₂ 𝑡𝑥′↦y′₁y′₂ con)
+... | con-tup _ _ (con-pair cony₁y₂ _) _ _ _ = toValCon cony₁y₂

@@ -41,10 +41,10 @@ ctHead ⟪ x , _ ⟫ = x
 ctTail : Valuation Γ → Valuation (tail Γ)
 ctTail ⟪ _ , 𝑥 ⟫ = 𝑥
 
-toValCon : ∀ {𝒟 x y} → {conxy : NbhSys.Con 𝒟 x y} →
+toValCon : ∀ {𝒟 x y} → (conxy : NbhSys.Con 𝒟 x y) →
            ValCon [ 𝒟 ] ⟪ x ⟫ ⟪ y ⟫
-toValCon {conxy = conxy} = con-tup _ _ conxy ⟪⟫ ⟪⟫ con-nil
+toValCon conxy = con-tup _ _ conxy ⟪⟫ ⟪⟫ con-nil
 
-fromValCon : ∀ {𝒟 x y} → {conxy : ValCon [ 𝒟 ] ⟪ x ⟫ ⟪ y ⟫} →
+fromValCon : ∀ {𝒟 x y} → (conxy : ValCon [ 𝒟 ] ⟪ x ⟫ ⟪ y ⟫) →
              NbhSys.Con 𝒟 x y
-fromValCon {conxy = con-tup _ _ conxy _ _ _} = conxy
+fromValCon (con-tup _ _ conxy _ _ _) = conxy
