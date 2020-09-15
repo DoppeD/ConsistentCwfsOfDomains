@@ -5,14 +5,21 @@ open import Base.Core
 module Scwf.DomainScwf.ArrowStructure.NbhSys.Definition
   (𝐴 𝐵 : Ty) where
 
+open import Base.ConFinFun 𝐴 𝐵
 open import Base.FinFun
 
 data ArrNbh : Set where
   ⊥ₑ : ArrNbh
-  𝐹 : NbhFinFun 𝐴 𝐵 → ArrNbh
+  𝐹 : (𝑓 : NbhFinFun 𝐴 𝐵) → ConFinFun 𝑓 → ArrNbh
 
-_⊔ₑ_ : ArrNbh → ArrNbh → ArrNbh
-⊥ₑ ⊔ₑ ⊥ₑ = ⊥ₑ
-⊥ₑ ⊔ₑ (𝐹 𝑓) = 𝐹 𝑓
-(𝐹 𝑓) ⊔ₑ ⊥ₑ = 𝐹 𝑓
-(𝐹 𝑓) ⊔ₑ (𝐹 𝑓′) = 𝐹 (𝑓 ∪ 𝑓′)
+data ArrCon : ArrNbh → ArrNbh → Set where
+  conₑ-⊥₁ : ∀ {x} → ArrCon x ⊥ₑ
+  conₑ-⊥₂ : ∀ {x} → ArrCon ⊥ₑ x
+  con-∪ : ∀ {𝑓 𝑓′} → (con𝑓 : ConFinFun 𝑓) → (con𝑓′ : ConFinFun 𝑓′) →
+          ConFinFun (𝑓 ∪ 𝑓′) → ArrCon (𝐹 𝑓 con𝑓) (𝐹 𝑓′ con𝑓′)
+
+_⊔ₑ_[_] : (x : ArrNbh) → (y : ArrNbh) → ArrCon x y → ArrNbh
+⊥ₑ ⊔ₑ ⊥ₑ [ _ ] = ⊥ₑ
+⊥ₑ ⊔ₑ (𝐹 𝑓′ con𝑓′) [ _ ] = 𝐹 𝑓′ con𝑓′
+(𝐹 𝑓 con𝑓) ⊔ₑ ⊥ₑ [ _ ] = 𝐹 𝑓 con𝑓
+𝐹 𝑓 _ ⊔ₑ 𝐹 𝑓′ _ [ con-∪ _ _ con∪ ] = 𝐹 (𝑓 ∪ 𝑓′) con∪
