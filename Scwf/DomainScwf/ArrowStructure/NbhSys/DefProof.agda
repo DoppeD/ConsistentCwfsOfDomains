@@ -46,7 +46,7 @@ pre↦post ∅ _ _ γ _ = Appmap.↦-bottom γ
 pre↦post (< x , y > ∷ 𝑓′) (pre-cons preable𝑓′ conxpre𝑓′)
   (post-cons postable𝑓′ conypost𝑓′) γ (⋐-intro p)
   = appmapLemma₃ {γ = γ} ⟪ x ⟫ ⟪ pre 𝑓′ preable𝑓′ ⟫
-    ⟪ y ⟫ ⟪ post 𝑓′ _ ⟫ toValCon toValCon (p x y here)
+    ⟪ y ⟫ ⟪ post 𝑓′ _ ⟫ (toValCon _) (toValCon _) (p x y here)
     (pre↦post 𝑓′ preable𝑓′ postable𝑓′ γ (⋐-intro (λ x′ y′ x′y′∈𝑓′ →
     p x′ y′ (there x′y′∈𝑓′))))
 
@@ -174,8 +174,8 @@ smallest⇒exp' 𝑓′ {con} γ x _ (ig-↑dir _ y y′ idGeny idGeny′ conyy�
                      (⋐-lemma sub 𝑓′ sub⊆𝑓′ γγ γ⋐𝑓′))
                      (pre↦post sub′ preable′ postable′ γγ
                      (⋐-lemma sub′ 𝑓′ sub′⊆𝑓′ γγ γ⋐𝑓′))
-                     (toValCon {conxy = consubs})
-        conpost = fromValCon {conxy = conpostval}
+                     (toValCon consubs)
+        conpost = fromValCon conpostval
         postable∪ = postUnionLemma postable postable′
                     (NbhSys.⊑-⊔-fst 𝐵 conpost)
                     (NbhSys.⊑-⊔-snd 𝐵 _)
