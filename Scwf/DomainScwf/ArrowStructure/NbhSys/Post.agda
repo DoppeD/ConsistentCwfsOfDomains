@@ -5,7 +5,6 @@ open import Base.Core
 module Scwf.DomainScwf.ArrowStructure.NbhSys.Post (𝐴 𝐵 : Ty) where
 
 open import Base.FinFun
-open import Base.ConFinFun 𝐴 𝐵
 open import NbhSys.Definition
 open import NbhSys.Lemmata
 open import Scwf.DomainScwf.ArrowStructure.Variables 𝐴 𝐵

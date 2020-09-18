@@ -5,8 +5,8 @@ open import Base.Core
 module Scwf.DomainScwf.ArrowStructure.NbhSys.Definition
   (𝐴 𝐵 : Ty) where
 
-open import Base.ConFinFun 𝐴 𝐵
 open import Base.FinFun
+open import Scwf.DomainScwf.ArrowStructure.NbhSys.ConFinFun 𝐴 𝐵
 
 data ArrNbh : Set where
   ⊥ₑ : ArrNbh

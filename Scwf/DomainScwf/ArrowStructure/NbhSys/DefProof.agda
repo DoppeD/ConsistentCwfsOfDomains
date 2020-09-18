@@ -6,7 +6,6 @@ module Scwf.DomainScwf.ArrowStructure.NbhSys.DefProof
   (𝐴 𝐵 : Ty) where
 
 open import Appmap.Lemmata
-open import Base.ConFinFun 𝐴 𝐵
 open import Base.FinFun
 open import NbhSys.Definition
 open import NbhSys.Lemmata
@@ -14,6 +13,7 @@ open import Scwf.DomainScwf.Appmap.Definition
 open import Scwf.DomainScwf.Appmap.Valuation.Definition
 open import Scwf.DomainScwf.Appmap.Valuation.Relation
 open import Scwf.DomainScwf.ArrowStructure.NbhSys.Definition 𝐴 𝐵
+open import Scwf.DomainScwf.ArrowStructure.NbhSys.ConFinFun 𝐴 𝐵
 open import Scwf.DomainScwf.ArrowStructure.NbhSys.Post 𝐴 𝐵
 open import Scwf.DomainScwf.ArrowStructure.NbhSys.Pre 𝐴 𝐵
 open import Scwf.DomainScwf.ArrowStructure.NbhSys.Relation 𝐴 𝐵
@@ -49,6 +49,22 @@ pre↦post (< x , y > ∷ 𝑓′) (pre-cons preable𝑓′ conxpre𝑓′)
     ⟪ y ⟫ ⟪ post 𝑓′ _ ⟫ (toValCon _) (toValCon _) (p x y here)
     (pre↦post 𝑓′ preable𝑓′ postable𝑓′ γ (⋐-intro (λ x′ y′ x′y′∈𝑓′ →
     p x′ y′ (there x′y′∈𝑓′))))
+
+-- A predicate describing that γ maps x to y iff either (x, y) ∈ 𝑓
+-- or γ : x ↦ y is inductively generated from the approximable mapping
+-- axioms.
+data InductivelyGenerated (𝑓 : NbhFinFun 𝐴 𝐵) : ∀ x y → Set where
+  ig-inset : ∀ x y → < x , y > ∈ 𝑓 →
+             InductivelyGenerated 𝑓 x y
+  ig-bot  : ∀ x →
+            InductivelyGenerated 𝑓 x (NbhSys.⊥ 𝐵)
+  ig-mono : ∀ x x′ y → InductivelyGenerated 𝑓 x′ y → [ 𝐴 ] x′ ⊑ x →
+            InductivelyGenerated 𝑓 x y
+  ig-↓clo : ∀ x y y′ → InductivelyGenerated 𝑓 x y′ → [ 𝐵 ] y ⊑ y′ →
+            InductivelyGenerated 𝑓 x y
+  ig-↑dir : ∀ x y y′ → InductivelyGenerated 𝑓 x y →
+            InductivelyGenerated 𝑓 x y′ → (con : NbhSys.Con 𝐵 y y′) →
+            InductivelyGenerated 𝑓 x ([ 𝐵 ] y ⊔ y′ [ con ])
 
 -- Definition of the smallest mapping containing a function 𝑓.
 -- Such a mapping can contain only the relations required
@@ -117,7 +133,7 @@ smallest⇒exp' 𝑓′ γ x y (ig-bot _)
       ; postablesub = post-nil
       ; y⊑post = NbhSys.⊑-⊥ 𝐵
       ; pre⊑x = NbhSys.⊑-⊥ 𝐴
-      }      
+      }
 smallest⇒exp' 𝑓′ {con} γ x y (ig-mono _ x′ _ idGen x′⊑x)
   = record
       { sub = ⊑ₑ-proof.sub rec
