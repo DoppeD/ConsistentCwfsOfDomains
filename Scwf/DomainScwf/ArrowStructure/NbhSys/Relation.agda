@@ -5,9 +5,9 @@ open import Base.Core
 module Scwf.DomainScwf.ArrowStructure.NbhSys.Relation
   (𝐴 𝐵 : Ty) where
 
-open import Base.ConFinFun 𝐴 𝐵
 open import Base.FinFun
 open import NbhSys.Definition
+open import Scwf.DomainScwf.ArrowStructure.NbhSys.ConFinFun 𝐴 𝐵
 open import Scwf.DomainScwf.ArrowStructure.NbhSys.Definition 𝐴 𝐵
 open import Scwf.DomainScwf.ArrowStructure.NbhSys.Post 𝐴 𝐵
 open import Scwf.DomainScwf.ArrowStructure.NbhSys.Pre 𝐴 𝐵

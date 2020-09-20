@@ -133,3 +133,6 @@ preUnionLemma {< x , y > ∷ 𝑓} (pre-cons preable𝑓 conxpre𝑓) preable�
         rec = preUnionLemma preable𝑓 preable𝑓′ pre𝑓⊑max pre𝑓′⊑x
         x⊑max = NbhSys.⊑-trans 𝐴 (NbhSys.⊑-⊔-fst 𝐴 conxpre𝑓) pre𝑓⊑x
         pre∪⊑max = preUnionLemma' preable𝑓 preable𝑓′ rec pre𝑓⊑max pre𝑓′⊑x
+
+singletonIsPreable : ∀ {x y} → Preable (< x , y > ∷ ∅)
+singletonIsPreable = pre-cons pre-nil (con⊥₂ 𝐴)

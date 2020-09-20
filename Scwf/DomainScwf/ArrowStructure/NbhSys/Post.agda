@@ -134,3 +134,6 @@ postUnionLemma {< x , y > ∷ 𝑓} (post-cons postable𝑓 conxpost𝑓) postab
         rec = postUnionLemma postable𝑓 postable𝑓′ post𝑓⊑max post𝑓′⊑x
         x⊑max = NbhSys.⊑-trans 𝐵 (NbhSys.⊑-⊔-fst 𝐵 conxpost𝑓) post𝑓⊑x
         post∪⊑max = postUnionLemma' postable𝑓 postable𝑓′ rec post𝑓⊑max post𝑓′⊑x
+
+singletonIsPostable : ∀ {x y} → Postable (< x , y > ∷ ∅)
+singletonIsPostable = post-cons post-nil (con⊥₂ 𝐵)
