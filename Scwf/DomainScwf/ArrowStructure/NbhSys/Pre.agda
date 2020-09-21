@@ -61,6 +61,15 @@ preableLemma {< x , y > ∷ 𝑓} (pre-cons preable𝑓 conxpre𝑓) boundedPrex
     (preableLemma preable𝑓 (boundedPreLemma (⊆-lemma₃ < x , y >) boundedPrexy𝑓))
     conxpre𝑓
 
+boundedPreable : BoundedPre 𝑓 → Preable 𝑓
+boundedPreable {∅} _ = pre-nil
+boundedPreable {< x , y > ∷ 𝑓} (max , maxProof)
+  = pre-cons preable𝑓 (NbhSys.Con-⊔ 𝐴 (maxProof here)
+    (preableLemma preable𝑓 boundedpre𝑓))
+  where boundedpre𝑓
+          = boundedPreLemma (λ xy xy∈𝑓 → there xy∈𝑓) (max , maxProof)
+        preable𝑓 = boundedPreable boundedpre𝑓
+
 preableProofIrr : (preable𝑓₁ preable𝑓₂ : Preable 𝑓) →
                   [ 𝐴 ] (pre 𝑓 preable𝑓₁) ⊑ (pre 𝑓 preable𝑓₂)
 preableProofIrr {∅} pre-nil pre-nil = NbhSys.⊑-refl 𝐴
@@ -136,3 +145,8 @@ preUnionLemma {< x , y > ∷ 𝑓} (pre-cons preable𝑓 conxpre𝑓) preable�
 
 singletonIsPreable : ∀ {x y} → Preable (< x , y > ∷ ∅)
 singletonIsPreable = pre-cons pre-nil (con⊥₂ 𝐴)
+
+subsetIsPreable : ∀ {𝑓 𝑓′} → 𝑓 ⊆ 𝑓′ → Preable 𝑓′ → Preable 𝑓
+subsetIsPreable {𝑓} {𝑓′} 𝑓⊆𝑓′ preable𝑓′
+  with (boundedPreLemma 𝑓⊆𝑓′ (preableBounded preable𝑓′))
+... | 𝑓bound = boundedPreable 𝑓bound

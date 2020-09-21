@@ -15,6 +15,20 @@ open import Scwf.DomainScwf.ArrowStructure.NbhSys.Pre 𝐴 𝐵
 open import Scwf.DomainScwf.ArrowStructure.NbhSys.Relation 𝐴 𝐵
 open import Scwf.DomainScwf.ArrowStructure.Variables 𝐴 𝐵
 
+post⊆-lemma : ∀ {𝑓 𝑓′ postable𝑓 postable𝑓′} → 𝑓 ⊆ 𝑓′ →
+             [ 𝐵 ] post 𝑓 postable𝑓 ⊑ post 𝑓′ postable𝑓′
+post⊆-lemma {postable𝑓 = post-nil} {post-nil} 𝑓⊆𝑓′ = {!!}
+post⊆-lemma {postable𝑓 = post-nil} {post-cons b x} 𝑓⊆𝑓′ = {!!}
+post⊆-lemma {postable𝑓 = post-cons postable𝑓 x} {post-nil} 𝑓⊆𝑓′ = {!!}
+post⊆-lemma {𝑓 = < x , y > ∷ 𝑓} {postable𝑓 = post-cons postable𝑓 conypost𝑓} {post-cons postable𝑓′ cony′post𝑓′} 𝑓⊆𝑓′
+  with (𝑓⊆𝑓′ < x , y > here)
+... | here = ⊑-⊔-lemma₃ 𝐵 _ _ (NbhSys.⊑-refl 𝐵) (post⊆-lemma {postable𝑓′ = {!!}} (⊆-lemma₂ < x , y > 𝑓⊆𝑓′))
+... | there as = {!!}
+
+pre⊆-lemma : ∀ {𝑓 𝑓′ preable𝑓 preable𝑓′} → 𝑓 ⊆ 𝑓′ →
+             [ 𝐴 ] pre 𝑓 preable𝑓 ⊑ pre 𝑓′ preable𝑓′
+pre⊆-lemma x = {!!}
+
 record ⊑ₑ-proof₂ (𝑓 : NbhFinFun 𝐴 𝐵) (isCon : ConFinFun 𝑓)
                  (𝑓′ : NbhFinFun 𝐴 𝐵) (preable𝑓′ : Preable 𝑓′) :
                  Set where

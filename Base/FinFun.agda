@@ -89,6 +89,12 @@ _∪_ : FinFun A B → FinFun A B → FinFun A B
 ∪-lemma₅ _ 𝑓′⊆𝑓‴ x x∈𝑓∪𝑓′ | inr x∈𝑓′
   = ∪-lemma₄ x (𝑓′⊆𝑓‴ x x∈𝑓′)
 
+∪-lemma₆ : 𝑓 ⊆ (𝑓 ∪ 𝑓′)
+∪-lemma₆ x x∈𝑓 = ∪-lemma₃ x x∈𝑓
+
+∪-lemma₇ : 𝑓′ ⊆ (𝑓 ∪ 𝑓′)
+∪-lemma₇ x x∈𝑓 = ∪-lemma₄ x x∈𝑓
+
 -- From a proof that a pair of neighborhoods is in the
 -- empty set, anything.
 xy∈∅-abs : {p : Set} → ∀ {x y} →

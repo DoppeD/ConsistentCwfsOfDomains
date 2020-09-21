@@ -62,6 +62,15 @@ postableLemma {< x , y > ∷ 𝑓} (post-cons postable𝑓 conxpost𝑓) bounded
     (postableLemma postable𝑓 (boundedPostLemma (⊆-lemma₃ < x , y >) boundedPostxy𝑓))
     conxpost𝑓
 
+boundedPostable : BoundedPost 𝑓 → Postable 𝑓
+boundedPostable {∅} _ = post-nil
+boundedPostable {< x , y > ∷ 𝑓} (max , maxProof)
+  = post-cons postable𝑓 (NbhSys.Con-⊔ 𝐵 (maxProof here)
+    (postableLemma postable𝑓 boundedpost𝑓))
+  where boundedpost𝑓
+          = boundedPostLemma (λ xy xy∈𝑓 → there xy∈𝑓) (max , maxProof)
+        postable𝑓 = boundedPostable boundedpost𝑓
+
 postableProofIrr : (postable𝑓₁ postable𝑓₂ : Postable 𝑓) →
                    [ 𝐵 ] (post 𝑓 postable𝑓₁) ⊑ (post 𝑓 postable𝑓₂)
 postableProofIrr {∅} post-nil post-nil = NbhSys.⊑-refl 𝐵
@@ -137,3 +146,8 @@ postUnionLemma {< x , y > ∷ 𝑓} (post-cons postable𝑓 conxpost𝑓) postab
 
 singletonIsPostable : ∀ {x y} → Postable (< x , y > ∷ ∅)
 singletonIsPostable = post-cons post-nil (con⊥₂ 𝐵)
+
+subsetIsPostable : ∀ {𝑓 𝑓′} → 𝑓 ⊆ 𝑓′ → Postable 𝑓′ → Postable 𝑓
+subsetIsPostable {𝑓} {𝑓′} 𝑓⊆𝑓′ postable𝑓′
+  with (boundedPostLemma 𝑓⊆𝑓′ (postableBounded postable𝑓′))
+... | 𝑓bound = boundedPostable 𝑓bound
