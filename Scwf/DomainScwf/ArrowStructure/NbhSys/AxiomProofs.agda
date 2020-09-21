@@ -15,17 +15,66 @@ open import Scwf.DomainScwf.ArrowStructure.NbhSys.Pre 𝐴 𝐵
 open import Scwf.DomainScwf.ArrowStructure.NbhSys.Relation 𝐴 𝐵
 open import Scwf.DomainScwf.ArrowStructure.Variables 𝐴 𝐵
 
+record ⊑ₑ-proof₂ (𝑓 : NbhFinFun 𝐴 𝐵) (isCon : ConFinFun 𝑓)
+                 (𝑓′ : NbhFinFun 𝐴 𝐵) (preable𝑓′ : Preable 𝑓′) :
+                 Set where
+  field
+    sub : NbhFinFun 𝐴 𝐵
+    sub⊆𝑓 : sub ⊆ 𝑓
+    preablesub : Preable sub
+    postablesub : Postable sub
+    ybound : ∀ {x y} → < x , y > ∈ 𝑓′ → [ 𝐵 ] y ⊑ (post sub postablesub)
+    prebound : ∀ {x y} → < x , y > ∈ sub → [ 𝐴 ] x ⊑ (pre 𝑓′ preable𝑓′)
+
 Con-⊔ₑ' : ∀ {𝑓 𝑓′ 𝑓″ sub con𝑓 con𝑓′ con𝑓″} →
           (𝐹 𝑓 con𝑓) ⊑ₑ (𝐹 𝑓″ con𝑓″) → (𝐹 𝑓′ con𝑓′) ⊑ₑ (𝐹 𝑓″ con𝑓″) →
-          sub ⊆ (𝑓 ∪ 𝑓′) → Preable sub → Postable sub
-Con-⊔ₑ' 𝑓⊑𝑓″ 𝑓′⊑𝑓″ sub⊆𝑓∪𝑓″ preable = {!!}
+          sub ⊆ (𝑓 ∪ 𝑓′) → (preable : Preable sub) →
+          ⊑ₑ-proof₂ 𝑓″ con𝑓″ sub preable
+Con-⊔ₑ' {sub = ∅} _ _ _ _
+  = record
+      { sub = ∅
+      ; sub⊆𝑓 = ∅-isSubset
+      ; preablesub = {!!}
+      ; postablesub = {!!}
+      ; ybound = xy∈∅-abs
+      ; prebound = xy∈∅-abs
+      }
+Con-⊔ₑ' {𝑓 = 𝑓} {sub = < x , y > ∷ sub} _ _ sub⊆𝑓∪𝑓′ _
+  with (∪-lemma₂ {𝑓 = 𝑓} < x , y > (sub⊆𝑓∪𝑓′ < x , y > here))
+Con-⊔ₑ' {sub = < x , y > ∷ sub} (⊑ₑ-intro₂ _ _ _ _ p) _ _ _
+  | inl xy∈𝑓 with (p x y xy∈𝑓)
+Con-⊔ₑ' {sub = < x , y > ∷ sub} {con𝑓″ = cff p} 𝑓⊑𝑓″ 𝑓′⊑𝑓″ sub⊆𝑓∪𝑓′ preable
+  | inl xy∈𝑓
+  | record { sub = sub″
+           ; sub⊆𝑓 = sub″⊆𝑓″
+           ; preablesub = preablesub″
+           ; postablesub = postablesub″
+           ; y⊑post = y⊑post″
+           ; pre⊑x = pre″⊑x
+           }
+  = record
+      { sub = sub″ ∪ recsub
+      ; sub⊆𝑓 = ∪⊆𝑓″
+      ; preablesub = preable∪
+      ; postablesub = p ∪⊆𝑓″ preable∪
+      ; ybound = {!!}
+      ; prebound = {!!}
+      }
+  where rec = Con-⊔ₑ' {sub = sub} 𝑓⊑𝑓″ 𝑓′⊑𝑓″ {!!} {!!}
+        recsub = ⊑ₑ-proof₂.sub rec
+        recsub⊆𝑓″ = ⊑ₑ-proof₂.sub⊆𝑓 rec
+        preable∪ = {!!}
+        ∪⊆𝑓″ = ∪-lemma₁ sub″⊆𝑓″ recsub⊆𝑓″
+Con-⊔ₑ' {sub = < x , y > ∷ sub} (⊑ₑ-intro₂ _ _ _ _ p) _ _ _
+  | inr xy∈𝑓′ = {!!}
 
 Con-⊔ₑ : ∀ {x y z} → x ⊑ₑ z → y ⊑ₑ z → ArrCon x y
 Con-⊔ₑ {⊥ₑ} {y} _ _ = conₑ-⊥₂
 Con-⊔ₑ {𝐹 𝑓 _} {⊥ₑ} _ _ = conₑ-⊥₁
 Con-⊔ₑ {𝐹 𝑓 _} {𝐹 𝑓′ _} {⊥ₑ} () _
-Con-⊔ₑ {𝐹 𝑓 _} {𝐹 𝑓′ _} {𝐹 𝑓″ _} 𝑓⊑𝑓″ 𝑓′⊑𝑓″
-  = ArrCon.con-∪ _ _ (cff (Con-⊔ₑ' 𝑓⊑𝑓″ 𝑓′⊑𝑓″))
+Con-⊔ₑ {𝐹 𝑓 con𝑓} {𝐹 𝑓′ con𝑓′} {𝐹 𝑓″ con𝑓″} 𝑓⊑𝑓″ 𝑓′⊑𝑓″
+  = ArrCon.con-∪ _ _ (cff λ sub sub⊆𝑓∪𝑓′ →
+    {!boundedPostable!})
 
 ⊑ₑ-refl : ∀ {x} → x ⊑ₑ x
 ⊑ₑ-refl {⊥ₑ} = ⊑ₑ-intro₁
