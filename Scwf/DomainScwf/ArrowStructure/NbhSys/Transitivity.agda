@@ -69,17 +69,16 @@ shrinkExp {𝑓 = 𝑓} {𝑓″ = 𝑓″} 𝑓⊆𝑓′ 𝑓′⊑𝑓″
   = record
       { sub = sub ∪ sub′
       ; preablesub = preable∪
-      ; postablesub = con𝑓′ ∪⊆𝑓 preable∪
-      ; p𝑓⊑post = NbhSys.⊑-trans 𝐵 (⊑-⊔-lemma₃ 𝐵 conypost𝑓″ {!!} y⊑post
+      ; postablesub = postable∪
+      ; p𝑓⊑post = NbhSys.⊑-trans 𝐵 (⊑-⊔-lemma₃ 𝐵 conypost𝑓″ conpostsubs y⊑post
                   (NbhSys.⊑-trans 𝐵 (postableProofIrr postable𝑓″ _)
                   (⊑ₑ-proof₂.p𝑓⊑post recur)))
-                  (postLemma₁ postablesub (⊑ₑ-proof₂.postablesub recur)
-                  (con𝑓′ ∪⊆𝑓 preable∪) {!!})
+                  (postLemma₁ postablesub postablesub′ postable∪ conpostsubs)
       ; pre⊑p𝑓 = NbhSys.⊑-trans 𝐴
-                 (preLemma₁ preablesub (⊑ₑ-proof₂.preablesub recur) preable∪
-                 {!!})
-                 (⊑-⊔-lemma₃ 𝐴 {!!} conxpre𝑓″ pre⊑x (NbhSys.⊑-trans 𝐴
-                 (⊑ₑ-proof₂.pre⊑p𝑓 recur) (preableProofIrr _ preable𝑓″)))
+                 (preLemma₁ preablesub preablesub′ preable∪
+                 conpresubs) (⊑-⊔-lemma₃ 𝐴 conpresubs conxpre𝑓″ pre⊑x
+                 (NbhSys.⊑-trans 𝐴 (⊑ₑ-proof₂.pre⊑p𝑓 recur)
+                 (preableProofIrr _ preable𝑓″)))
       ; sub⊆𝑓′ = ∪-lemma₁ sub⊆𝑓 (⊑ₑ-proof₂.sub⊆𝑓′ recur)
       }
   where preable𝑓′ = pre-cons preable𝑓″ conxpre𝑓″
@@ -87,16 +86,25 @@ shrinkExp {𝑓 = 𝑓} {𝑓″ = 𝑓″} 𝑓⊆𝑓′ 𝑓′⊑𝑓″
         preableTail = subsetIsPreable (⊆-lemma₃ < x , y >) preable𝑓′
         postableTail = subsetIsPostable (⊆-lemma₃ < x , y >) postable𝑓′
         conTail = subsetIsCon (cff con𝑓) (⊆-lemma₃ < x , y >)
-        recur = Ω 𝑓″ 𝑓′ {conTail} {cff con𝑓′} {preableTail} {postableTail}
-                (shrinkExp {con𝑓 = conTail} {cff con𝑓} (⊆-lemma₃ < x , y >)
-                (⊑ₑ-intro₂ (< x , y > ∷ 𝑓″) 𝑓′ (cff con𝑓) (cff con𝑓′) p))
+        recur = Ω 𝑓″ 𝑓′ {conTail} {_} {preableTail} {postableTail}
+                (shrinkExp {con𝑓 = conTail} (⊆-lemma₃ < x , y >)
+                (⊑ₑ-intro₂ (< x , y > ∷ 𝑓″) 𝑓′ (cff con𝑓) _ p))
         sub′ = ⊑ₑ-proof₂.sub recur
+        preablesub′ = ⊑ₑ-proof₂.preablesub recur
+        postablesub′ = ⊑ₑ-proof₂.postablesub recur       
         ∪⊆𝑓 = ∪-lemma₁ sub⊆𝑓 (⊑ₑ-proof₂.sub⊆𝑓′ recur)
         presub⊑pre𝑓′ = ⊑-⊔-lemma₄ 𝐴 pre⊑x conxpre𝑓″
         presub′⊑pre𝑓′ = ⊑-⊔-lemma₅ 𝐴 (NbhSys.⊑-trans 𝐴 (⊑ₑ-proof₂.pre⊑p𝑓 recur)
                         (preableProofIrr preableTail _)) conxpre𝑓″
-        preable∪ = preUnionLemma preablesub (⊑ₑ-proof₂.preablesub recur)
-                   presub⊑pre𝑓′ presub′⊑pre𝑓′
+        preable∪ = preUnionLemma preablesub preablesub′ presub⊑pre𝑓′
+                   presub′⊑pre𝑓′
+        postable∪ = con𝑓′ ∪⊆𝑓 preable∪
+        conpostsubs = NbhSys.Con-⊔ 𝐵 (postLemma₂ {postable𝑓 = postablesub}
+                      {postable∪}) (postLemma₃ {postable𝑓′ = postablesub′}
+                      {postable∪})
+        conpresubs = NbhSys.Con-⊔ 𝐴 (preLemma₂ {preable𝑓 = preablesub}
+                     {preable∪}) (preLemma₃ {preable𝑓′ = preablesub′}
+                     {preable∪})
 
 ⊑ₑ-trans' : ∀ {con𝑓 con𝑓′ con𝑓″} →
             (𝐹 𝑓 con𝑓) ⊑ₑ (𝐹 𝑓′ con𝑓′) → (𝐹 𝑓′ con𝑓′) ⊑ₑ (𝐹 𝑓″ con𝑓″) →

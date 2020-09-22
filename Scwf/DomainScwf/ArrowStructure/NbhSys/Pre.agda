@@ -150,3 +150,24 @@ subsetIsPreable : ∀ {𝑓 𝑓′} → 𝑓 ⊆ 𝑓′ → Preable 𝑓′ �
 subsetIsPreable {𝑓} {𝑓′} 𝑓⊆𝑓′ preable𝑓′
   with (boundedPreLemma 𝑓⊆𝑓′ (preableBounded preable𝑓′))
 ... | 𝑓bound = boundedPreable 𝑓bound
+
+preLemma₂ : ∀ {𝑓 𝑓′ preable𝑓 preable∪} →
+            [ 𝐴 ] pre 𝑓 preable𝑓 ⊑ pre (𝑓 ∪ 𝑓′) preable∪
+preLemma₂ {preable𝑓 = pre-nil} = NbhSys.⊑-⊥ 𝐴
+preLemma₂ {𝑓 = _ ∷ 𝑓} {preable𝑓 = pre-cons preable𝑓 conxpre𝑓}
+  {pre-cons preable𝑓∪𝑓′ conxpre∪}
+  = ⊑-⊔-lemma₃ 𝐴 _ _ (NbhSys.⊑-refl 𝐴) rec
+  where rec = preLemma₂ {𝑓 = 𝑓} {preable𝑓 = preable𝑓}
+
+preLemma₃ : ∀ {𝑓 𝑓′ preable𝑓′ preable∪} →
+            [ 𝐴 ] pre 𝑓′ preable𝑓′ ⊑ pre (𝑓 ∪ 𝑓′) preable∪
+preLemma₃ {𝑓 = _} {∅} = NbhSys.⊑-⊥ 𝐴
+preLemma₃ {𝑓 = ∅} {_ ∷ _} {preable𝑓′}
+  = NbhSys.⊑-trans 𝐴 (NbhSys.⊑-refl 𝐴) (preableProofIrr preable𝑓′ _)
+preLemma₃ {𝑓 = < x , y > ∷ 𝑓} {< x′ , y′ > ∷ 𝑓′}
+  {pre-cons preable𝑓′tail conxpre𝑓′tail}
+  {pre-cons preable∪tail x′con∪tail}
+  = ⊑-⊔-lemma₅ 𝐴 rec x′con∪tail
+  where preable𝑓′ = pre-cons preable𝑓′tail conxpre𝑓′tail
+        rec = preLemma₃ {𝑓 = 𝑓} {𝑓′ = < x′ , y′ > ∷ 𝑓′}
+              {preable𝑓′ = preable𝑓′} 
