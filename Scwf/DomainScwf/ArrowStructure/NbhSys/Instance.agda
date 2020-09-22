@@ -6,6 +6,7 @@ open import Base.Core
 open import Base.FinFun
 open import NbhSys.Definition
 open import Scwf.DomainScwf.ArrowStructure.NbhSys.AxiomProofs
+open import Scwf.DomainScwf.ArrowStructure.NbhSys.Consistency
 open import Scwf.DomainScwf.ArrowStructure.NbhSys.Definition
 open import Scwf.DomainScwf.ArrowStructure.NbhSys.Relation
 open import Scwf.DomainScwf.ArrowStructure.NbhSys.Transitivity
@@ -13,8 +14,10 @@ open import Scwf.DomainScwf.ArrowStructure.NbhSys.Transitivity
 ArrNbhSys : (𝐴 𝐵 : Ty) → NbhSys
 NbhSys.Nbh (ArrNbhSys 𝐴 𝐵)     = ArrNbh 𝐴 𝐵
 NbhSys._⊑_ (ArrNbhSys 𝐴 𝐵)     = _⊑ₑ_ 𝐴 𝐵
-NbhSys._⊔_ (ArrNbhSys 𝐴 𝐵)     = _⊔ₑ_ 𝐴 𝐵
+NbhSys.Con (ArrNbhSys 𝐴 𝐵)     = ArrCon 𝐴 𝐵
+NbhSys._⊔_[_] (ArrNbhSys 𝐴 𝐵)  = _⊔ₑ_[_] 𝐴 𝐵
 NbhSys.⊥ (ArrNbhSys 𝐴 𝐵)       = ⊥ₑ
+NbhSys.Con-⊔ (ArrNbhSys 𝐴 𝐵)   = Con-⊔ₑ 𝐴 𝐵
 NbhSys.⊑-refl (ArrNbhSys 𝐴 𝐵)  = ⊑ₑ-refl 𝐴 𝐵
 NbhSys.⊑-trans (ArrNbhSys 𝐴 𝐵) = ⊑ₑ-trans 𝐴 𝐵
 NbhSys.⊑-⊥ (ArrNbhSys 𝐴 𝐵)     = ⊑ₑ-⊥ₑ 𝐴 𝐵

@@ -170,4 +170,4 @@ preLemma₃ {𝑓 = < x , y > ∷ 𝑓} {< x′ , y′ > ∷ 𝑓′}
   = ⊑-⊔-lemma₅ 𝐴 rec x′con∪tail
   where preable𝑓′ = pre-cons preable𝑓′tail conxpre𝑓′tail
         rec = preLemma₃ {𝑓 = 𝑓} {𝑓′ = < x′ , y′ > ∷ 𝑓′}
-              {preable𝑓′ = preable𝑓′} 
+              {preable𝑓′ = preable𝑓′}
