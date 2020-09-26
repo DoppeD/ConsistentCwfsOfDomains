@@ -139,19 +139,18 @@ Con-⊔ₑ'' {sub = < x , y > ∷ sub} {con𝑓″ = cff p} 𝑓⊑𝑓″ 𝑓�
         consub″recsub = NbhSys.Con-⊔ 𝐴 {z = pre (sub″ ∪ recsub) preable∪}
                         (preLemma₂ {preable𝑓 = preablesub″} {preable∪})
                         (preLemma₃ {preable𝑓′ = recpreablesub} {preable∪})
-  
+
 Con-⊔ₑ' : ∀ {sub con𝑓 con𝑓′ con𝑓″} →
           (𝐹 𝑓 con𝑓) ⊑ₑ (𝐹 𝑓″ con𝑓″) →
           (𝐹 𝑓′ con𝑓′) ⊑ₑ (𝐹 𝑓″ con𝑓″) →
           sub ⊆ (𝑓 ∪ 𝑓′) → (preable : Preable sub) →
           Postable sub
 Con-⊔ₑ' 𝑓⊑𝑓″ 𝑓′⊑𝑓″ sub⊆𝑓∪𝑓′ preablesub
-  = boundedPostable (post sub″ postablesub″ , ybound)
+  = boundedPostable ybound
   where proof = Con-⊔ₑ'' 𝑓⊑𝑓″ 𝑓′⊑𝑓″ sub⊆𝑓∪𝑓′ preablesub
         sub″ = ⊑ₑ-proof₃.sub proof
-        postablesub″ = ⊑ₑ-proof₃.postablesub proof
         ybound = ⊑ₑ-proof₃.ybound proof
-          
+
 Con-⊔ₑ : ∀ {x y z} → x ⊑ₑ z → y ⊑ₑ z → ArrCon x y
 Con-⊔ₑ {⊥ₑ} {y} _ _ = conₑ-⊥₂
 Con-⊔ₑ {𝐹 𝑓 _} {⊥ₑ} _ _ = conₑ-⊥₁
