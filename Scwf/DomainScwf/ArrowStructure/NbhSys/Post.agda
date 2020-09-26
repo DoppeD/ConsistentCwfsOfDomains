@@ -10,8 +10,6 @@ open import NbhSys.Definition
 open import NbhSys.Lemmata
 open import Scwf.DomainScwf.ArrowStructure.Variables 𝐴 𝐵
 
-open import Agda.Builtin.Equality
-
 data Postable : NbhFinFun 𝐴 𝐵 → Set
 post : (𝑓 : NbhFinFun 𝐴 𝐵) → Postable 𝑓 → NbhSys.Nbh 𝐵
 

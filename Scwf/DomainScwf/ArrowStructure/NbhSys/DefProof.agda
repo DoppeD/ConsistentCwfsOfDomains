@@ -134,8 +134,8 @@ smallest⇒exp' 𝑓′ {cff p} x _
       ; postablesub = postable∪
       ; y⊑post = NbhSys.⊑-trans 𝐵
                  (⊑-⊔-lemma₃ 𝐵 _ conpost y⊑post y⊑post′)
-                 (postLemma₁ postable postable′ _ _ )
-      ; pre⊑x = NbhSys.⊑-trans 𝐴 (preLemma₁ preable preable′ _ _)
+                 (postLemma₃ postable postable′ _ _ )
+      ; pre⊑x = NbhSys.⊑-trans 𝐴 (preLemma₃ preable preable′ _ _)
                 (NbhSys.⊑-⊔ 𝐴 pre⊑x pre′⊑x conpre)
       }
   where preable∪ = preUnionLemma preable preable′ pre⊑x pre′⊑x
@@ -143,8 +143,8 @@ smallest⇒exp' 𝑓′ {cff p} x _
         ∪⊆𝑓 = ∪-lemma₁ sub⊆𝑓′ sub′⊆𝑓′
         postable∪ = p (∪-lemma₁ sub⊆𝑓′ sub′⊆𝑓′) preable∪
         conpost = NbhSys.Con-⊔ 𝐵
-                  (postLemma₂ {𝑓 = sub} {postable∪ = postable∪})
-                  (postLemma₃ {𝑓′ = sub′} {postable∪ = postable∪})
+                  (postLemma₁ {𝑓 = sub} {postable∪ = postable∪})
+                  (postLemma₂ {𝑓′ = sub′} {postable∪ = postable∪})
 
 appmapClosureCon : ∀ {𝑓 con𝑓 x y x′ y′} →
                    AppmapClosure 𝑓 con𝑓 x y →
@@ -176,9 +176,9 @@ appmapClosureCon {𝑓} {cff p} {x} {y} {x′} {y′}
                    presub′⊑x⊔x′
         postable∪ = p (∪-lemma₁ sub⊆𝑓 sub′⊆𝑓) preable∪
         y⊑post∪ = NbhSys.⊑-trans 𝐵 y⊑post
-                  (postLemma₂ {𝑓 = sub} {postable∪ = postable∪})
+                  (postLemma₁ {𝑓 = sub} {postable∪ = postable∪})
         y′⊑post∪ = NbhSys.⊑-trans 𝐵 y′⊑post′
-                   (postLemma₃ {𝑓′ = sub′} {postable∪ = postable∪})
+                   (postLemma₂ {𝑓′ = sub′} {postable∪ = postable∪})
 
 SmallestAppmap : (𝑓 : NbhFinFun 𝐴 𝐵) → ConFinFun 𝑓 → Appmap 𝐴 𝐵
 Appmap._↦_ (SmallestAppmap 𝑓 con𝑓)      = AppmapClosure 𝑓 con𝑓
