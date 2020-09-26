@@ -74,7 +74,7 @@ Con-⊔ₑ'' {sub = < x , y > ∷ sub} {con𝑓″ = cff p} 𝑓⊑𝑓″ 𝑓�
       ; postablesub = postable∪
       ; ybound = yboundlemma postablesub″ recpostablesub postable∪
                  y⊑post″ recybound
-      ; pre⊑pre𝑓′ = NbhSys.⊑-trans 𝐴 (preLemma₁ preablesub″ recpreablesub
+      ; pre⊑pre𝑓′ = NbhSys.⊑-trans 𝐴 (preLemma₃ preablesub″ recpreablesub
                     preable∪ consub″recsub)
                     (⊑-⊔-lemma₃ 𝐴 consub″recsub conxpresub pre″⊑x
                     recpre⊑pre𝑓′)
@@ -94,8 +94,8 @@ Con-⊔ₑ'' {sub = < x , y > ∷ sub} {con𝑓″ = cff p} 𝑓⊑𝑓″ 𝑓�
         ∪⊆𝑓″ = ∪-lemma₁ sub″⊆𝑓″ recsub⊆𝑓″
         postable∪ = p ∪⊆𝑓″ preable∪
         consub″recsub = NbhSys.Con-⊔ 𝐴 {z = pre (sub″ ∪ recsub) preable∪}
-                        (preLemma₂ {preable𝑓 = preablesub″} {preable∪})
-                        (preLemma₃ {preable𝑓′ = recpreablesub} {preable∪})
+                        (preLemma₁ {preable𝑓 = preablesub″} {preable∪})
+                        (preLemma₂ {preable𝑓′ = recpreablesub} {preable∪})
 Con-⊔ₑ'' {sub = < x , y > ∷ sub} _ (⊑ₑ-intro₂ _ _ _ _ p) _ _
   | inr xy∈𝑓′ with (p x y xy∈𝑓′)
 Con-⊔ₑ'' {sub = < x , y > ∷ sub} {con𝑓″ = cff p} 𝑓⊑𝑓″ 𝑓′⊑𝑓″
@@ -115,7 +115,7 @@ Con-⊔ₑ'' {sub = < x , y > ∷ sub} {con𝑓″ = cff p} 𝑓⊑𝑓″ 𝑓�
       ; postablesub = postable∪
       ; ybound = yboundlemma postablesub″ recpostablesub postable∪
                  y⊑post″ recybound
-      ; pre⊑pre𝑓′ = NbhSys.⊑-trans 𝐴 (preLemma₁ preablesub″ recpreablesub
+      ; pre⊑pre𝑓′ = NbhSys.⊑-trans 𝐴 (preLemma₃ preablesub″ recpreablesub
                     preable∪ consub″recsub)
                     (⊑-⊔-lemma₃ 𝐴 consub″recsub conxpresub pre″⊑x
                     recpre⊑pre𝑓′)
@@ -135,8 +135,8 @@ Con-⊔ₑ'' {sub = < x , y > ∷ sub} {con𝑓″ = cff p} 𝑓⊑𝑓″ 𝑓�
         ∪⊆𝑓″ = ∪-lemma₁ sub″⊆𝑓″ recsub⊆𝑓″
         postable∪ = p ∪⊆𝑓″ preable∪
         consub″recsub = NbhSys.Con-⊔ 𝐴 {z = pre (sub″ ∪ recsub) preable∪}
-                        (preLemma₂ {preable𝑓 = preablesub″} {preable∪})
-                        (preLemma₃ {preable𝑓′ = recpreablesub} {preable∪})
+                        (preLemma₁ {preable𝑓 = preablesub″} {preable∪})
+                        (preLemma₂ {preable𝑓′ = recpreablesub} {preable∪})
 
 Con-⊔ₑ' : ∀ {sub con𝑓 con𝑓′ con𝑓″} →
           (𝐹 𝑓 con𝑓) ⊑ₑ (𝐹 𝑓″ con𝑓″) →
