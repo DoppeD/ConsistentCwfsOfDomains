@@ -73,7 +73,7 @@ shrinkExp {𝑓 = 𝑓} {𝑓″ = 𝑓″} 𝑓⊆𝑓′ 𝑓′⊑𝑓″
       ; p𝑓⊑post = NbhSys.⊑-trans 𝐵 (⊑-⊔-lemma₃ 𝐵 conypost𝑓″ conpostsubs y⊑post
                   (NbhSys.⊑-trans 𝐵 (postableProofIrr postable𝑓″ _)
                   (⊑ₑ-proof₂.p𝑓⊑post recur)))
-                  (postLemma₁ postablesub postablesub′ postable∪ conpostsubs)
+                  (postLemma₃ postablesub postablesub′ postable∪ conpostsubs)
       ; pre⊑p𝑓 = NbhSys.⊑-trans 𝐴
                  (preLemma₁ preablesub preablesub′ preable∪
                  conpresubs) (⊑-⊔-lemma₃ 𝐴 conpresubs conxpre𝑓″ pre⊑x
@@ -97,8 +97,8 @@ shrinkExp {𝑓 = 𝑓} {𝑓″ = 𝑓″} 𝑓⊆𝑓′ 𝑓′⊑𝑓″
         preable∪ = preUnionLemma preablesub preablesub′ presub⊑pre𝑓′
                    presub′⊑pre𝑓′
         postable∪ = con𝑓′ ∪⊆𝑓 preable∪
-        conpostsubs = NbhSys.Con-⊔ 𝐵 (postLemma₂ {postable𝑓 = postablesub}
-                      {postable∪}) (postLemma₃ {postable𝑓′ = postablesub′}
+        conpostsubs = NbhSys.Con-⊔ 𝐵 (postLemma₁ {postable𝑓 = postablesub}
+                      {postable∪}) (postLemma₂ {postable𝑓′ = postablesub′}
                       {postable∪})
         conpresubs = NbhSys.Con-⊔ 𝐴 (preLemma₂ {preable𝑓 = preablesub}
                      {preable∪}) (preLemma₃ {preable𝑓′ = preablesub′}

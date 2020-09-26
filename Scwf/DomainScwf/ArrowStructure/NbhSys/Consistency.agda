@@ -15,8 +15,6 @@ open import Scwf.DomainScwf.ArrowStructure.NbhSys.Pre 𝐴 𝐵
 open import Scwf.DomainScwf.ArrowStructure.NbhSys.Relation 𝐴 𝐵
 open import Scwf.DomainScwf.ArrowStructure.Variables 𝐴 𝐵
 
-open import Agda.Builtin.Sigma
-
 yboundlemma : {x : NbhSys.Nbh 𝐴} → ∀ {y sub} →
       ∀ postable𝑓 postable𝑓′ postable∪ →
       [ 𝐵 ] y ⊑ post 𝑓 postable𝑓 →
@@ -25,10 +23,10 @@ yboundlemma : {x : NbhSys.Nbh 𝐴} → ∀ {y sub} →
       [ 𝐵 ] y′ ⊑ post (𝑓 ∪ 𝑓′) postable∪
 yboundlemma {𝑓 = 𝑓} {𝑓′} postable𝑓 _ postable∪ y⊑post𝑓 _ here
   = NbhSys.⊑-trans 𝐵 y⊑post𝑓 post𝑓⊑post∪
-  where post𝑓⊑post∪ = postLemma₂ {𝑓 = 𝑓} {𝑓′}
+  where post𝑓⊑post∪ = postLemma₁ {𝑓 = 𝑓} {𝑓′}
 yboundlemma {𝑓 = 𝑓} {𝑓′} _ postable𝑓′ postable∪ _ p (there x′y′∈sub)
   = NbhSys.⊑-trans 𝐵 (p x′y′∈sub) post𝑓′⊑post∪
-  where post𝑓′⊑post∪ = postLemma₃ {𝑓 = 𝑓} {𝑓′}
+  where post𝑓′⊑post∪ = postLemma₂ {𝑓 = 𝑓} {𝑓′}
 
 record ⊑ₑ-proof₃ (𝑓 : NbhFinFun 𝐴 𝐵) (isCon : ConFinFun 𝑓)
                  (𝑓′ : NbhFinFun 𝐴 𝐵) (preable𝑓′ : Preable 𝑓′) :

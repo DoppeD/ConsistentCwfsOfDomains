@@ -11,7 +11,6 @@ open import NbhSys.Lemmata
 open import Scwf.DomainScwf.ArrowStructure.Variables 𝐴 𝐵
 
 open import Agda.Builtin.Equality
-open import Agda.Builtin.Sigma
 
 data Postable : NbhFinFun 𝐴 𝐵 → Set
 post : (𝑓 : NbhFinFun 𝐴 𝐵) → Postable 𝑓 → NbhSys.Nbh 𝐵
@@ -52,38 +51,38 @@ postableProofIrr {< x , y > ∷ 𝑓} (post-cons postable𝑓₁ conxpost𝑓₁
   = ⊑-⊔-lemma₃ 𝐵 _ _ (NbhSys.⊑-refl 𝐵)
     (postableProofIrr postable𝑓₁ postable𝑓₂)
 
-postLemma₂ : ∀ {𝑓 𝑓′ postable𝑓 postable∪} →
+postLemma₁ : ∀ {𝑓 𝑓′ postable𝑓 postable∪} →
             [ 𝐵 ] post 𝑓 postable𝑓 ⊑ post (𝑓 ∪ 𝑓′) postable∪
-postLemma₂ {postable𝑓 = post-nil} = NbhSys.⊑-⊥ 𝐵
-postLemma₂ {𝑓 = _ ∷ 𝑓} {postable𝑓 = post-cons postable𝑓 conxpost𝑓}
+postLemma₁ {postable𝑓 = post-nil} = NbhSys.⊑-⊥ 𝐵
+postLemma₁ {𝑓 = _ ∷ 𝑓} {postable𝑓 = post-cons postable𝑓 conxpost𝑓}
   {post-cons postable𝑓∪𝑓′ conxpost∪}
   = ⊑-⊔-lemma₃ 𝐵 _ _ (NbhSys.⊑-refl 𝐵) rec
-  where rec = postLemma₂ {𝑓 = 𝑓} {postable𝑓 = postable𝑓}
+  where rec = postLemma₁ {𝑓 = 𝑓} {postable𝑓 = postable𝑓}
 
-postLemma₃ : ∀ {𝑓 𝑓′ postable𝑓′ postable∪} →
+postLemma₂ : ∀ {𝑓 𝑓′ postable𝑓′ postable∪} →
             [ 𝐵 ] post 𝑓′ postable𝑓′ ⊑ post (𝑓 ∪ 𝑓′) postable∪
-postLemma₃ {𝑓 = _} {∅} = NbhSys.⊑-⊥ 𝐵
-postLemma₃ {𝑓 = ∅} {_ ∷ _} {postable𝑓′}
+postLemma₂ {𝑓 = _} {∅} = NbhSys.⊑-⊥ 𝐵
+postLemma₂ {𝑓 = ∅} {_ ∷ _} {postable𝑓′}
   = NbhSys.⊑-trans 𝐵 (NbhSys.⊑-refl 𝐵)
     (postableProofIrr postable𝑓′ _)
-postLemma₃ {𝑓 = < x , y > ∷ 𝑓} {< x′ , y′ > ∷ 𝑓′}
+postLemma₂ {𝑓 = < x , y > ∷ 𝑓} {< x′ , y′ > ∷ 𝑓′}
   {post-cons postable𝑓′tail conxpost𝑓′tail}
   {post-cons postable∪tail x′con∪tail}
   = ⊑-⊔-lemma₅ 𝐵 rec x′con∪tail
   where postable𝑓′ = post-cons postable𝑓′tail conxpost𝑓′tail
-        rec = postLemma₃ {𝑓 = 𝑓} {𝑓′ = < x′ , y′ > ∷ 𝑓′}
+        rec = postLemma₂ {𝑓 = 𝑓} {𝑓′ = < x′ , y′ > ∷ 𝑓′}
               {postable𝑓′ = postable𝑓′}
 
-postLemma₁ : (postable𝑓 : Postable 𝑓) → (postable𝑓′ : Postable 𝑓′) →
+postLemma₃ : (postable𝑓 : Postable 𝑓) → (postable𝑓′ : Postable 𝑓′) →
              (postable∪ : Postable (𝑓 ∪ 𝑓′)) →
              (conpost : NbhSys.Con 𝐵 (post 𝑓 postable𝑓) (post 𝑓′ postable𝑓′)) →
              [ 𝐵 ] ([ 𝐵 ] (post 𝑓 postable𝑓) ⊔
              (post 𝑓′ postable𝑓′) [ conpost ])
              ⊑ (post (𝑓 ∪ 𝑓′) postable∪)
-postLemma₁ postable𝑓 postable𝑓′ postable∪ conpost
+postLemma₃ postable𝑓 postable𝑓′ postable∪ conpost
   = NbhSys.⊑-⊔ 𝐵 post𝑓⊑post∪ post𝑓′⊑post∪ conpost
-  where post𝑓⊑post∪ = postLemma₂ {postable𝑓 = postable𝑓} {postable∪}
-        post𝑓′⊑post∪ = postLemma₃ {postable𝑓′ = postable𝑓′} {postable∪}
+  where post𝑓⊑post∪ = postLemma₁ {postable𝑓 = postable𝑓} {postable∪}
+        post𝑓′⊑post∪ = postLemma₂ {postable𝑓′ = postable𝑓′} {postable∪}
 
 singletonIsPostable : ∀ {x y} → Postable (< x , y > ∷ ∅)
 singletonIsPostable = post-cons post-nil (con⊥₂ 𝐵)
