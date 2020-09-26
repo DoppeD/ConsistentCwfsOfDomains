@@ -67,22 +67,6 @@ data AppmapClosure (𝑓 : NbhFinFun 𝐴 𝐵)
             AppmapClosure 𝑓 con𝑓 x y′ → (con : NbhSys.Con 𝐵 y y′) →
             AppmapClosure 𝑓 con𝑓 x ([ 𝐵 ] y ⊔ y′ [ con ])
 
-appmapClosureCon : ∀ {𝑓 con𝑓 x y x′ y′} →
-                   AppmapClosure 𝑓 con𝑓 x y →
-                   AppmapClosure 𝑓 con𝑓 x′ y′ →
-                   NbhSys.Con 𝐴 x x′ →
-                   NbhSys.Con 𝐵 y y′
-appmapClosureCon {con𝑓 = cff p} apcloxy apclox′y′ conxx′
-  = {!!}
-
-SmallestAppmap : (𝑓 : NbhFinFun 𝐴 𝐵) → ConFinFun 𝑓 → Appmap 𝐴 𝐵
-Appmap._↦_ (SmallestAppmap 𝑓 con𝑓)      = AppmapClosure 𝑓 con𝑓
-Appmap.↦-mono (SmallestAppmap 𝑓 _)      = ig-mono
-Appmap.↦-bottom (SmallestAppmap 𝑓 _)    = ig-bot
-Appmap.↦-↓closed (SmallestAppmap 𝑓 _)   = ig-↓clo
-Appmap.↦-↑directed (SmallestAppmap 𝑓 _) = ig-↑dir
-Appmap.↦-con (SmallestAppmap 𝑓 _)       = appmapClosureCon
-
 smallest⇒exp' : (𝑓′ : NbhFinFun 𝐴 𝐵) → {con : ConFinFun 𝑓′} →
                 ∀ x y → AppmapClosure 𝑓′ con x y →
                 ⊑ₑ-proof 𝑓′ con x y
@@ -93,7 +77,8 @@ smallest⇒exp' 𝑓′ x y (ig-inset xy∈𝑓′)
       ; preablesub = pre-cons pre-nil (con⊥₂ 𝐴)
       ; postablesub = post-cons post-nil (con⊥₂ 𝐵)
       ; y⊑post = NbhSys.⊑-⊔-fst 𝐵 (con⊥₂ 𝐵)
-      ; pre⊑x = NbhSys.⊑-⊔ 𝐴 (NbhSys.⊑-refl 𝐴) (NbhSys.⊑-⊥ 𝐴) (con⊥₂ 𝐴)
+      ; pre⊑x = NbhSys.⊑-⊔ 𝐴 (NbhSys.⊑-refl 𝐴)
+                (NbhSys.⊑-⊥ 𝐴) (con⊥₂ 𝐴)
       }
 smallest⇒exp' 𝑓′ x y ig-bot
   = record
@@ -124,8 +109,10 @@ smallest⇒exp' 𝑓′ {con} x y (ig-↓clo {y′ = y′} y⊑y′ idGen)
       ; pre⊑x = ⊑ₑ-proof.pre⊑x rec
       }
   where rec = smallest⇒exp' 𝑓′ {con} x y′ idGen
-smallest⇒exp' 𝑓′ {con} x _ (ig-↑dir {y = y} {y′} idGeny idGeny′ conyy′)
-  with (smallest⇒exp' 𝑓′ {con} x y idGeny) | smallest⇒exp' 𝑓′ {con} x y′ idGeny′
+smallest⇒exp' 𝑓′ {cff p} x _
+  (ig-↑dir {y = y} {y′} idGeny idGeny′ conyy′)
+  with (smallest⇒exp' 𝑓′ {cff p} x y idGeny)
+  | smallest⇒exp' 𝑓′ {cff p} x y′ idGeny′
 ... | record { sub = sub
              ; sub⊆𝑓 = sub⊆𝑓′
              ; preablesub = preable
@@ -145,26 +132,62 @@ smallest⇒exp' 𝑓′ {con} x _ (ig-↑dir {y = y} {y′} idGeny idGeny′ con
       ; sub⊆𝑓 = ∪⊆𝑓
       ; preablesub = preable∪
       ; postablesub = postable∪
-      ; y⊑post = NbhSys.⊑-trans 𝐵 (⊑-⊔-lemma₃ 𝐵 _ conpost y⊑post y⊑post′)
+      ; y⊑post = NbhSys.⊑-trans 𝐵
+                 (⊑-⊔-lemma₃ 𝐵 _ conpost y⊑post y⊑post′)
                  (postLemma₁ postable postable′ _ _ )
       ; pre⊑x = NbhSys.⊑-trans 𝐴 (preLemma₁ preable preable′ _ _)
-                (NbhSys.⊑-⊔ 𝐴 pre⊑x pre′⊑x consubs)
+                (NbhSys.⊑-⊔ 𝐴 pre⊑x pre′⊑x conpre)
       }
-  where γ = SmallestAppmap 𝑓′ con
-        γ⋐𝑓′ = ⋐-intro (λ x y → ig-inset)
-        preable∪ = preUnionLemma preable preable′ pre⊑x pre′⊑x
-        consubs = NbhSys.Con-⊔ 𝐴 pre⊑x pre′⊑x
+  where preable∪ = preUnionLemma preable preable′ pre⊑x pre′⊑x
+        conpre = NbhSys.Con-⊔ 𝐴 pre⊑x pre′⊑x
         ∪⊆𝑓 = ∪-lemma₁ sub⊆𝑓′ sub′⊆𝑓′
-        conpost = Appmap.↦-con γ
-                  (pre↦post sub preable postable γ
-                  (⋐-lemma sub 𝑓′ sub⊆𝑓′ γ γ⋐𝑓′))
-                  (pre↦post sub′ preable′ postable′ γ
-                  (⋐-lemma sub′ 𝑓′ sub′⊆𝑓′ γ γ⋐𝑓′))
-                  consubs
-        postable∪ = postUnionLemma postable postable′
-                    (NbhSys.⊑-⊔-fst 𝐵 conpost)
-                    (NbhSys.⊑-⊔-snd 𝐵 _)
-                    
+        postable∪ = p (∪-lemma₁ sub⊆𝑓′ sub′⊆𝑓′) preable∪
+        conpost = NbhSys.Con-⊔ 𝐵
+                  (postLemma₂ {𝑓 = sub} {postable∪ = postable∪})
+                  (postLemma₃ {𝑓′ = sub′} {postable∪ = postable∪})
+
+appmapClosureCon : ∀ {𝑓 con𝑓 x y x′ y′} →
+                   AppmapClosure 𝑓 con𝑓 x y →
+                   AppmapClosure 𝑓 con𝑓 x′ y′ →
+                   NbhSys.Con 𝐴 x x′ →
+                   NbhSys.Con 𝐵 y y′
+appmapClosureCon {𝑓} {cff p} {x} {y} {x′} {y′}
+  apcloxy apclox′y′ conxx′ with
+  (smallest⇒exp' 𝑓 x y apcloxy) | smallest⇒exp' 𝑓 x′ y′ apclox′y′
+... | record { sub = sub
+             ; sub⊆𝑓 = sub⊆𝑓
+             ; preablesub = preable
+             ; postablesub = postable
+             ; y⊑post = y⊑post
+             ; pre⊑x = pre⊑x
+             }
+    | record { sub = sub′
+             ; sub⊆𝑓 = sub′⊆𝑓
+             ; preablesub = preable′
+             ; postablesub = postable′
+             ; y⊑post = y′⊑post′
+             ; pre⊑x = pre′⊑x′
+             }
+  = NbhSys.Con-⊔ 𝐵 {z = post (sub ∪ sub′) postable∪} y⊑post∪ y′⊑post∪
+  where x⊔x′ = [ 𝐴 ] x ⊔ x′ [ conxx′ ]
+        presub⊑x⊔x′ = ⊑-⊔-lemma₄ 𝐴 pre⊑x conxx′
+        presub′⊑x⊔x′ = ⊑-⊔-lemma₅ 𝐴 pre′⊑x′ conxx′
+        preable∪ = preUnionLemma preable preable′ presub⊑x⊔x′
+                   presub′⊑x⊔x′
+        postable∪ = p (∪-lemma₁ sub⊆𝑓 sub′⊆𝑓) preable∪
+        y⊑post∪ = NbhSys.⊑-trans 𝐵 y⊑post
+                  (postLemma₂ {𝑓 = sub} {postable∪ = postable∪})
+        y′⊑post∪ = NbhSys.⊑-trans 𝐵 y′⊑post′
+                   (postLemma₃ {𝑓′ = sub′} {postable∪ = postable∪})
+
+SmallestAppmap : (𝑓 : NbhFinFun 𝐴 𝐵) → ConFinFun 𝑓 → Appmap 𝐴 𝐵
+Appmap._↦_ (SmallestAppmap 𝑓 con𝑓)      = AppmapClosure 𝑓 con𝑓
+Appmap.↦-mono (SmallestAppmap 𝑓 _)      = ig-mono
+Appmap.↦-bottom (SmallestAppmap 𝑓 _)    = ig-bot
+Appmap.↦-↓closed (SmallestAppmap 𝑓 _)   = ig-↓clo
+Appmap.↦-↑directed (SmallestAppmap 𝑓 _) = ig-↑dir
+Appmap.↦-con (SmallestAppmap 𝑓 _)       = appmapClosureCon
+
 smallest⇒exp : (𝑓 𝑓′ : NbhFinFun 𝐴 𝐵) →
                (con𝑓 : ConFinFun 𝑓) →
                (con𝑓′ : ConFinFun 𝑓′) →
@@ -194,7 +217,7 @@ exp⇒smallest' 𝑓 𝑓′ (⊑ₑ-intro₂ _ _ _ con p) x y xy∈𝑓
                         (⋐-lemma 𝑓″ 𝑓′ sub⊆𝑓 γ'
                         (⋐-intro (λ x y → ig-inset)))
         γx↦post = Appmap.↦-mono γ' pre⊑x γpre𝑓″↦post𝑓″
-   
+
 exp⇒smallest : (𝑓 𝑓′ : NbhFinFun 𝐴 𝐵) →
                ∀ {con𝑓 con𝑓′} →
                𝐹 𝑓 con𝑓 ⊑ₑ 𝐹 𝑓′ con𝑓′ →
