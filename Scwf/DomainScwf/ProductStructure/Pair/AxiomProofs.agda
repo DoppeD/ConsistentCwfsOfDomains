@@ -63,3 +63,10 @@ open import Scwf.DomainScwf.ProductStructure.Pair.Relation
   = <>↦-intro₂ 𝑥 [ 𝐴 ] y₁ ⊔ z₁ [ cony₁z₁ ] [ 𝐵 ] y₂ ⊔ z₂ [ cony₂z₂ ] 𝑡𝑥↦y₁⊔z₁ 𝑢𝑥↦y₂⊔z₂
   where 𝑡𝑥↦y₁⊔z₁ = Appmap.↦-↑directed 𝑡 𝑡𝑥↦y₁ 𝑡𝑥↦z₁ (toValCon cony₁z₁)
         𝑢𝑥↦y₂⊔z₂ = Appmap.↦-↑directed 𝑢 𝑢𝑥↦y₂ 𝑢𝑥↦z₂ (toValCon cony₂z₂)
+
+<>↦-con : ∀ {𝑥 𝑦 𝑥′ 𝑦′} → <>↦ 𝑡 𝑢 𝑥 𝑦 → <>↦ 𝑡 𝑢 𝑥′ 𝑦′ →
+          ValCon Γ 𝑥 𝑥′ → ValCon [ 𝐴 × 𝐵 ] 𝑦 𝑦′
+<>↦-con <>↦-intro₁ <>↦-intro₁ c = {!!}
+<>↦-con <>↦-intro₁ (<>↦-intro₂ _ y₁ y₂ x x₁) c = {!!}
+<>↦-con (<>↦-intro₂ _ y₁ y₂ x x₁) <>↦-intro₁ c = {!!}
+<>↦-con (<>↦-intro₂ _ y₁ y₂ x x₁) (<>↦-intro₂ _ y₃ y₄ x₂ x₃) c = {!!}

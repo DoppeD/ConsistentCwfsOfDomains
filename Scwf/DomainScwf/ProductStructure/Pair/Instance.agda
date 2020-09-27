@@ -15,3 +15,4 @@ Appmap.↦-mono < 𝑡 , 𝑢 >      = <>↦-mono 𝑡 𝑢
 Appmap.↦-bottom < 𝑡 , 𝑢 >    = <>↦-bottom 𝑡 𝑢
 Appmap.↦-↓closed < 𝑡 , 𝑢 >   = <>↦-↓closed 𝑡 𝑢
 Appmap.↦-↑directed < 𝑡 , 𝑢 > = <>↦-↑directed 𝑡 𝑢
+Appmap.↦-con < 𝑡 , 𝑢 >       = ?
