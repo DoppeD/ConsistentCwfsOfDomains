@@ -10,8 +10,6 @@ open import Base.FinFun
 open import NbhSys.Definition
 open import NbhSys.Lemmata
 open import Scwf.DomainScwf.Appmap.Definition
-open import Scwf.DomainScwf.Appmap.Valuation.Definition
-open import Scwf.DomainScwf.Appmap.Valuation.Relation
 open import Scwf.DomainScwf.ArrowStructure.NbhSys.Definition 𝐴 𝐵
 open import Scwf.DomainScwf.ArrowStructure.NbhSys.ConFinFun 𝐴 𝐵
 open import Scwf.DomainScwf.ArrowStructure.NbhSys.Post 𝐴 𝐵

@@ -12,6 +12,7 @@ open import NbhSys.Lemmata
 open import Scwf.DomainScwf.Appmap.Composition.Relation
 open import Scwf.DomainScwf.Appmap.Valuation.Definition
 open import Scwf.DomainScwf.Appmap.Valuation.Instance
+open import Scwf.DomainScwf.Appmap.Valuation.Lemmata
 open import Scwf.DomainScwf.Appmap.Valuation.Relation
 
 ∘↦-mono : ∀ {𝑥 𝑦 𝑧} → ⊑ᵥ Γ 𝑥 𝑦 →
@@ -29,13 +30,25 @@ open import Scwf.DomainScwf.Appmap.Valuation.Relation
   = ∘↦-intro 𝑥 y 𝑧 γ𝑥↦y (Appmap.↦-↓closed δ 𝑧⊑𝑤 δy↦𝑤)
 
 ∘↦-↑directed : ∀ {𝑥 𝑧 𝑤} → _∘↦_ δ γ 𝑥 𝑧 → _∘↦_ δ γ 𝑥 𝑤 →
-               _∘↦_ δ γ 𝑥 (𝑧 ⊔ᵥ 𝑤)
-∘↦-↑directed {𝑥 = 𝑥} {𝑧} {𝑤}
-  (∘↦-intro _ 𝑦 _ γ𝑥↦𝑦 δ𝑦↦𝑧) (∘↦-intro _ 𝑦' _ γ𝑥↦𝑦' δ𝑦'↦𝑤)
-  = ∘↦-intro 𝑥 (𝑦 ⊔ᵥ 𝑦') (𝑧 ⊔ᵥ 𝑤) γ𝑥↦𝑦⊔𝑦' δ𝑦⊔𝑦'↦𝑧⊔𝑤
-    where γ𝑥↦𝑦⊔𝑦' = Appmap.↦-↑directed γ γ𝑥↦𝑦 γ𝑥↦𝑦'
-          𝑦⊑𝑦⊔𝑦′ = NbhSys.⊑-⊔-fst (ValNbhSys Δ)
+               (con : ValCon Θ 𝑧 𝑤) →
+               _∘↦_ δ γ 𝑥 (𝑧 ⊔ᵥ 𝑤 [ con ])
+∘↦-↑directed  (∘↦-intro _ 𝑦 _ γ𝑥↦𝑦 δ𝑦↦𝑧)
+  (∘↦-intro _ 𝑦' _ γ𝑥↦𝑦' δ𝑦'↦𝑤) con𝑧𝑤
+  = ∘↦-intro _ (𝑦 ⊔ᵥ 𝑦' [ con𝑦𝑦′ ]) _ γ𝑥↦𝑦⊔𝑦' δ𝑦⊔𝑦'↦𝑧⊔𝑤
+    where con𝑦𝑦′ = Appmap.↦-con γ γ𝑥↦𝑦 γ𝑥↦𝑦' valConRefl
+          γ𝑥↦𝑦⊔𝑦' = Appmap.↦-↑directed γ γ𝑥↦𝑦 γ𝑥↦𝑦' con𝑦𝑦′
+          𝑦⊑𝑦⊔𝑦′ = NbhSys.⊑-⊔-fst (ValNbhSys Δ) con𝑦𝑦′
           δ𝑦⊔𝑦'↦𝑧 = Appmap.↦-mono δ 𝑦⊑𝑦⊔𝑦′ δ𝑦↦𝑧
-          𝑦′⊑𝑦⊔𝑦′ = NbhSys.⊑-⊔-snd (ValNbhSys Δ)
+          𝑦′⊑𝑦⊔𝑦′ = NbhSys.⊑-⊔-snd (ValNbhSys Δ) con𝑦𝑦′
           δ𝑦⊔𝑦'↦𝑤 = Appmap.↦-mono δ 𝑦′⊑𝑦⊔𝑦′ δ𝑦'↦𝑤
-          δ𝑦⊔𝑦'↦𝑧⊔𝑤 = Appmap.↦-↑directed δ δ𝑦⊔𝑦'↦𝑧 δ𝑦⊔𝑦'↦𝑤
+          δ𝑦⊔𝑦'↦𝑧⊔𝑤 = Appmap.↦-↑directed δ δ𝑦⊔𝑦'↦𝑧 δ𝑦⊔𝑦'↦𝑤 con𝑧𝑤
+
+∘↦-con : ∀ {𝑥 𝑦 𝑥′ 𝑦′} → _∘↦_ δ γ 𝑥 𝑦 → _∘↦_ δ γ 𝑥′ 𝑦′ →
+         ValCon Γ 𝑥 𝑥′ → ValCon Θ 𝑦 𝑦′
+∘↦-con {𝑦 = ⟪⟫} {𝑦′ = ⟪⟫} _ _ _ = con-nil
+∘↦-con {𝑦 = ⟪ y , 𝑦 ⟫} {𝑦′ = ⟪ y′ , 𝑦′ ⟫}
+  (∘↦-intro _ 𝑧 _ γ𝑥↦𝑧 δ𝑧↦𝑦) (∘↦-intro _ 𝑧′ _ γ𝑥′↦𝑧′ δ𝑧′↦𝑦′) con𝑥𝑥′
+  with (Appmap.↦-con δ δ𝑧↦𝑦 δ𝑧′↦𝑦′ con𝑧𝑧′)
+  where con𝑧𝑧′ = Appmap.↦-con γ γ𝑥↦𝑧 γ𝑥′↦𝑧′ con𝑥𝑥′
+... | con-tup _ _ conyy′ _ _ con𝑦𝑦′
+  = con-tup _ _ conyy′ _ _ con𝑦𝑦′

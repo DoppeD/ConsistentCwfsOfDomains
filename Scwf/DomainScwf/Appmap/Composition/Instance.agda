@@ -13,3 +13,4 @@ Appmap.↦-mono (δ ∘ γ)      = ∘↦-mono δ γ
 Appmap.↦-bottom (δ ∘ γ)    = ∘↦-bottom δ γ
 Appmap.↦-↓closed (δ ∘ γ)   = ∘↦-↓closed δ γ
 Appmap.↦-↑directed (δ ∘ γ) = ∘↦-↑directed δ γ
+Appmap.↦-con (δ ∘ γ)       = ∘↦-con δ γ
