@@ -6,8 +6,6 @@ open import Base.Core
 open import Base.Variables
 open import NbhSys.Definition
 
-open import Agda.Primitive
-
 -- Finite functions are lists of pairs.
 data FinFun (A B : Set) : Set where
   ∅ : FinFun A B
