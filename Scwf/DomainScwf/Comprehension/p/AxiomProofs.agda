@@ -40,6 +40,5 @@ p↦-con : {𝑥 : Valuation (𝐴 :: Γ)} → ∀ {𝑦 𝑥′ 𝑦′} →
 p↦-con (p↦-intro _ _ 𝑦⊑𝑥) (p↦-intro _ _ 𝑦′⊑𝑥′)
   (con-tup _ _ _ _ _ con𝑥𝑥′)
   = Con-⊔ᵥ 𝑦⊑𝑥⊔𝑥′ 𝑦′⊑𝑥⊔𝑥′
-  where 𝑥⊔𝑥′ = _ ⊔ᵥ _ [ con𝑥𝑥′ ]
-        𝑦⊑𝑥⊔𝑥′ = ⊑-⊔-lemma₄ (ValNbhSys _) 𝑦⊑𝑥 con𝑥𝑥′
+  where 𝑦⊑𝑥⊔𝑥′ = ⊑-⊔-lemma₄ (ValNbhSys _) 𝑦⊑𝑥 con𝑥𝑥′
         𝑦′⊑𝑥⊔𝑥′ = ⊑-⊔-lemma₅ (ValNbhSys _) 𝑦′⊑𝑥′ con𝑥𝑥′
