@@ -14,3 +14,4 @@ Appmap.↦-mono ⟨ γ , 𝑡 ⟩      = ⟨⟩↦-mono γ 𝑡
 Appmap.↦-bottom ⟨ γ , 𝑡 ⟩    = ⟨⟩↦-bottom γ 𝑡
 Appmap.↦-↓closed ⟨ γ , 𝑡 ⟩   = ⟨⟩↦-↓closed γ 𝑡
 Appmap.↦-↑directed ⟨ γ , 𝑡 ⟩ = ⟨⟩↦-↑directed γ 𝑡
+Appmap.↦-con ⟨ γ , 𝑡 ⟩       = ⟨⟩↦-con γ 𝑡
