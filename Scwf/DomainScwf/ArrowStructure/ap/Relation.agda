@@ -22,3 +22,20 @@ data [_,_]_ap↦_ (𝑡 : tAppmap Γ [ ArrNbhSys 𝐴 𝐵 ])
                [ 𝑡 ] 𝑥 ↦ ⟪ 𝐹 𝑓 con𝑓 ⟫ → [ 𝑢 ] 𝑥 ↦ ⟪ x ⟫ →
                [ ArrNbhSys 𝐴 𝐵 ] (𝐹 (< x , y > ∷ ∅) conxy) ⊑ (𝐹 𝑓 con𝑓) →
                [ 𝑡 , 𝑢 ] 𝑥 ap↦ ⟪ y ⟫
+
+[ 𝑡 ] 𝑥 ↦ ⟪ 𝐹 𝑓 con𝑓 ⟫
+[ 𝑢 ] 𝑥 ↦ ⟪ x ⟫
+(𝐹 (< x , y > ∷ ∅)) ⊑ (𝐹 𝑓 con𝑓)
+
+[ 𝑡 ] 𝑥′ ↦ ⟪ 𝐹 𝑓′ con𝑓′ ⟫
+[ 𝑢 ] 𝑥′ ↦ ⟪ x′ ⟫
+(𝐹 (< x′ , y′ > ∷ ∅)) ⊑ (𝐹 𝑓′ con𝑓′)
+
+𝑥 and 𝑥′ are consistent.
+⟪ x ⟫ and ⟪ x′ ⟫ are consistent.
+𝑓 and 𝑓′ are consistent.
+
+Take subset sub ⊆ 𝑓 such that pre sub ⊑ x and y ⊑ post sub.
+Also subset sub′ ⊆ 𝑓′ such that pre sub′ ⊑ x′ and y′ ⊑ post sub′.
+Their union is preable, since bounded by x ⊔ x′.
+Hence postable, since 𝑓 and 𝑓′ are consistent.
