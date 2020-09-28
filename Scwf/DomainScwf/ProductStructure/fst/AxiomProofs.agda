@@ -76,8 +76,7 @@ fst↦-↑directed {𝑥 = 𝑥} (fst-intro₂ _ y₁ y₂ 𝑡𝑥↦y₁y₂)
 ... | con-tup _ _ (con-pair cony₁z₁ cony₂z₂) _ _ _
   = fst-intro₂ 𝑥 ((𝐴 NbhSys.⊔ y₁ [ z₁ ]) _) [ 𝐵 ] y₂ ⊔ z₂ [ cony₂z₂ ] 𝑡𝑥↦⊔
   where 𝑡𝑥↦⊔ = Appmap.↦-↑directed 𝑡 𝑡𝑥↦y₁y₂ 𝑡𝑥↦z₁z₂
-               (con-tup < y₁ , y₂ > < z₁ , z₂ > (con-pair _ cony₂z₂)
-               ⟪⟫ ⟪⟫ con-nil)
+               (con-tup _ _ (con-pair _ cony₂z₂) _ _ con-nil)
 
 fst↦-con : ∀ {𝑥 𝑦 𝑥′ 𝑦′} → fst↦ 𝑡 𝑥 𝑦 → fst↦ 𝑡 𝑥′ 𝑦′ → ValCon Γ 𝑥 𝑥′ →
            ValCon [ 𝐴 ] 𝑦 𝑦′

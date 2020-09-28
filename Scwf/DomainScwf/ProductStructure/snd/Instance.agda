@@ -15,3 +15,4 @@ Appmap.↦-mono (snd 𝑡)      = snd↦-mono 𝑡
 Appmap.↦-bottom (snd 𝑡)    = snd↦-bottom 𝑡
 Appmap.↦-↓closed (snd 𝑡)   = snd↦-↓closed 𝑡
 Appmap.↦-↑directed (snd 𝑡) = snd↦-↑directed 𝑡
+Appmap.↦-con (snd 𝑡)       = snd↦-con 𝑡
