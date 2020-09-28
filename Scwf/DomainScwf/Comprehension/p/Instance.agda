@@ -9,8 +9,9 @@ open import Scwf.DomainScwf.Comprehension.p.AxiomProofs
 open import Scwf.DomainScwf.Comprehension.p.Relation
 
 p : (Γ : Ctx n) → (𝐴 : Ty) → tAppmap (𝐴 :: Γ) Γ
-Appmap._↦_ (p Γ A)         = _p↦_
-Appmap.↦-mono (p Γ A)      = p↦-mono
-Appmap.↦-bottom (p Γ A)    = p↦-bottom
-Appmap.↦-↓closed (p Γ A)   = p↦-↓closed
-Appmap.↦-↑directed (p Γ A) = p↦-↑directed
+Appmap._↦_ (p Γ 𝐴)         = _p↦_
+Appmap.↦-mono (p Γ 𝐴)      = p↦-mono
+Appmap.↦-bottom (p Γ 𝐴)    = p↦-bottom
+Appmap.↦-↓closed (p Γ 𝐴)   = p↦-↓closed
+Appmap.↦-↑directed (p Γ 𝐴) = p↦-↑directed
+Appmap.↦-con (p Γ 𝐴)       = p↦-con
