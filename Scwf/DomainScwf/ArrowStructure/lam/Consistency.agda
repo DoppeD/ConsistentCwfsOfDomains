@@ -17,6 +17,7 @@ open import Scwf.DomainScwf.Appmap.Valuation.Lemmata
 open import Scwf.DomainScwf.Appmap.Valuation.Instance
 open import Scwf.DomainScwf.Appmap.Valuation.Relation
 open import Scwf.DomainScwf.ArrowStructure.lam.Relation 𝐴 𝐵
+open import Scwf.DomainScwf.ArrowStructure.NbhSys.ConFinFun 𝐴 𝐵
 open import Scwf.DomainScwf.ArrowStructure.NbhSys.Definition 𝐴 𝐵
 open import Scwf.DomainScwf.ArrowStructure.NbhSys.Post 𝐴 𝐵
 open import Scwf.DomainScwf.ArrowStructure.NbhSys.Pre 𝐴 𝐵
@@ -29,21 +30,16 @@ lamPrePost : ∀ {x y 𝑓 𝑥} →
                      (pre-cons preable𝑓 conxpre𝑓) , 𝑥 ⟫ ↦
                    ⟪ post (< x , y > ∷ 𝑓)
                      (post-cons postable𝑓 conypost𝑓) ⟫
-lamPrePost {x} {y} {𝑥 = 𝑥} preable𝑓 conxpre𝑓 postable𝑓 conypost𝑓 𝑡x𝑥↦y 𝑡x𝑥↦post𝑓
-  = Appmap.↦-mono 𝑡 x𝑥⊑pre𝑓𝑥 𝑡x𝑥↦postxy𝑓
-  where x𝑥⊑pre𝑓𝑥 = ⊑ᵥ-cons _ ⟪ x , 𝑥 ⟫ _ (NbhSys.⊑-⊔-fst 𝐴 conxpre𝑓)
-                   ⊑ᵥ-refl
-        𝑡x𝑥↦postxy𝑓 = Appmap.↦-↑directed 𝑡 𝑡x𝑥↦y {!!}
-                      (toValCon conypost𝑓)
-{-
-lamPrePost {x} {y} {𝑥 = 𝑥}
-  (pre-cons a conypre𝑓) postable𝑓 conypost𝑓 𝑡x𝑥↦y 𝑡x𝑥↦post𝑓
-  = Appmap.↦-mono 𝑡 x𝑥⊑pre𝑓𝑥 𝑡x𝑥↦postxy𝑓
-  where x𝑥⊑pre𝑓𝑥 = ⊑ᵥ-cons _ ⟪ x , 𝑥 ⟫ _ (NbhSys.⊑-⊔-fst 𝐴 conypre𝑓)
-                   ⊑ᵥ-refl
-        𝑡x𝑥↦postxy𝑓 = Appmap.↦-↑directed 𝑡 𝑡x𝑥↦y ?
-                      (toValCon conypost𝑓)
--}
+lamPrePost {x} {y} {𝑓} {𝑥}
+  preable𝑓 conxpre𝑓 postable𝑓 conypost𝑓 𝑡x𝑥↦y 𝑡x𝑥↦post𝑓
+  = Appmap.↦-↑directed 𝑡 𝑡x⊔pre𝑓𝑥↦y 𝑡x⊔pre𝑓𝑥↦post𝑓
+    (toValCon conypost𝑓)
+  where x𝑥⊑prexy𝑓𝑥 = ⊑ᵥ-cons _ _ _ (NbhSys.⊑-⊔-fst 𝐴 conxpre𝑓)
+                     ⊑ᵥ-refl
+        𝑡x⊔pre𝑓𝑥↦y = Appmap.↦-mono 𝑡 x𝑥⊑prexy𝑓𝑥 𝑡x𝑥↦y
+        pre𝑓𝑥⊑prexy𝑓𝑥 = ⊑ᵥ-cons _ _ _ (NbhSys.⊑-⊔-snd 𝐴 conxpre𝑓)
+                        ⊑ᵥ-refl
+        𝑡x⊔pre𝑓𝑥↦post𝑓 = Appmap.↦-mono 𝑡 pre𝑓𝑥⊑prexy𝑓𝑥 𝑡x𝑥↦post𝑓
 
 record ⊑ₑ-proof₄ (𝑓 : NbhFinFun 𝐴 𝐵) (preable𝑓 : Preable 𝑓)
                  (𝑥 : Valuation Γ) : Set where
@@ -62,7 +58,8 @@ lam↦-con'' _ pre-nil
 lam↦-con'' {𝑓 = < x , y > ∷ 𝑓}
   p (pre-cons preable𝑓 conxpre𝑓)
   = record { postable𝑓 = postablexy𝑓
-           ; 𝑡pre↦post = lamPrePost preable𝑓 _ recpostable𝑓 _ (p _ _ here) rec𝑡pre↦post
+           ; 𝑡pre↦post = lamPrePost preable𝑓 _ recpostable𝑓 _
+                         (p _ _ here) rec𝑡pre↦post
            }
   where rec = lam↦-con'' (λ x′ y′ x′y′∈𝑓 → p x′ y′
               (there x′y′∈𝑓)) preable𝑓
@@ -77,7 +74,7 @@ lam↦-con' : ∀ {𝑓 𝑓′ 𝑥 𝑥′ con𝑥𝑥′} →
             (∀ x y → < x , y > ∈ 𝑓 → [ 𝑡 ] ⟪ x , 𝑥 ⟫ ↦ ⟪ y ⟫) →
             (∀ x y → < x , y > ∈ 𝑓′ → [ 𝑡 ] ⟪ x , 𝑥′ ⟫ ↦ ⟪ y ⟫) →
             ∀ x y → < x , y > ∈ (𝑓 ∪ 𝑓′) →
-            [ 𝑡 ] ⟪ x , [ ValNbhSys Γ ] 𝑥 ⊔ 𝑥′ [ con𝑥𝑥′ ] ⟫ ↦ ⟪ y ⟫
+            [ 𝑡 ] ⟪ x , 𝑥 ⊔ᵥ 𝑥′ [ con𝑥𝑥′ ] ⟫ ↦ ⟪ y ⟫
 lam↦-con' {𝑓} {con𝑥𝑥′ = con𝑥𝑥′} p₁ p₂ x y xy∈∪
   with (∪-lemma₂ {𝑓 = 𝑓} < x , y > xy∈∪)
 ... | inl xy∈𝑓 = Appmap.↦-mono 𝑡 x𝑥⊑x𝑥⊔𝑥′ (p₁ x y xy∈𝑓)
@@ -86,6 +83,17 @@ lam↦-con' {𝑓} {con𝑥𝑥′ = con𝑥𝑥′} p₁ p₂ x y xy∈∪
 ... | inr xy∈𝑓′ = Appmap.↦-mono 𝑡 x𝑥′⊑x𝑥⊔𝑥′ (p₂ x y xy∈𝑓′)
   where 𝑥′⊑𝑥⊔𝑥′ = NbhSys.⊑-⊔-snd (ValNbhSys Γ) con𝑥𝑥′
         x𝑥′⊑x𝑥⊔𝑥′ = ⊑ᵥ-cons _ _ _ (NbhSys.⊑-refl 𝐴) 𝑥′⊑𝑥⊔𝑥′
+
+from⊑ₑ-proof₄ : ∀ {𝑓 𝑓′ 𝑥 𝑥′ sub} →
+               (∀ x y → < x , y > ∈ 𝑓 → [ 𝑡 ] ⟪ x , 𝑥 ⟫ ↦ ⟪ y ⟫) →
+               (∀ x y → < x , y > ∈ 𝑓′ → [ 𝑡 ] ⟪ x , 𝑥′ ⟫ ↦ ⟪ y ⟫) →
+               ValCon _ 𝑥 𝑥′ →
+               sub ⊆ (𝑓 ∪ 𝑓′) → Preable sub →
+               Postable sub
+from⊑ₑ-proof₄ p₁ p₂ con𝑥𝑥′ sub⊆∪ preablesub
+  = ⊑ₑ-proof₄.postable𝑓 (lam↦-con'' p₃ preablesub)
+  where p₃' = lam↦-con' {con𝑥𝑥′ = con𝑥𝑥′} p₁ p₂
+        p₃ = λ x y xy∈sub → p₃' x y (sub⊆∪ < x , y > xy∈sub)
 
 lam↦-con : ∀ {𝑥 𝑦 𝑥′ 𝑦′} → [ 𝑡 ] 𝑥 lam↦ 𝑦 →
            [ 𝑡 ] 𝑥′ lam↦ 𝑦′ → ValCon _ 𝑥 𝑥′ →
@@ -96,6 +104,7 @@ lam↦-con lam↦-intro₁ (lam↦-intro₂ _ _ _ _) _
   = toValCon conₑ-⊥₂
 lam↦-con (lam↦-intro₂ _ _ _ _) lam↦-intro₁ _
   = toValCon conₑ-⊥₁
-lam↦-con (lam↦-intro₂ _ 𝑓 con𝑓 p₁) (lam↦-intro₂ _ 𝑓′ con𝑓′ p₂)
-  con𝑥𝑥′
-  = {!⊑ₑ-proof₄!}
+lam↦-con (lam↦-intro₂ _ 𝑓 con𝑓 p₁)
+  (lam↦-intro₂ _ 𝑓′ con𝑓′ p₂) con𝑥𝑥′
+  = con-tup _ _ (con-∪ _ _ con𝑓∪𝑓′) _ _ con-nil
+  where con𝑓∪𝑓′ = cff (from⊑ₑ-proof₄ p₁ p₂ con𝑥𝑥′)
