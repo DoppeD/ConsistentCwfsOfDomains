@@ -17,6 +17,7 @@ open import NbhSys.Definition
 open import NbhSys.Lemmata
 open import Scwf.DomainScwf.Appmap.Valuation.Definition
 open import Scwf.DomainScwf.Appmap.Valuation.Instance
+open import Scwf.DomainScwf.Appmap.Valuation.Lemmata
 open import Scwf.DomainScwf.Appmap.Valuation.Relation
 open import Scwf.DomainScwf.ArrowStructure.ap.Relation 𝐴 𝐵
 open import Scwf.DomainScwf.ArrowStructure.NbhSys.Definition 𝐴 𝐵
@@ -116,11 +117,11 @@ ap↦-↑directed' {x = x} {x′} {y} {y′} {con∪ = cff con∪} conxx′ cony
   (⊑ₑ-intro₂ _ _ _ _ p₁) (⊑ₑ-intro₂ _ _ _ _ p₂) x″ y″ here
   = record { sub = p₁sub ∪ p₂sub
            ; y⊑post = NbhSys.⊑-trans 𝐵
-                      (⊑-⊔-lemma₃ 𝐵 conyy′ {!!} p₁y⊑post p₂y⊑post)
-                      (postLemma₃ p₁postable p₂postable postable∪ {!!})
+                      (⊑-⊔-lemma₃ 𝐵 conyy′ conposts p₁y⊑post p₂y⊑post)
+                      (postLemma₃ p₁postable p₂postable postable∪ conposts)
            ; pre⊑x = NbhSys.⊑-trans 𝐴
-                     (preLemma₃ p₁preable p₂preable preable∪ {!!})
-                     (⊑-⊔-lemma₃ 𝐴 {!!} conxx′ p₁pre⊑x p₂pre⊑x)
+                     (preLemma₃ p₁preable p₂preable preable∪ conpres)
+                     (⊑-⊔-lemma₃ 𝐴 conpres conxx′ p₁pre⊑x p₂pre⊑x)
            ; sub⊆𝑓 = ∪-lemma₅ p₁sub⊆𝑓 p₂sub⊆𝑓
            }
   where p₁xyh = p₁ x y here
@@ -137,31 +138,46 @@ ap↦-↑directed' {x = x} {x′} {y} {y′} {con∪ = cff con∪} conxx′ cony
         p₂postable = ⊑ₑ-proof.postablesub p₂x′y′h
         p₁preable = ⊑ₑ-proof.preablesub p₁xyh
         p₂preable = ⊑ₑ-proof.preablesub p₂x′y′h
-        preable∪ = {!!}
-        postable∪ = con∪ {!!} preable∪
-{-
+        p₁pre⊑x⊔x′ = ⊑-⊔-lemma₄ 𝐴 p₁pre⊑x conxx′
+        p₂pre⊑x⊔x′ = ⊑-⊔-lemma₅ 𝐴 p₂pre⊑x conxx′
+        conpres = NbhSys.Con-⊔ 𝐴 p₁pre⊑x⊔x′ p₂pre⊑x⊔x′
+        preable∪ = preUnionLemma p₁preable p₂preable
+                   p₁pre⊑x⊔x′ p₂pre⊑x⊔x′
+        postable∪ = con∪ (∪-lemma₅ p₁sub⊆𝑓 p₂sub⊆𝑓) preable∪
+        conposts = NbhSys.Con-⊔ 𝐵 {z = post (p₁sub ∪ p₂sub) postable∪}
+                   (postLemma₁ {postable𝑓 = p₁postable} {postable∪})
+                   (postLemma₂ {postable𝑓′ = p₂postable} {postable∪})
+
 ap↦-↑directed : ∀ {𝑥 𝑦 𝑧} →
                 [ 𝑡 , 𝑢 ] 𝑥 ap↦ 𝑦 → [ 𝑡 , 𝑢 ] 𝑥 ap↦ 𝑧 →
-                [ 𝑡 , 𝑢 ] 𝑥 ap↦ (𝑦 ⊔ᵥ 𝑧)
-ap↦-↑directed (ap↦-intro₁ p₁) (ap↦-intro₁ p₂)
-  = ap↦-intro₁ (NbhSys.⊑-⊔ 𝐵 p₁ p₂)
+                (con𝑦𝑧 : ValCon _ 𝑦 𝑧) →
+                [ 𝑡 , 𝑢 ] 𝑥 ap↦ (𝑦 ⊔ᵥ 𝑧 [ con𝑦𝑧 ])
+ap↦-↑directed (ap↦-intro₁ p₁) (ap↦-intro₁ p₂) (con-tup _ _ _ _ _ _)
+  = ap↦-intro₁ (NbhSys.⊑-⊔ 𝐵 p₁ p₂ _)
+
 ap↦-↑directed {𝑦 = ⟪ y , ⟪⟫ ⟫} {⟪ z , ⟪⟫ ⟫} (ap↦-intro₁ p)
-  (ap↦-intro₂ x′ _ 𝑔′ 𝑡𝑥↦𝑔′ 𝑢𝑥↦x′ x′z⊑𝑔′)
-  = ap↦-intro₂ x′ ([ 𝐵 ] y ⊔ z) 𝑔′ 𝑡𝑥↦𝑔′ 𝑢𝑥↦x′ x′y⊔z⊑𝑔′
-  where x′y⊔z⊑𝑔′ = ⊑ₑ-intro₂ (< x′ , [ 𝐵 ] y ⊔ z > ∷ ∅) 𝑔′
-                   (ap↦-↑directed'' x′ y z 𝑔′ x′z⊑𝑔′ p)
+  (ap↦-intro₂ x′ _ 𝑔′ con𝑔′ conxz  𝑡𝑥↦𝑔′ 𝑢𝑥↦x′ x′z⊑𝑔′)
+  (con-tup _ _ _ _ _ _)
+  = ap↦-intro₂ x′ _ 𝑔′ con𝑔′ singletonIsCon 𝑡𝑥↦𝑔′ 𝑢𝑥↦x′ x′y⊔z⊑𝑔′
+  where x′y⊔z⊑𝑔′ = ⊑ₑ-intro₂ _ _ _ _
+                   (ap↦-↑directed'' _ _ _ _ _ x′z⊑𝑔′ p)
 ap↦-↑directed {𝑦 = ⟪ y , ⟪⟫ ⟫} {⟪ z , ⟪⟫ ⟫}
-  (ap↦-intro₂ x _ 𝑔 𝑡𝑥↦𝑔 𝑢𝑥↦x xy⊑𝑔) (ap↦-intro₁ p)
-  = ap↦-intro₂ x ([ 𝐵 ] y ⊔ z) 𝑔 𝑡𝑥↦𝑔 𝑢𝑥↦x xy⊔z⊑𝑔
-    where xy⊔z⊑𝑔 = ⊑ₑ-intro₂ (< x , [ 𝐵 ] y ⊔ z > ∷ ∅) 𝑔
-                   (ap↦-↑directed''' xy⊑𝑔 p)
+  (ap↦-intro₂ x _ 𝑔 _ _ 𝑡𝑥↦𝑔 𝑢𝑥↦x xy⊑𝑔) (ap↦-intro₁ p)
+  (con-tup _ _ _ _ _ _)
+  = ap↦-intro₂ _ _ _ _ singletonIsCon 𝑡𝑥↦𝑔 𝑢𝑥↦x xy⊔z⊑𝑔
+  where xy⊔z⊑𝑔 = ⊑ₑ-intro₂ _ _ _ _
+                 (ap↦-↑directed''' _ xy⊑𝑔 p)
 ap↦-↑directed {𝑦 = ⟪ y , ⟪⟫ ⟫} {⟪ z , ⟪⟫ ⟫}
-  (ap↦-intro₂ x _ 𝑔 𝑡𝑥↦𝑔 𝑢𝑥↦x xy⊑𝑔)
-  (ap↦-intro₂ x′ _ 𝑔′ 𝑡𝑥↦𝑔′ 𝑢𝑥↦x′ x′z⊑𝑔′)
-  = ap↦-intro₂ ([ 𝐴 ] x ⊔ x′) ([ 𝐵 ] y ⊔ z) (𝑔 ∪ 𝑔′)
-    𝑡𝑥↦𝑔∪𝑔′ 𝑢𝑥↦x⊔x′ ⊔⊑∪
-  where 𝑡𝑥↦𝑔∪𝑔′ = Appmap.↦-↑directed 𝑡 𝑡𝑥↦𝑔 𝑡𝑥↦𝑔′
+  (ap↦-intro₂ x _ 𝑔 _ _ 𝑡𝑥↦𝑔 𝑢𝑥↦x xy⊑𝑔)
+  (ap↦-intro₂ x′ _ 𝑔′ _ _ 𝑡𝑥↦𝑔′ 𝑢𝑥↦x′ x′z⊑𝑔′)
+  (con-tup _ _ _ _ _ _)
+  with (fromValCon (Appmap.↦-con 𝑡 𝑡𝑥↦𝑔 𝑡𝑥↦𝑔′ valConRefl))
+... | con-∪ _ _ con𝑔∪𝑔′ =
+  ap↦-intro₂ _ _ (𝑔 ∪ 𝑔′) con𝑔∪𝑔′ singletonIsCon 𝑡𝑥↦𝑔∪𝑔′ 𝑢𝑥↦x⊔x′ ⊔⊑∪
+  where conxx′ = fromValCon (Appmap.↦-con 𝑢 𝑢𝑥↦x 𝑢𝑥↦x′ valConRefl)
+        𝑡𝑥↦𝑔∪𝑔′ = Appmap.↦-↑directed 𝑡 𝑡𝑥↦𝑔 𝑡𝑥↦𝑔′
+                  (con-tup _ _ (con-∪ _ _ con𝑔∪𝑔′) _ _ con-nil)
         𝑢𝑥↦x⊔x′ = Appmap.↦-↑directed 𝑢 𝑢𝑥↦x 𝑢𝑥↦x′
-        ⊔⊑∪ = ⊑ₑ-intro₂ (< [ 𝐴 ] x ⊔ x′ , [ 𝐵 ] y ⊔ z > ∷ ∅)
-              (𝑔 ∪ 𝑔′) (ap↦-↑directed' xy⊑𝑔 x′z⊑𝑔′)
--}
+                  (con-tup _ _ conxx′ _ _ con-nil)
+        ⊔⊑∪ = ⊑ₑ-intro₂ (< [ 𝐴 ] _ ⊔ _ [ conxx′ ] , _ > ∷ ∅) _ _ con𝑔∪𝑔′
+              (ap↦-↑directed' conxx′ _ _ _ xy⊑𝑔 x′z⊑𝑔′)
