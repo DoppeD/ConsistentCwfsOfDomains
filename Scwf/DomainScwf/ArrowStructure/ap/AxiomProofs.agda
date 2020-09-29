@@ -21,7 +21,6 @@ open import Scwf.DomainScwf.Appmap.Valuation.Relation
 open import Scwf.DomainScwf.ArrowStructure.ap.Relation 𝐴 𝐵
 open import Scwf.DomainScwf.ArrowStructure.NbhSys.Definition 𝐴 𝐵
 open import Scwf.DomainScwf.ArrowStructure.NbhSys.ConFinFun 𝐴 𝐵
-open import Scwf.DomainScwf.ArrowStructure.NbhSys.Instance
 open import Scwf.DomainScwf.ArrowStructure.NbhSys.Post 𝐴 𝐵
 open import Scwf.DomainScwf.ArrowStructure.NbhSys.Pre 𝐴 𝐵
 open import Scwf.DomainScwf.ArrowStructure.NbhSys.Relation 𝐴 𝐵
@@ -63,15 +62,15 @@ ap↦-↓closed {𝑦 = ⟪ y , ⟪⟫ ⟫}
   = ap↦-intro₂ x′ y 𝑓 _ _ 𝑡𝑥↦𝑓 𝑢𝑥↦x′ x′y⊑𝑓
   where x′y⊑𝑓' = ap↦-↓closed' _ _ y⊑y′ x′y′⊑𝑓′
         x′y⊑𝑓 = ⊑ₑ-intro₂ (< x′ , y > ∷ ∅) 𝑓 singletonIsCon _ x′y⊑𝑓'
-{-
-ap↦-↑directed''' : ∀ {x y z 𝑔} → ∀ con𝑦𝑧 →
-                   [ ArrNbhSys 𝐴 𝐵 ] 𝐹 (< x , y > ∷ ∅) ⊑ 𝐹 𝑔 →
+
+ap↦-↑directed''' : ∀ {x y z 𝑔 con𝑔 conxy} → ∀ conyz →
+                   [ ArrNbhSys 𝐴 𝐵 ] (𝐹 (< x , y > ∷ ∅) conxy) ⊑ (𝐹 𝑔 con𝑔) →
                    [ 𝐵 ] z ⊑ NbhSys.⊥ 𝐵 → ∀ x′ y′ →
-                   < x′ , y′ > ∈ (< x , [ 𝐵 ] y ⊔ z [ con𝑦𝑧 ] > ∷ ∅) →
-                   ⊑ₑ-proof 𝑔 x′ y′
-ap↦-↑directed''' {x = x} {y} (⊑ₑ-intro₂ _ _ p) _ _ _ here
+                   < x′ , y′ > ∈ (< x , [ 𝐵 ] y ⊔ z [ conyz ] > ∷ ∅) →
+                   ⊑ₑ-proof 𝑔 con𝑔 x′ y′
+ap↦-↑directed''' {x = x} {y} _ (⊑ₑ-intro₂ _ _ _ _ p) _ _ _ here
   with (p x y here)
-ap↦-↑directed''' (⊑ₑ-intro₂ _ _ p) z⊑⊥ x _ here
+ap↦-↑directed''' conyz (⊑ₑ-intro₂ _ _ _ _ p) z⊑⊥ x _ here
   | record { sub = sub
            ; y⊑post = y⊑post
            ; pre⊑x = pre⊑x
@@ -80,19 +79,19 @@ ap↦-↑directed''' (⊑ₑ-intro₂ _ _ p) z⊑⊥ x _ here
   = record { sub = sub
            ; y⊑post = NbhSys.⊑-⊔ 𝐵 y⊑post
                       (NbhSys.⊑-trans 𝐵 z⊑⊥ (NbhSys.⊑-⊥ 𝐵))
+                      conyz
            ; pre⊑x = pre⊑x
            ; sub⊆𝑓 = sub⊆𝑓
            }
-           -}
-{-
-ap↦-↑directed'' : ∀ x y z 𝑔 →
-                  [ ArrNbhSys 𝐴 𝐵 ] 𝐹 (< x , z > ∷ ∅) ⊑ 𝐹 𝑔 →
+
+ap↦-↑directed'' : ∀ x y z 𝑔 → ∀ {con𝑔 conxz} → ∀ conyz →
+                  [ ArrNbhSys 𝐴 𝐵 ] (𝐹 (< x , z > ∷ ∅) conxz) ⊑ (𝐹 𝑔 con𝑔) →
                   [ 𝐵 ] y ⊑ NbhSys.⊥ 𝐵 → ∀ x′ y′ →
-                  < x′ , y′ > ∈ (< x , [ 𝐵 ] y ⊔ z > ∷ ∅) →
-                  ⊑ₑ-proof 𝑔 x′ y′
-ap↦-↑directed'' x _ z _ (⊑ₑ-intro₂ _ _ p) _ _ _ here
+                  < x′ , y′ > ∈ (< x , [ 𝐵 ] y ⊔ z [ conyz ] > ∷ ∅) →
+                  ⊑ₑ-proof 𝑔 con𝑔 x′ y′
+ap↦-↑directed'' x _ z _ _ (⊑ₑ-intro₂ _ _ _ _ p) _ _ _ here
   with (p x z here)
-ap↦-↑directed'' x y z _ _ y⊑⊥ _ _ here
+ap↦-↑directed'' x y z _ conyz _ y⊑⊥ _ _ here
   | record { sub = sub
            ; y⊑post = y⊑post
            ; pre⊑x = pre⊑x
@@ -101,24 +100,27 @@ ap↦-↑directed'' x y z _ _ y⊑⊥ _ _ here
   = record { sub = sub
            ; y⊑post = NbhSys.⊑-⊔ 𝐵 (NbhSys.⊑-trans 𝐵 y⊑⊥
                       (NbhSys.⊑-⊥ 𝐵)) y⊑post
+                      conyz
            ; pre⊑x = pre⊑x
            ; sub⊆𝑓 = sub⊆𝑓
            }
 
-ap↦-↑directed' : {𝑓 𝑓′ : NbhFinFun 𝐴 𝐵} → ∀ {x x′ y y′} →
-                 𝐹 (< x , y > ∷ ∅) ⊑ₑ 𝐹 𝑓 →
-                 𝐹 (< x′ , y′ > ∷ ∅) ⊑ₑ 𝐹 𝑓′ → ∀ x″ y″ →
-                 < x″ , y″ > ∈ (< [ 𝐴 ] x ⊔ x′ , [ 𝐵 ] y ⊔ y′ > ∷ ∅) →
-                 ⊑ₑ-proof (𝑓 ∪ 𝑓′) x″ y″
-ap↦-↑directed' {x = x} {x′} {y} {y′} (⊑ₑ-intro₂ _ _ p₁)
-  (⊑ₑ-intro₂ _ _ p₂) x″ y″ here
+ap↦-↑directed' : {𝑓 𝑓′ : NbhFinFun 𝐴 𝐵} → ∀ {x x′ y y′ con𝑓 con𝑓′ con∪} →
+                 ∀ conxx′ conyy′ conxy conx′y′ →
+                 (𝐹 (< x , y > ∷ ∅) conxy) ⊑ₑ (𝐹 𝑓 con𝑓) →
+                 (𝐹 (< x′ , y′ > ∷ ∅) conx′y′) ⊑ₑ (𝐹 𝑓′ con𝑓′) →
+                 ∀ x″ y″ →
+                 < x″ , y″ > ∈ (< [ 𝐴 ] x ⊔ x′ [ conxx′ ] , [ 𝐵 ] y ⊔ y′ [ conyy′ ] > ∷ ∅) →
+                 ⊑ₑ-proof (𝑓 ∪ 𝑓′) con∪ x″ y″
+ap↦-↑directed' {x = x} {x′} {y} {y′} {con∪ = cff con∪} conxx′ conyy′ _ _
+  (⊑ₑ-intro₂ _ _ _ _ p₁) (⊑ₑ-intro₂ _ _ _ _ p₂) x″ y″ here
   = record { sub = p₁sub ∪ p₂sub
            ; y⊑post = NbhSys.⊑-trans 𝐵
-                      (⊑-⊔-lemma₃ 𝐵 p₁y⊑post p₂y⊑post)
-                      (postLemma₁ p₁sub p₂sub)
+                      (⊑-⊔-lemma₃ 𝐵 conyy′ {!!} p₁y⊑post p₂y⊑post)
+                      (postLemma₃ p₁postable p₂postable postable∪ {!!})
            ; pre⊑x = NbhSys.⊑-trans 𝐴
-                     (preLemma₁ p₁sub p₂sub)
-                     (⊑-⊔-lemma₃ 𝐴 p₁pre⊑x p₂pre⊑x)
+                     (preLemma₃ p₁preable p₂preable preable∪ {!!})
+                     (⊑-⊔-lemma₃ 𝐴 {!!} conxx′ p₁pre⊑x p₂pre⊑x)
            ; sub⊆𝑓 = ∪-lemma₅ p₁sub⊆𝑓 p₂sub⊆𝑓
            }
   where p₁xyh = p₁ x y here
@@ -131,7 +133,13 @@ ap↦-↑directed' {x = x} {x′} {y} {y′} (⊑ₑ-intro₂ _ _ p₁)
         p₂pre⊑x = ⊑ₑ-proof.pre⊑x p₂x′y′h
         p₁sub⊆𝑓 = ⊑ₑ-proof.sub⊆𝑓 p₁xyh
         p₂sub⊆𝑓 = ⊑ₑ-proof.sub⊆𝑓 p₂x′y′h
-
+        p₁postable = ⊑ₑ-proof.postablesub p₁xyh
+        p₂postable = ⊑ₑ-proof.postablesub p₂x′y′h
+        p₁preable = ⊑ₑ-proof.preablesub p₁xyh
+        p₂preable = ⊑ₑ-proof.preablesub p₂x′y′h
+        preable∪ = {!!}
+        postable∪ = con∪ {!!} preable∪
+{-
 ap↦-↑directed : ∀ {𝑥 𝑦 𝑧} →
                 [ 𝑡 , 𝑢 ] 𝑥 ap↦ 𝑦 → [ 𝑡 , 𝑢 ] 𝑥 ap↦ 𝑧 →
                 [ 𝑡 , 𝑢 ] 𝑥 ap↦ (𝑦 ⊔ᵥ 𝑧)
@@ -157,21 +165,3 @@ ap↦-↑directed {𝑦 = ⟪ y , ⟪⟫ ⟫} {⟪ z , ⟪⟫ ⟫}
         ⊔⊑∪ = ⊑ₑ-intro₂ (< [ 𝐴 ] x ⊔ x′ , [ 𝐵 ] y ⊔ z > ∷ ∅)
               (𝑔 ∪ 𝑔′) (ap↦-↑directed' xy⊑𝑔 x′z⊑𝑔′)
 -}
-
-ap↦-con : ∀ {𝑥 𝑦 𝑥′ 𝑦′} → [ 𝑡 , 𝑢 ] 𝑥 ap↦ 𝑦 →
-          [ 𝑡 , 𝑢 ] 𝑥′ ap↦ 𝑦′ → ValCon _ 𝑥 𝑥′ →
-          ValCon _ 𝑦 𝑦′
-ap↦-con {𝑦′ = ⟪ y' , ⟪⟫ ⟫} (ap↦-intro₁ y⊑⊥) ap𝑥′↦𝑦′ _
-  = NbhSys.Con-⊔ (ValNbhSys [ 𝐵 ]) 𝑦⊑𝑦′ 𝑦′⊑𝑦′
-  where 𝑦′⊑𝑦′ = NbhSys.⊑-refl (ValNbhSys _)
-        y⊑y′ = NbhSys.⊑-trans 𝐵 y⊑⊥ (NbhSys.⊑-⊥ 𝐵)
-        𝑦⊑𝑦′ = ⊑ᵥ-cons _ _ _ y⊑y′ ⊑ᵥ-nil
-ap↦-con (ap↦-intro₂ _ _ _ _ _ _ _ _) (ap↦-intro₁ y′⊑⊥) _
-  = NbhSys.Con-⊔ (ValNbhSys [ 𝐵 ]) 𝑦⊑𝑦 𝑦′⊑𝑦
-  where 𝑦⊑𝑦 = NbhSys.⊑-refl (ValNbhSys _)
-        y′⊑y = NbhSys.⊑-trans 𝐵 y′⊑⊥ (NbhSys.⊑-⊥ 𝐵)
-        𝑦′⊑𝑦 = ⊑ᵥ-cons _ _ _ y′⊑y ⊑ᵥ-nil
-ap↦-con (ap↦-intro₂ x y 𝑓 con𝑓 conxy 𝑡𝑥↦𝑓 𝑢𝑥↦x xy⊑𝑓)
-  (ap↦-intro₂ x′ y′ 𝑓′ con𝑓′ conx′y′ 𝑡𝑥′↦𝑓′ 𝑢𝑥′↦x′ x′y′⊑𝑓′)
-  con𝑥𝑥′
-  = {!!}
