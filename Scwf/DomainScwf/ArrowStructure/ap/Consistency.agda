@@ -24,24 +24,6 @@ open import Scwf.DomainScwf.ArrowStructure.NbhSys.ConFinFun 𝐴 𝐵
 open import Scwf.DomainScwf.ArrowStructure.NbhSys.Post 𝐴 𝐵
 open import Scwf.DomainScwf.ArrowStructure.NbhSys.Pre 𝐴 𝐵
 open import Scwf.DomainScwf.ArrowStructure.NbhSys.Relation 𝐴 𝐵
-{-
-[ 𝑡 ] 𝑥 ↦ ⟪ 𝐹 𝑓 con𝑓 ⟫
-[ 𝑢 ] 𝑥 ↦ ⟪ x ⟫
-(𝐹 (< x , y > ∷ ∅)) ⊑ (𝐹 𝑓 con𝑓)
-
-[ 𝑡 ] 𝑥′ ↦ ⟪ 𝐹 𝑓′ con𝑓′ ⟫
-[ 𝑢 ] 𝑥′ ↦ ⟪ x′ ⟫
-(𝐹 (< x′ , y′ > ∷ ∅)) ⊑ (𝐹 𝑓′ con𝑓′)
-
-𝑥 and 𝑥′ are consistent.
-⟪ x ⟫ and ⟪ x′ ⟫ are consistent.
-𝑓 and 𝑓′ are consistent.
-
-Take subset sub ⊆ 𝑓 such that pre sub ⊑ x and y ⊑ post sub.
-Also subset sub′ ⊆ 𝑓′ such that pre sub′ ⊑ x′ and y′ ⊑ post sub′.
-Their union is preable, since bounded by x ⊔ x′.
-Hence postable, since 𝑓 and 𝑓′ are consistent (meaning 𝑓 ∪ 𝑓′ is).
--}
 
 ap↦-con : ∀ {𝑥 𝑦 𝑥′ 𝑦′} → [ 𝑡 , 𝑢 ] 𝑥 ap↦ 𝑦 →
           [ 𝑡 , 𝑢 ] 𝑥′ ap↦ 𝑦′ → ValCon _ 𝑥 𝑥′ →
@@ -56,7 +38,37 @@ ap↦-con (ap↦-intro₂ _ _ _ _ _ _ _ _) (ap↦-intro₁ y′⊑⊥) _
   where 𝑦⊑𝑦 = NbhSys.⊑-refl (ValNbhSys _)
         y′⊑y = NbhSys.⊑-trans 𝐵 y′⊑⊥ (NbhSys.⊑-⊥ 𝐵)
         𝑦′⊑𝑦 = ⊑ᵥ-cons _ _ _ y′⊑y ⊑ᵥ-nil
-ap↦-con (ap↦-intro₂ x y 𝑓 con𝑓 conxy 𝑡𝑥↦𝑓 𝑢𝑥↦x xy⊑𝑓)
-  (ap↦-intro₂ x′ y′ 𝑓′ con𝑓′ conx′y′ 𝑡𝑥′↦𝑓′ 𝑢𝑥′↦x′ x′y′⊑𝑓′)
+ap↦-con
+  (ap↦-intro₂ x y 𝑓 con𝑓 conxy 𝑡𝑥↦𝑓 𝑢𝑥↦x
+  (⊑ₑ-intro₂ _ _ _ _ p₁))
+  (ap↦-intro₂ x′ y′ 𝑓′ con𝑓′ conx′y′ 𝑡𝑥′↦𝑓′ 𝑢𝑥′↦x′
+  (⊑ₑ-intro₂ _ _ _ _ p₂))
   con𝑥𝑥′
-  = {!!}
+  with (fromValCon (Appmap.↦-con 𝑡 𝑡𝑥↦𝑓 𝑡𝑥′↦𝑓′ con𝑥𝑥′))
+... | con-∪ _ _ (cff p) = toValCon conyy′
+  where p₁proof = p₁ x y here
+        p₂proof = p₂ x′ y′ here
+        p₁sub = ⊑ₑ-proof.sub p₁proof
+        p₂sub = ⊑ₑ-proof.sub p₂proof
+        p₁sub⊆𝑓 = ⊑ₑ-proof.sub⊆𝑓 p₁proof
+        p₂sub⊆𝑓 = ⊑ₑ-proof.sub⊆𝑓 p₂proof
+        p₁y⊑post = ⊑ₑ-proof.y⊑post p₁proof
+        p₂y⊑post = ⊑ₑ-proof.y⊑post p₂proof
+        p₁pre⊑x = ⊑ₑ-proof.pre⊑x p₁proof
+        p₂pre⊑x = ⊑ₑ-proof.pre⊑x p₂proof
+        p₁postable = ⊑ₑ-proof.postablesub p₁proof
+        p₂postable = ⊑ₑ-proof.postablesub p₂proof
+        p₁preable = ⊑ₑ-proof.preablesub p₁proof
+        p₂preable = ⊑ₑ-proof.preablesub p₂proof
+        conxx′ = fromValCon (Appmap.↦-con 𝑢 𝑢𝑥↦x 𝑢𝑥′↦x′ con𝑥𝑥′)
+        p₁pre⊑x⊔x′ = ⊑-⊔-lemma₄ 𝐴 p₁pre⊑x conxx′
+        p₂pre⊑x⊔x′ = ⊑-⊔-lemma₅ 𝐴 p₂pre⊑x conxx′
+        preable∪ = preUnionLemma p₁preable p₂preable
+                   p₁pre⊑x⊔x′ p₂pre⊑x⊔x′
+        postable∪ = p (∪-lemma₅ p₁sub⊆𝑓 p₂sub⊆𝑓) preable∪
+        y⊑post∪ = NbhSys.⊑-trans 𝐵 p₁y⊑post
+                  (postLemma₁ {postable𝑓 = p₁postable})
+        y′⊑post∪ = NbhSys.⊑-trans 𝐵 p₂y⊑post
+                   (postLemma₂ {postable𝑓′ = p₂postable}
+                   {postable∪})
+        conyy′ = NbhSys.Con-⊔ 𝐵 y⊑post∪ y′⊑post∪
