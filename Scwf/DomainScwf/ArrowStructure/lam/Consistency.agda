@@ -9,43 +9,83 @@ module Scwf.DomainScwf.ArrowStructure.lam.Consistency
   {Γ : Ctx n}
   (𝑡 : tAppmap (𝐴 :: Γ) [ 𝐵 ]) where
 
-open import Appmap.Lemmata
 open import Base.FinFun
 open import NbhSys.Definition
-open import NbhSys.Lemmata
+open import Scwf.DomainScwf.Appmap.Valuation.AxiomProofs
 open import Scwf.DomainScwf.Appmap.Valuation.Definition
+open import Scwf.DomainScwf.Appmap.Valuation.Lemmata
 open import Scwf.DomainScwf.Appmap.Valuation.Instance
 open import Scwf.DomainScwf.Appmap.Valuation.Relation
-open import Scwf.DomainScwf.ArrowStructure.lam.Lemmata 𝐴 𝐵 𝑡
 open import Scwf.DomainScwf.ArrowStructure.lam.Relation 𝐴 𝐵
-open import Scwf.DomainScwf.ArrowStructure.NbhSys.ConFinFun 𝐴 𝐵
 open import Scwf.DomainScwf.ArrowStructure.NbhSys.Definition 𝐴 𝐵
-open import Scwf.DomainScwf.ArrowStructure.NbhSys.Instance
 open import Scwf.DomainScwf.ArrowStructure.NbhSys.Post 𝐴 𝐵
 open import Scwf.DomainScwf.ArrowStructure.NbhSys.Pre 𝐴 𝐵
-open import Scwf.DomainScwf.ArrowStructure.NbhSys.Relation 𝐴 𝐵
-open import Scwf.DomainScwf.ArrowStructure.Variables 𝐴 𝐵
 
-record ⊑ₑ-proof₄ (𝑓 𝑓′ : NbhFinFun 𝐴 𝐵) (𝑥 : Valuation Γ) : Set where
+lamPrePost : ∀ {x y 𝑓 𝑥} →
+             ∀ preable𝑓 conxpre𝑓 postable𝑓 conypost𝑓 →
+             [ 𝑡 ] ⟪ x , 𝑥 ⟫ ↦ ⟪ y ⟫ →
+             [ 𝑡 ] ⟪ pre 𝑓 preable𝑓 , 𝑥 ⟫ ↦ ⟪ post 𝑓 postable𝑓 ⟫ →
+             [ 𝑡 ] ⟪ pre (< x , y > ∷ 𝑓)
+                     (pre-cons preable𝑓 conxpre𝑓) , 𝑥 ⟫ ↦
+                   ⟪ post (< x , y > ∷ 𝑓)
+                     (post-cons postable𝑓 conypost𝑓) ⟫
+lamPrePost {x} {y} {𝑥 = 𝑥} preable𝑓 conxpre𝑓 postable𝑓 conypost𝑓 𝑡x𝑥↦y 𝑡x𝑥↦post𝑓
+  = Appmap.↦-mono 𝑡 x𝑥⊑pre𝑓𝑥 𝑡x𝑥↦postxy𝑓
+  where x𝑥⊑pre𝑓𝑥 = ⊑ᵥ-cons _ ⟪ x , 𝑥 ⟫ _ (NbhSys.⊑-⊔-fst 𝐴 conxpre𝑓)
+                   ⊑ᵥ-refl
+        𝑡x𝑥↦postxy𝑓 = Appmap.↦-↑directed 𝑡 𝑡x𝑥↦y {!!}
+                      (toValCon conypost𝑓)
+{-
+lamPrePost {x} {y} {𝑥 = 𝑥}
+  (pre-cons a conypre𝑓) postable𝑓 conypost𝑓 𝑡x𝑥↦y 𝑡x𝑥↦post𝑓
+  = Appmap.↦-mono 𝑡 x𝑥⊑pre𝑓𝑥 𝑡x𝑥↦postxy𝑓
+  where x𝑥⊑pre𝑓𝑥 = ⊑ᵥ-cons _ ⟪ x , 𝑥 ⟫ _ (NbhSys.⊑-⊔-fst 𝐴 conypre𝑓)
+                   ⊑ᵥ-refl
+        𝑡x𝑥↦postxy𝑓 = Appmap.↦-↑directed 𝑡 𝑡x𝑥↦y ?
+                      (toValCon conypost𝑓)
+-}
+
+record ⊑ₑ-proof₄ (𝑓 : NbhFinFun 𝐴 𝐵) (preable𝑓 : Preable 𝑓)
+                 (𝑥 : Valuation Γ) : Set where
   field
-    sub : NbhFinFun 𝐴 𝐵
-    preablesub : Preable sub
-    postablesub : Postable sub
-    sub⊆𝑓′ : sub ⊆ 𝑓′
-    asd : [ 𝑡 ] ⟪ pre sub preablesub , 𝑥 ⟫ ↦ ⟪ post sub postablesub ⟫
+    postable𝑓 : Postable 𝑓
+    𝑡pre↦post : [ 𝑡 ] ⟪ pre 𝑓 preable𝑓 , 𝑥 ⟫ ↦ ⟪ post 𝑓 postable𝑓 ⟫
 
-lam↦-con' : ∀ {𝑓 𝑓′ sub 𝑥 𝑥′} →
+lam↦-con'' : ∀ {𝑓 𝑥} →
+             (∀ x y → < x , y > ∈ 𝑓 → [ 𝑡 ] ⟪ x , 𝑥 ⟫ ↦ ⟪ y ⟫) →
+             (preable𝑓 : Preable 𝑓) →
+             ⊑ₑ-proof₄ 𝑓 preable𝑓 𝑥
+lam↦-con'' _ pre-nil
+  = record { postable𝑓 = post-nil
+           ; 𝑡pre↦post = Appmap.↦-bottom 𝑡
+           }
+lam↦-con'' {𝑓 = < x , y > ∷ 𝑓}
+  p (pre-cons preable𝑓 conxpre𝑓)
+  = record { postable𝑓 = postablexy𝑓
+           ; 𝑡pre↦post = lamPrePost preable𝑓 _ recpostable𝑓 _ (p _ _ here) rec𝑡pre↦post
+           }
+  where rec = lam↦-con'' (λ x′ y′ x′y′∈𝑓 → p x′ y′
+              (there x′y′∈𝑓)) preable𝑓
+        recpostable𝑓 = ⊑ₑ-proof₄.postable𝑓 rec
+        rec𝑡pre↦post = ⊑ₑ-proof₄.𝑡pre↦post rec
+        conypost𝑓 = fromValCon (Appmap.↦-con 𝑡
+                      (p x y here) rec𝑡pre↦post
+                      (con-tup _ _ conxpre𝑓 _ _ valConRefl))
+        postablexy𝑓 = post-cons recpostable𝑓 conypost𝑓
+
+lam↦-con' : ∀ {𝑓 𝑓′ 𝑥 𝑥′ con𝑥𝑥′} →
             (∀ x y → < x , y > ∈ 𝑓 → [ 𝑡 ] ⟪ x , 𝑥 ⟫ ↦ ⟪ y ⟫) →
             (∀ x y → < x , y > ∈ 𝑓′ → [ 𝑡 ] ⟪ x , 𝑥′ ⟫ ↦ ⟪ y ⟫) →
-            sub ⊆ (𝑓 ∪ 𝑓′) →
-            Preable sub → Postable sub
-lam↦-con' {sub = ∅} p₁ p₂ sub⊆∪ preable = post-nil
-lam↦-con' {sub = < x , y > ∷ sub} p₁ p₂ sub⊆∪
-  (pre-cons preablesub conxpresub)
-  = boundedPostable {max = [ 𝐵 ] y ⊔ (post sub rec) [ conypostsub ]} (λ x′y′∈sub → {!!})
-  where rec = lam↦-con' p₁ p₂ (⊆-lemma₂ < x , y > sub⊆∪)
-              preablesub
-        conypostsub = fromValCon (Appmap.↦-con 𝑡 {!!} {!!} {!!})
+            ∀ x y → < x , y > ∈ (𝑓 ∪ 𝑓′) →
+            [ 𝑡 ] ⟪ x , [ ValNbhSys Γ ] 𝑥 ⊔ 𝑥′ [ con𝑥𝑥′ ] ⟫ ↦ ⟪ y ⟫
+lam↦-con' {𝑓} {con𝑥𝑥′ = con𝑥𝑥′} p₁ p₂ x y xy∈∪
+  with (∪-lemma₂ {𝑓 = 𝑓} < x , y > xy∈∪)
+... | inl xy∈𝑓 = Appmap.↦-mono 𝑡 x𝑥⊑x𝑥⊔𝑥′ (p₁ x y xy∈𝑓)
+  where 𝑥⊑𝑥⊔𝑥′ = NbhSys.⊑-⊔-fst (ValNbhSys Γ) con𝑥𝑥′
+        x𝑥⊑x𝑥⊔𝑥′ = ⊑ᵥ-cons _ _ _ (NbhSys.⊑-refl 𝐴) 𝑥⊑𝑥⊔𝑥′
+... | inr xy∈𝑓′ = Appmap.↦-mono 𝑡 x𝑥′⊑x𝑥⊔𝑥′ (p₂ x y xy∈𝑓′)
+  where 𝑥′⊑𝑥⊔𝑥′ = NbhSys.⊑-⊔-snd (ValNbhSys Γ) con𝑥𝑥′
+        x𝑥′⊑x𝑥⊔𝑥′ = ⊑ᵥ-cons _ _ _ (NbhSys.⊑-refl 𝐴) 𝑥′⊑𝑥⊔𝑥′
 
 lam↦-con : ∀ {𝑥 𝑦 𝑥′ 𝑦′} → [ 𝑡 ] 𝑥 lam↦ 𝑦 →
            [ 𝑡 ] 𝑥′ lam↦ 𝑦′ → ValCon _ 𝑥 𝑥′ →
@@ -58,5 +98,4 @@ lam↦-con (lam↦-intro₂ _ _ _ _) lam↦-intro₁ _
   = toValCon conₑ-⊥₁
 lam↦-con (lam↦-intro₂ _ 𝑓 con𝑓 p₁) (lam↦-intro₂ _ 𝑓′ con𝑓′ p₂)
   con𝑥𝑥′
-  = toValCon con𝑓𝑓′
-  where con𝑓𝑓′ = con-∪ _ _ (cff (lam↦-con' p₁ p₂))
+  = {!⊑ₑ-proof₄!}

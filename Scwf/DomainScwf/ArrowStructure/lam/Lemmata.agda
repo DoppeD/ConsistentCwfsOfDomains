@@ -26,12 +26,14 @@ open import Scwf.DomainScwf.ArrowStructure.Variables 𝐴 𝐵
 
 open import Agda.Builtin.Equality
 
-shrinkLam : ∀ {𝑥 con𝑓 con𝑓′} → 𝑓 ⊆ 𝑓′ → [ 𝑡 ] 𝑥 lam↦ ⟪ 𝐹 𝑓′ con𝑓′ ⟫ →
+shrinkLam : ∀ {𝑥 con𝑓 con𝑓′} → 𝑓 ⊆ 𝑓′ →
+            [ 𝑡 ] 𝑥 lam↦ ⟪ 𝐹 𝑓′ con𝑓′ ⟫ →
             [ 𝑡 ] 𝑥 lam↦ ⟪ 𝐹 𝑓 con𝑓 ⟫
 shrinkLam {𝑓 = 𝑓} 𝑓⊆𝑓′ (lam↦-intro₂ 𝑥 𝑓′ _ p)
   = lam↦-intro₂ 𝑥 𝑓 _ (λ x y xy∈𝑓 → p x y (𝑓⊆𝑓′ < x , y > xy∈𝑓))
 
--- The first component of any pair in a FinFun 𝑓 is smaller than pre 𝑓.
+-- The first component of any pair in a FinFun 𝑓 is smaller
+-- than pre 𝑓.
 preBiggest : ∀ {x y 𝑓 preable𝑓} → < x , y > ∈ 𝑓 →
              [ 𝐴 ] x ⊑ pre 𝑓 preable𝑓
 preBiggest {preable𝑓 = pre-nil} = xy∈∅-abs
@@ -45,8 +47,8 @@ preBiggest {preable𝑓 = pre-cons preable𝑓 conx′pre𝑓} (there xy∈𝑓)
                 [ 𝑡 ] 𝑥 lam↦ ⟪ 𝐹 𝑓 con𝑓 ⟫ →
                 ∀ x y → < x , y > ∈ 𝑓 →
                 [ 𝑡 ] ⟪ pre 𝑓 preable𝑓 , 𝑥 ⟫ ↦ ⟪ y ⟫
-↓closedLemma'  {𝑓 = (x ∷ 𝑓′)} {𝑥 = 𝑥} _ preable (lam↦-intro₂ _ _ _ p)
-  x′ y′ x′y′∈𝑓
+↓closedLemma'  {𝑓 = (x ∷ 𝑓′)} {𝑥 = 𝑥} _ preable
+  (lam↦-intro₂ _ _ _ p) x′ y′ x′y′∈𝑓
   = Appmap.↦-mono 𝑡 a𝑥⊑p𝑓𝑥 (p x′ y′ x′y′∈𝑓)
   where a⊑p𝑓 = preBiggest x′y′∈𝑓
         a𝑥⊑p𝑓𝑥 = ⊑ᵥ-cons (𝐴 :: Γ) ⟪ x′ , 𝑥 ⟫
