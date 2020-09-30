@@ -22,20 +22,20 @@ open import Ucwf.DomainUcwf.UniType.SizedFinFun
 lam↦-mono : ∀ {𝑥 𝑦 𝑧} → ⊑ᵥ (nToCtx n) 𝑥 𝑦 →
             [ 𝑡 ] 𝑥 lam↦ 𝑧 → [ 𝑡 ] 𝑦 lam↦ 𝑧
 lam↦-mono {𝑦 = 𝑦} 𝑥⊑𝑦 lam↦-intro₁ = lam↦-intro₁
-lam↦-mono {𝑥 = 𝑥} {𝑦 = 𝑦} 𝑥⊑𝑦 (lam↦-intro₂ _ 𝑓 p)
-  = lam↦-intro₂ 𝑦 𝑓 λ x y xy∈𝑓 → Appmap.↦-mono 𝑡
+lam↦-mono {𝑥 = 𝑥} {𝑦 = 𝑦} 𝑥⊑𝑦 (lam↦-intro₂ p)
+  = lam↦-intro₂ λ xy∈𝑓 → Appmap.↦-mono 𝑡
     (⊑ᵥ-cons (nToCtx (suc n)) (NbhSys.⊑-refl UniType) 𝑥⊑𝑦)
-    (p x y xy∈𝑓)
+    (p xy∈𝑓)
 
 lam↦-bottom : ∀ {𝑥} → [ 𝑡 ] 𝑥 lam↦ ⟪ ⊥ᵤ ⟫
 lam↦-bottom = lam↦-intro₁
 
 lam↦-↓closed' : ∀ {𝑥 𝑓 𝑓′} → [ UniType ] λᵤ 𝑓 ⊑ λᵤ 𝑓′ →
                 [ 𝑡 ] 𝑥 lam↦ ⟪ λᵤ 𝑓′ ⟫ →
-                ∀ x y → < x , y >ₛ ∈ₛ 𝑓 →
+                ∀ {x y} → < x , y >ₛ ∈ₛ 𝑓 →
                 [ 𝑡 ] ⟪ x ,, 𝑥 ⟫ ↦ ⟪ y ⟫
-lam↦-↓closed' (⊑ᵤ-intro₂ _ _ p) _ x y xy∈𝑓 with (p x y xy∈𝑓)
-lam↦-↓closed' {𝑥 = 𝑥} _ 𝑡𝑥↦𝑓′ x y xy∈𝑓
+lam↦-↓closed' (⊑ᵤ-intro₂ _ _ p) _ xy∈𝑓 with (p _ _ xy∈𝑓)
+lam↦-↓closed' {𝑥 = 𝑥} _ 𝑡𝑥↦𝑓′ xy∈𝑓
   | record { sub = sub
            ; y⊑ᵤpost = y⊑ᵤpost
            ; pre⊑ᵤx = pre⊑ᵤx
@@ -55,18 +55,18 @@ lam↦-↓closed {𝑦 = ⟪ ⊥ᵤ ,, _ ⟫} {⟪ 𝑧 ,, _ ⟫}
   (⊑ᵥ-cons _ 𝑦⊑𝑧 ⊑ᵥ-nil) 𝑡𝑥↦𝑧 = lam↦-intro₁
 lam↦-↓closed {𝑥 = 𝑥} {⟪ λᵤ 𝑓 ,, _ ⟫} {⟪ λᵤ 𝑓′ ,, _ ⟫}
   (⊑ᵥ-cons _ 𝑓⊑𝑓′ ⊑ᵥ-nil) 𝑡𝑥↦𝑓′
-  = lam↦-intro₂ 𝑥 𝑓 (lam↦-↓closed' 𝑓⊑𝑓′ 𝑡𝑥↦𝑓′)
+  = lam↦-intro₂ (lam↦-↓closed' 𝑓⊑𝑓′ 𝑡𝑥↦𝑓′)
 
 lam↦-↑directed' : ∀ {𝑥 𝑓 𝑓′} → [ 𝑡 ] 𝑥 lam↦ ⟪ λᵤ 𝑓 ⟫ →
-                  [ 𝑡 ] 𝑥 lam↦ ⟪ λᵤ 𝑓′ ⟫ → ∀ x y →
+                  [ 𝑡 ] 𝑥 lam↦ ⟪ λᵤ 𝑓′ ⟫ → ∀ {x y} →
                   < x , y >ₛ ∈ₛ (𝑓 ∪ₛ 𝑓′) →
                   [ 𝑡 ] ⟪ x ,, 𝑥 ⟫ ↦ ⟪ y ⟫
-lam↦-↑directed' {𝑓 = 𝑓} _ _ x y xy∈𝑓∪𝑓′
-  with (∪ₛ-lemma₂ {𝑓 = 𝑓} < x , y >ₛ xy∈𝑓∪𝑓′)
-lam↦-↑directed' (lam↦-intro₂ _ _ p) _ x y _
-  | inl xy∈𝑓 = p x y xy∈𝑓
-lam↦-↑directed' _ (lam↦-intro₂ _ _ p) x y _
-  | inr xy∈𝑓′ = p x y xy∈𝑓′
+lam↦-↑directed' {𝑓 = 𝑓} _ _ xy∈𝑓∪𝑓′
+  with (∪ₛ-lemma₂ {𝑓 = 𝑓} < _ , _ >ₛ xy∈𝑓∪𝑓′)
+lam↦-↑directed' (lam↦-intro₂ p) _ _
+  | inl xy∈𝑓 = p xy∈𝑓
+lam↦-↑directed' _ (lam↦-intro₂ p) _
+  | inr xy∈𝑓′ = p xy∈𝑓′
 
 lam↦-↑directed : ∀ {𝑥 𝑦 𝑧} → [ 𝑡 ] 𝑥 lam↦ 𝑦 →
                  [ 𝑡 ] 𝑥 lam↦ 𝑧 → (con𝑦𝑧 : ValCon _ 𝑦 𝑧) →
@@ -82,11 +82,5 @@ lam↦-↑directed {𝑦 = ⟪ ⊥ᵤ ,, ⟪⟫ ⟫} {⟪ λᵤ 𝑓′ ,, ⟪�
   = 𝑡𝑥lam↦𝑧
 lam↦-↑directed {𝑥 = 𝑥} {⟪ λᵤ 𝑓 ,, ⟪⟫ ⟫} {⟪ λᵤ 𝑓′ ,, ⟪⟫ ⟫}
   𝑡𝑥lam↦𝑓 𝑡𝑥lam↦𝑓′ (con-tup _ _)
-  = lam↦-intro₂ 𝑥 (𝑓 ∪ₛ 𝑓′) 𝑡x𝑥↦y
+  = lam↦-intro₂ 𝑡x𝑥↦y
   where 𝑡x𝑥↦y = lam↦-↑directed' 𝑡𝑥lam↦𝑓 𝑡𝑥lam↦𝑓′
-
-lam↦-con : ∀ {𝑥 𝑦 𝑥′ 𝑦′} → [ 𝑡 ] 𝑥 lam↦ 𝑦 →
-           [ 𝑡 ] 𝑥′ lam↦ 𝑦′ → ValCon _ 𝑥 𝑥′ →
-           ValCon _ 𝑦 𝑦′
-lam↦-con {𝑦 = ⟪ _ ,, ⟪⟫ ⟫} {𝑦′ = ⟪ _ ,, ⟪⟫ ⟫} _ _ _
-  = con-tup con-all con-nil

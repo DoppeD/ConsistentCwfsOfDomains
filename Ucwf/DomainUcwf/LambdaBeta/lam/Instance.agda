@@ -4,6 +4,7 @@ module Ucwf.DomainUcwf.LambdaBeta.lam.Instance where
 
 open import Base.Variables
 open import Ucwf.DomainUcwf.Appmap.Definition
+open import Ucwf.DomainUcwf.Appmap.Valuation
 open import Ucwf.DomainUcwf.LambdaBeta.lam.AxiomProofs
 open import Ucwf.DomainUcwf.LambdaBeta.lam.Relation
 
@@ -15,4 +16,4 @@ Appmap.↦-mono (lam 𝑡)      = lam↦-mono
 Appmap.↦-bottom (lam 𝑡)    = lam↦-bottom
 Appmap.↦-↓closed (lam 𝑡)   = lam↦-↓closed
 Appmap.↦-↑directed (lam 𝑡) = lam↦-↑directed
-Appmap.↦-con (lam 𝑡)       = lam↦-con
+Appmap.↦-con (lam 𝑡)       = λ _ _ _ → valConAll

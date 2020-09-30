@@ -22,8 +22,8 @@ lamCongLemma : 𝑡 ≼ 𝑡′ → ∀ {𝑥 𝑦} → [ lam 𝑡 ] 𝑥 ↦ �
                [ lam 𝑡′ ] 𝑥 ↦ 𝑦
 lamCongLemma _ {𝑦 = ⟪ ⊥ᵤ ,, ⟪⟫ ⟫} _ = lam↦-intro₁
 lamCongLemma (≼-intro p₁) {𝑦 = ⟪ λᵤ 𝑓 ,, ⟪⟫ ⟫}
-  (lam↦-intro₂ _ _ p₂)
-  = lam↦-intro₂ _ _ λ x y xy∈𝑓 → p₁ (p₂ x y xy∈𝑓)
+  (lam↦-intro₂ p₂)
+  = lam↦-intro₂ λ xy∈𝑓 → p₁ (p₂ xy∈𝑓)
 
 lamCong : 𝑡 ≈ 𝑡′ → lam 𝑡 ≈ lam 𝑡′
 lamCong (≈-intro 𝑡≼𝑡′ 𝑡′≼𝑡)
