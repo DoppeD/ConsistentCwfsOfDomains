@@ -14,14 +14,12 @@ open import Scwf.DomainScwf.ArrowStructure.NbhSys.Definition 𝐴 𝐵
 open import Scwf.DomainScwf.ArrowStructure.NbhSys.Instance
 
 lamCongLemma : {𝑡 𝑡′ : tAppmap (𝐴 :: Γ) [ 𝐵 ]} →
-               𝑡 ≼ 𝑡′ → ∀ 𝑥 𝑦 →
+               𝑡 ≼ 𝑡′ → ∀ {𝑥 𝑦} →
                [ lam 𝑡 ] 𝑥 ↦ 𝑦 → [ lam 𝑡′ ] 𝑥 ↦ 𝑦
-lamCongLemma (≼-intro p₁) 𝑥 ⟪ ⊥ₑ , ⟪⟫ ⟫ lam↦-intro₁
+lamCongLemma (≼-intro p₁) lam↦-intro₁
   = lam↦-intro₁
-lamCongLemma (≼-intro p₁) 𝑥 ⟪ 𝐹 𝑓 _ , ⟪⟫ ⟫
-  (lam↦-intro₂ _ _ _ p₂)
-  = lam↦-intro₂ 𝑥 𝑓 _ (λ x y xy∈𝑓 → p₁ ⟪ x , 𝑥 ⟫ ⟪ y ⟫
-    (p₂ x y xy∈𝑓))
+lamCongLemma (≼-intro p₁) (lam↦-intro₂ _ _ _ p₂)
+  = lam↦-intro₂ _ _ _ (λ x y xy∈𝑓 → p₁ (p₂ x y xy∈𝑓))
 
 lamCong : {𝑡 𝑡′ : tAppmap (𝐴 :: Γ) [ 𝐵 ]} → 𝑡 ≈ 𝑡′ →
           lam 𝑡 ≈ lam 𝑡′

@@ -35,27 +35,26 @@ private
     γ : tAppmap Δ Γ
     𝑡 : tAppmap (𝐴 :: Γ) [ 𝐵 ]
 
-lamSubLemma₁' : ∀ 𝑥 𝑓 → ∀ {con𝑓} →
+lamSubLemma₁' : ∀ {𝑥 𝑓} → ∀ {con𝑓} →
                 [ lam 𝑡 ∘ γ ] 𝑥 ↦ ⟪ 𝐹 𝑓 con𝑓 ⟫ →
                 ∀ x y → < x , y > ∈ 𝑓 →
                 [ 𝑡 ∘ ⟨ γ ∘ (p Δ 𝐴) , q Δ 𝐴 ⟩ ] ⟪ x , 𝑥 ⟫ ↦ ⟪ y ⟫
-lamSubLemma₁' {Δ = Δ} 𝑥 _
-  (∘↦-intro _ 𝑦 _ γ𝑥↦𝑦 (lam↦-intro₂ _ _ 𝑓' p)) x y xy∈𝑓
-  = ∘↦-intro ⟪ x , 𝑥 ⟫ ⟪ x , 𝑦 ⟫ ⟪ y ⟫ γ∘pq↦ (p x y xy∈𝑓)
-  where q↦ = q↦-intro ⟪ x , 𝑥 ⟫ ⟪ x ⟫ (NbhSys.⊑-refl 𝐴)
-        p↦𝑥 = p↦-intro ⟪ x , 𝑥 ⟫ 𝑥
-              (NbhSys.⊑-refl (ValNbhSys _))
-        γ∘p↦ = ∘↦-intro ⟪ x , 𝑥 ⟫ 𝑥 𝑦 p↦𝑥 γ𝑥↦𝑦
-        γ∘pq↦ = ⟨⟩↦-intro ⟪ x , 𝑥 ⟫ ⟪ x , 𝑦 ⟫ γ∘p↦ q↦
+lamSubLemma₁' {Δ = Δ} (∘↦-intro γ𝑥↦𝑦 (lam↦-intro₂ _ _ 𝑓' p))
+  x y xy∈𝑓
+  = ∘↦-intro γ∘pq↦ (p x y xy∈𝑓)
+  where q↦ = q↦-intro (NbhSys.⊑-refl 𝐴)
+        p↦𝑥 = p↦-intro (NbhSys.⊑-refl (ValNbhSys _))
+        γ∘p↦ = ∘↦-intro p↦𝑥 γ𝑥↦𝑦
+        γ∘pq↦ = ⟨⟩↦-intro γ∘p↦ q↦
 
-lamSubLemma₁ : ∀ 𝑥 𝑦 → [ lam 𝑡 ∘ γ ] 𝑥 ↦ 𝑦 →
+lamSubLemma₁ : ∀ {𝑥 𝑦} → [ lam 𝑡 ∘ γ ] 𝑥 ↦ 𝑦 →
                [ lam (𝑡 ∘ ⟨ (γ ∘ p Δ 𝐴) , q Δ 𝐴 ⟩) ] 𝑥 ↦ 𝑦
-lamSubLemma₁ {𝑡 = 𝑡} {Δ = Δ} {γ = γ} 𝑥 ⟪ ⊥ₑ , ⟪⟫ ⟫
-  (∘↦-intro _ 𝑓' _ γ𝑥↦𝑓' lam𝑓'↦𝑓)
+lamSubLemma₁ {𝑡 = 𝑡} {Δ = Δ} {γ = γ} {𝑦 = ⟪ ⊥ₑ , ⟪⟫ ⟫}
+  (∘↦-intro γ𝑥↦𝑓' lam𝑓'↦𝑓)
   = Appmap.↦-bottom (lam (𝑡 ∘ ⟨ (γ ∘ p Δ 𝐴) , q Δ 𝐴 ⟩))
-lamSubLemma₁ 𝑥 ⟪ 𝐹 𝑓 con𝑓 , ⟪⟫ ⟫ (∘↦-intro _ 𝑓' _ γ𝑥↦𝑓' lam𝑓'↦𝑓)
-  = lam↦-intro₂ 𝑥 𝑓 _ (lamSubLemma₁' 𝑥 𝑓 lam𝑥↦𝑓)
-  where lam𝑥↦𝑓 = ∘↦-intro 𝑥 𝑓' ⟪ 𝐹 𝑓 con𝑓 ⟫ γ𝑥↦𝑓' lam𝑓'↦𝑓
+lamSubLemma₁ {𝑦 = ⟪ 𝐹 𝑓 con𝑓 , ⟪⟫ ⟫} (∘↦-intro γ𝑥↦𝑓' lam𝑓'↦𝑓)
+  = lam↦-intro₂ _ _ _ (lamSubLemma₁' lam𝑥↦𝑓)
+  where lam𝑥↦𝑓 = ∘↦-intro γ𝑥↦𝑓' lam𝑓'↦𝑓
 
 -- From a proof that 𝑡 ∘ ⟨ (γ ∘ p Δ 𝐴) , q Δ 𝐴 ⟩ maps
 -- 𝑥 to ⟪ 𝐹 𝑓 ⟫, we can find a valuation 𝑦 such that
@@ -103,9 +102,8 @@ getP-Struct 𝑥 (< x , y > ∷ 𝑓) (lam↦-intro₂ _ _ _ p)
   with (p x y here)
 getP-Struct {Γ = Γ} {𝑡 = 𝑡} {γ = γ} 𝑥 (< x , y > ∷ 𝑓)
   {con𝑓 = con𝑓} (lam↦-intro₂ _ _ _ p)
-  | ∘↦-intro _ ⟪ z , 𝑧 ⟫ _ (⟨⟩↦-intro _ _
-    (∘↦-intro _ 𝑦 _ (p↦-intro _ _ 𝑦⊑𝑥) γ𝑦↦𝑧)
-    (q↦-intro _ _ z⊑x)) 𝑡z𝑧↦y
+  | ∘↦-intro {𝑦 = ⟪ z , 𝑧 ⟫} (⟨⟩↦-intro (∘↦-intro (p↦-intro 𝑦⊑𝑥) γ𝑦↦𝑧)
+    (q↦-intro z⊑x)) 𝑡z𝑧↦y
   = record { 𝑦 = big⊔
            ; γ𝑥↦𝑦 = Appmap.↦-↑directed γ γ𝑥↦𝑧 rec-γ𝑥↦𝑦 con𝑧rec𝑦
            ; λ𝑡𝑦 = getP-Struct' 𝑥 x y 𝑧 rec-𝑦 𝑓 {conxy𝑓 = con𝑓}
@@ -128,19 +126,19 @@ getP-Struct {Γ = Γ} {𝑡 = 𝑡} {γ = γ} 𝑥 (< x , y > ∷ 𝑓)
         con𝑧rec𝑦 = Appmap.↦-con γ γ𝑦↦𝑧 rec-γ𝑥↦𝑦 con𝑦𝑥
         big⊔ = 𝑧 ⊔ᵥ rec-𝑦 [ con𝑧rec𝑦 ]
 
-lamSubLemma₂ : ∀ 𝑥 y →
+lamSubLemma₂ : ∀ {𝑥 y} →
                [ 𝑡 ∘ ⟨ (γ ∘ p Δ 𝐴) , q Δ 𝐴 ⟩ ] 𝑥 lam↦ y →
                [ lam 𝑡 ∘ γ ] 𝑥 ↦ y
-lamSubLemma₂ {𝑡 = 𝑡} {γ = γ} 𝑥 _ lam↦-intro₁
+lamSubLemma₂ {𝑡 = 𝑡} {γ = γ} lam↦-intro₁
   = Appmap.↦-bottom (lam 𝑡 ∘ γ)
-lamSubLemma₂ 𝑥 _ (lam↦-intro₂ _ 𝑓 con𝑓 p)
-  with (getP-Struct 𝑥 𝑓 {con𝑓 = con𝑓} (lam↦-intro₂ 𝑥 𝑓 _ p))
-lamSubLemma₂ {𝑡 = 𝑡} {γ = γ} 𝑥 _ (lam↦-intro₂ _ 𝑓 _ p)
+lamSubLemma₂ (lam↦-intro₂ _ 𝑓 con𝑓 p)
+  with (getP-Struct _ _ {con𝑓 = con𝑓} (lam↦-intro₂ _ _ _ p))
+lamSubLemma₂ {𝑡 = 𝑡} {γ = γ} (lam↦-intro₂ _ 𝑓 _ p)
   | record { 𝑦 = 𝑦
            ; γ𝑥↦𝑦 = γ𝑥↦𝑦
            ; λ𝑡𝑦 = λ𝑡𝑦
            }
-  = ∘↦-intro 𝑥 𝑦 ⟪ 𝐹 𝑓 _ ⟫ γ𝑥↦𝑦 (lam↦-intro₂ 𝑦 𝑓 _ λ𝑡𝑦)
+  = ∘↦-intro γ𝑥↦𝑦 (lam↦-intro₂ 𝑦 𝑓 _ λ𝑡𝑦)
 
 lamSub : ∀ {Γ : Ctx n} → (γ : tAppmap Δ Γ) → ∀ 𝑡 →
          (lam 𝑡 ∘ γ) ≈ lam (𝑡 ∘ ⟨ (γ ∘ p Δ 𝐴) , q Δ 𝐴 ⟩)

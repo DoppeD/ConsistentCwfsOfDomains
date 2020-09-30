@@ -13,6 +13,6 @@ open import Scwf.DomainScwf.ProductStructure.NbhSys.Instance
 
 data fst↦ (𝑡 : tAppmap Γ [ 𝐴 × 𝐵 ]) :
           Valuation Γ → Valuation [ 𝐴 ] → Set where
-  fst-intro₁ : ∀ 𝑥 y → [ 𝐴 ] y ⊑ NbhSys.⊥ 𝐴 → fst↦ 𝑡 𝑥 ⟪ y ⟫
-  fst-intro₂ : ∀ 𝑥 y₁ y₂ → [ 𝑡 ] 𝑥 ↦ ⟪ < y₁ , y₂ > ⟫ →
+  fst-intro₁ : ∀ {𝑥 y} → [ 𝐴 ] y ⊑ NbhSys.⊥ 𝐴 → fst↦ 𝑡 𝑥 ⟪ y ⟫
+  fst-intro₂ : ∀ {𝑥 y₁ y₂} → [ 𝑡 ] 𝑥 ↦ ⟪ < y₁ , y₂ > ⟫ →
                fst↦ 𝑡 𝑥 ⟪ y₁ ⟫

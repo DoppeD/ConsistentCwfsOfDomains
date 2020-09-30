@@ -30,20 +30,20 @@ open import Scwf.DomainScwf.Comprehension.Morphism.Instance
 open import Scwf.DomainScwf.Comprehension.Morphism.Relation
 
 β-lemma₁ : {𝑡 : tAppmap Γ [ 𝐴 ]} →
-           {𝑢 : tAppmap (𝐴 :: Γ) [ 𝐵 ]} → ∀ 𝑥 𝑦 →
+           {𝑢 : tAppmap (𝐴 :: Γ) [ 𝐵 ]} → ∀ {𝑥 𝑦} →
            [ ap (lam 𝑢) 𝑡 ] 𝑥 ↦ 𝑦 →
            [ 𝑢 ∘ ⟨ idMap Γ , 𝑡 ⟩ ] 𝑥 ↦ 𝑦
-β-lemma₁ {Γ = Γ} {𝑡} {𝑢} 𝑥 ⟪ y , ⟪⟫ ⟫ (ap↦-intro₁ p)
-  = ∘↦-intro 𝑥 ⊥ᵥ ⟪ y ⟫ ⟨⟩𝑥↦⊥ 𝑢⊥↦y
+β-lemma₁ {Γ = Γ} {𝑡} {𝑢} {𝑥} {⟪ y , ⟪⟫ ⟫} (ap↦-intro₁ p)
+  = ∘↦-intro ⟨⟩𝑥↦⊥ 𝑢⊥↦y
   where id𝑥↦⊥ = Appmap.↦-bottom (idMap Γ)
         𝑡𝑥↦⊥ = Appmap.↦-bottom 𝑡
-        ⟨⟩𝑥↦⊥ = ⟨⟩↦-intro 𝑥 ⊥ᵥ id𝑥↦⊥ 𝑡𝑥↦⊥
+        ⟨⟩𝑥↦⊥ = ⟨⟩↦-intro {𝑦 = ⟪ _ , ⊥ᵥ ⟫} id𝑥↦⊥ 𝑡𝑥↦⊥
         tupy⊑⊥ = ⊑ᵥ-cons [ 𝐵 ] p ⊑ᵥ-nil
         𝑢⊥↦⊥ = Appmap.↦-bottom 𝑢
         𝑢⊥↦y = Appmap.↦-↓closed 𝑢 tupy⊑⊥ 𝑢⊥↦⊥
-β-lemma₁ _ _ (ap↦-intro₂ _ _ _ _ (⊑ₑ-intro₂ _ _ p))
+β-lemma₁ (ap↦-intro₂ _ _ _ _ (⊑ₑ-intro₂ _ _ p))
   with (p _ _ here)
-β-lemma₁ {Γ = Γ} {𝑢 = 𝑢} 𝑥 _
+β-lemma₁ {Γ = Γ} {𝑢 = 𝑢}
   (ap↦-intro₂ {x = x} {y} con𝑓 _ lam𝑢𝑥↦𝑓 𝑡𝑥↦x _)
   | record { sub = sub
            ; postablesub = postablesub
@@ -52,9 +52,8 @@ open import Scwf.DomainScwf.Comprehension.Morphism.Relation
            ; pre⊑x = pre⊑x
            ; sub⊆𝑓 = sub⊆𝑓
            }
-  = ∘↦-intro 𝑥 ⟪ x , 𝑥 ⟫ ⟪ y ⟫
-    (⟨⟩↦-intro 𝑥 ⟪ x , 𝑥 ⟫ id𝑥↦𝑥 𝑡𝑥↦x) 𝑢x𝑥↦y
-  where id𝑥↦𝑥 = id↦-intro 𝑥 𝑥 (NbhSys.⊑-refl (ValNbhSys _))
+  = ∘↦-intro (⟨⟩↦-intro {𝑦 = ⟪ x , _ ⟫} id𝑥↦𝑥 𝑡𝑥↦x) 𝑢x𝑥↦y
+  where id𝑥↦𝑥 = id↦-intro (NbhSys.⊑-refl (ValNbhSys _))
         y⊑post' = ⊑ᵥ-cons [ 𝐵 ] y⊑post ⊑ᵥ-nil
         pre𝑥⊑x𝑥 = ⊑ᵥ-cons (𝐴 :: Γ) pre⊑x
                   (NbhSys.⊑-refl (ValNbhSys _))
@@ -65,26 +64,24 @@ open import Scwf.DomainScwf.Comprehension.Morphism.Relation
         𝑢x𝑥↦post = Appmap.↦-mono 𝑢 pre𝑥⊑x𝑥 𝑢pre𝑥↦post𝑥
         𝑢x𝑥↦y = Appmap.↦-↓closed 𝑢 y⊑post' 𝑢x𝑥↦post
 
-β-lemma₂' : {𝑢 : tAppmap (𝐴 :: Γ) [ 𝐵 ]} → ∀ 𝑥 x′ y′ →
+β-lemma₂' : {𝑢 : tAppmap (𝐴 :: Γ) [ 𝐵 ]} → ∀ {𝑥 x′ y′} →
             [ 𝑢 ] ⟪ x′ , 𝑥 ⟫ ↦ ⟪ y′ ⟫ →
             ∀ x y → < x , y > ∈ (< x′ , y′ > ∷ ∅) →
             [ 𝑢 ] ⟪ x , 𝑥 ⟫ ↦ ⟪ y ⟫
-β-lemma₂' _ _ _ 𝑢x′𝑥↦y′ _ _ here = 𝑢x′𝑥↦y′
+β-lemma₂' 𝑢x′𝑥↦y′ _ _ here = 𝑢x′𝑥↦y′
 
 β-lemma₂ : {𝑡 : tAppmap Γ [ 𝐴 ]} →
            {𝑢 : tAppmap (𝐴 :: Γ) [ 𝐵 ]} →
-           ∀ 𝑥 𝑦 → [ 𝑢 ∘ ⟨ idMap Γ , 𝑡 ⟩ ] 𝑥 ↦ 𝑦 →
+           ∀ {𝑥 𝑦} → [ 𝑢 ∘ ⟨ idMap Γ , 𝑡 ⟩ ] 𝑥 ↦ 𝑦 →
            [ ap (lam 𝑢) 𝑡 ] 𝑥 ↦ 𝑦
-β-lemma₂ {Γ = Γ} {𝑢 = 𝑢} 𝑥 ⟪ y , ⟪⟫ ⟫
-  (∘↦-intro _ ⟪ x , 𝑥′ ⟫ _
-  (⟨⟩↦-intro _ _ (id↦-intro _ _ 𝑥′⊑𝑥) 𝑡𝑥↦x) 𝑢x𝑥′↦y)
+β-lemma₂ {Γ = Γ} {𝑢 = 𝑢} {𝑦 = ⟪ y , ⟪⟫ ⟫}
+  (∘↦-intro (⟨⟩↦-intro (id↦-intro 𝑥′⊑𝑥) 𝑡𝑥↦x) 𝑢x𝑥′↦y)
   = ap↦-intro₂ singletonIsCon singletonIsCon
     lam𝑥↦xy 𝑡𝑥↦x xy⊑xy
   where xy⊑xy = NbhSys.⊑-refl (ArrNbhSys 𝐴 𝐵)
         x𝑥′⊑x𝑥 = ⊑ᵥ-cons (𝐴 :: Γ) (NbhSys.⊑-refl 𝐴) 𝑥′⊑𝑥
         𝑢x𝑥↦y = Appmap.↦-mono 𝑢 x𝑥′⊑x𝑥 𝑢x𝑥′↦y
-        lam𝑥↦xy = lam↦-intro₂ 𝑥 (< x , y > ∷ ∅)
-                  singletonIsCon (β-lemma₂' {𝑢 = 𝑢} 𝑥 x y 𝑢x𝑥↦y)
+        lam𝑥↦xy = lam↦-intro₂ _ _ singletonIsCon (β-lemma₂' {𝑢 = 𝑢} 𝑢x𝑥↦y)
 
 β-equal : {𝑡 : tAppmap Γ [ 𝐴 ]} →
           {𝑢 : tAppmap (𝐴 :: Γ) [ 𝐵 ]} →

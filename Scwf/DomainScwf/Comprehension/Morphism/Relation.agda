@@ -11,7 +11,7 @@ open import Agda.Builtin.Nat
 
 data ⟨⟩↦ (γ : tAppmap Δ Γ) (𝑡 : tAppmap Δ [ 𝐴 ]) :
          Valuation Δ → Valuation (𝐴 :: Γ) → Set where
-  ⟨⟩↦-intro : ∀ 𝑥 𝑦 → [ γ ] 𝑥 ↦ (ctTail 𝑦) →
+  ⟨⟩↦-intro : ∀ {𝑥 𝑦} → [ γ ] 𝑥 ↦ (ctTail 𝑦) →
               [ 𝑡 ] 𝑥 ↦ ⟪ ctHead 𝑦 ⟫ → ⟨⟩↦ γ 𝑡 𝑥 𝑦
 
 -- Some simplifying notation.
