@@ -83,7 +83,7 @@ lam↦-↑directed' : ∀ {𝑓 𝑓′ 𝑥 con𝑓 con𝑓′} →
                   < x , y > ∈ (𝑓 ∪ 𝑓′) →
                   [ 𝑡 ] ⟪ x , 𝑥 ⟫ ↦ ⟪ y ⟫
 lam↦-↑directed' {𝑓 = 𝑓} _ _ x y xy∈𝑓⊔𝑓′
-  with (∪-lemma₂ {𝑓 = 𝑓} < x , y > xy∈𝑓⊔𝑓′)
+  with (∪-lemma₂ {𝑓 = 𝑓} xy∈𝑓⊔𝑓′)
 lam↦-↑directed' (lam↦-intro₂ _ _ _ p) _ x y _ | inl xy∈𝑓
   = p x y xy∈𝑓
 lam↦-↑directed' _ (lam↦-intro₂ _ _ _ p) x y _ | inr xy∈𝑓′

@@ -117,7 +117,7 @@ getP-Struct {Γ = Γ} {𝑡 = 𝑡} {γ = γ} 𝑥 (< x , y > ∷ 𝑓)
                    𝑡x𝑧↦y rec-λ𝑡𝑦
            }
   where rec = getP-Struct {𝑡 = 𝑡} {γ = γ} 𝑥 𝑓
-              {subsetIsCon con𝑓 (⊆-lemma₃ < x , y >)}
+              {subsetIsCon con𝑓 ⊆-lemma₃}
               (lam↦-intro₂ 𝑥 𝑓 _ λ x′ y′ x′y′∈𝑓 →
               p x′ y′ (there x′y′∈𝑓))
         rec-𝑦 = P-Struct.𝑦 rec

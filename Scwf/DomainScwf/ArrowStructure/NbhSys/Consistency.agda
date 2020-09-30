@@ -54,7 +54,7 @@ Con-⊔ₑ'' {sub = ∅} _ _ _ _
       ; pre⊑pre𝑓′ = NbhSys.⊑-⊥ 𝐴
       }
 Con-⊔ₑ'' {𝑓 = 𝑓} {sub = < x , y > ∷ sub} _ _ sub⊆𝑓∪𝑓′ _
-  with (∪-lemma₂ {𝑓 = 𝑓} < x , y > (sub⊆𝑓∪𝑓′ < x , y > here))
+  with (∪-lemma₂ {𝑓 = 𝑓} (sub⊆𝑓∪𝑓′ < x , y > here))
 Con-⊔ₑ'' {sub = < x , y > ∷ sub} (⊑ₑ-intro₂ _ _ _ _ p) _ _ _
   | inl xy∈𝑓 with (p x y xy∈𝑓)
 Con-⊔ₑ'' {sub = < x , y > ∷ sub} {con𝑓″ = cff p} 𝑓⊑𝑓″ 𝑓′⊑𝑓″
@@ -79,7 +79,7 @@ Con-⊔ₑ'' {sub = < x , y > ∷ sub} {con𝑓″ = cff p} 𝑓⊑𝑓″ 𝑓�
                     (⊑-⊔-lemma₃ 𝐴 consub″recsub conxpresub pre″⊑x
                     recpre⊑pre𝑓′)
       }
-  where rec = Con-⊔ₑ'' 𝑓⊑𝑓″ 𝑓′⊑𝑓″ (⊆-lemma₂ < x , y > sub⊆𝑓∪𝑓′)
+  where rec = Con-⊔ₑ'' 𝑓⊑𝑓″ 𝑓′⊑𝑓″ (⊆-lemma₂ sub⊆𝑓∪𝑓′)
               preablesub
         recsub = ⊑ₑ-proof₃.sub rec
         recsub⊆𝑓″ = ⊑ₑ-proof₃.sub⊆𝑓 rec
@@ -120,7 +120,7 @@ Con-⊔ₑ'' {sub = < x , y > ∷ sub} {con𝑓″ = cff p} 𝑓⊑𝑓″ 𝑓�
                     (⊑-⊔-lemma₃ 𝐴 consub″recsub conxpresub pre″⊑x
                     recpre⊑pre𝑓′)
       }
-  where rec = Con-⊔ₑ'' 𝑓⊑𝑓″ 𝑓′⊑𝑓″ (⊆-lemma₂ < x , y > sub⊆𝑓∪𝑓′)
+  where rec = Con-⊔ₑ'' 𝑓⊑𝑓″ 𝑓′⊑𝑓″ (⊆-lemma₂ sub⊆𝑓∪𝑓′)
               preablesub
         recsub = ⊑ₑ-proof₃.sub rec
         recsub⊆𝑓″ = ⊑ₑ-proof₃.sub⊆𝑓 rec

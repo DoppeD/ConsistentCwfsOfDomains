@@ -34,18 +34,18 @@ _⊆_ : (𝑓 𝑓′ : FinFun A B) → Set
 ⊆-trans : 𝑓 ⊆ 𝑓′ → 𝑓′ ⊆ 𝑓″ → 𝑓 ⊆ 𝑓″
 ⊆-trans 𝑓⊆𝑓′ 𝑓′⊆𝑓″ x x∈𝑓 = 𝑓′⊆𝑓″ x (𝑓⊆𝑓′ x x∈𝑓)
 
-⊆-lemma₁ : ∀ x → (x ∷ 𝑓′) ⊆ 𝑓 → (x ∷ ∅) ⊆ 𝑓
-⊆-lemma₁ x x𝑓′⊆𝑓 _ here = x𝑓′⊆𝑓 x here
+⊆-lemma₁ : ∀ {x} → (x ∷ 𝑓′) ⊆ 𝑓 → (x ∷ ∅) ⊆ 𝑓
+⊆-lemma₁ {x = x} x𝑓′⊆𝑓 _ here = x𝑓′⊆𝑓 x here
 
-⊆-lemma₂ : ∀ x → (x ∷ 𝑓′) ⊆ 𝑓 → 𝑓′ ⊆ 𝑓
-⊆-lemma₂ x x𝑓′⊆𝑓 y y∈𝑓′ = x𝑓′⊆𝑓 y (there y∈𝑓′)
+⊆-lemma₂ : ∀ {x} → (x ∷ 𝑓′) ⊆ 𝑓 → 𝑓′ ⊆ 𝑓
+⊆-lemma₂ x𝑓′⊆𝑓 y y∈𝑓′ = x𝑓′⊆𝑓 y (there y∈𝑓′)
 
-⊆-lemma₃ : ∀ x → 𝑓 ⊆ (x ∷ 𝑓)
-⊆-lemma₃ x y y∈𝑓 = ⊆-lemma₂ x ⊆-refl y y∈𝑓
+⊆-lemma₃ : ∀ {x} → 𝑓 ⊆ (x ∷ 𝑓)
+⊆-lemma₃ y y∈𝑓 = ⊆-lemma₂ ⊆-refl y y∈𝑓
 
-⊆-lemma₄ : ∀ x → x ∈ 𝑓 → 𝑓′ ⊆ 𝑓 → (x ∷ 𝑓′) ⊆ 𝑓
-⊆-lemma₄ _ x∈𝑓 _ _ here = x∈𝑓
-⊆-lemma₄ _ x∈𝑓 𝑓′⊆𝑓 y (there y∈𝑓) = 𝑓′⊆𝑓 y y∈𝑓
+⊆-lemma₄ : ∀ {x} → x ∈ 𝑓 → 𝑓′ ⊆ 𝑓 → (x ∷ 𝑓′) ⊆ 𝑓
+⊆-lemma₄ x∈𝑓 _ _ here = x∈𝑓
+⊆-lemma₄ x∈𝑓 𝑓′⊆𝑓 y (there y∈𝑓) = 𝑓′⊆𝑓 y y∈𝑓
 
 -- Set union.
 _∪_ : FinFun A B → FinFun A B → FinFun A B
@@ -60,38 +60,38 @@ _∪_ : FinFun A B → FinFun A B → FinFun A B
 ∪-lemma₁ {𝑓 = ∅} 𝑓⊆𝑓″ 𝑓′⊆𝑓″ y y∈𝑓∪𝑓′ = 𝑓′⊆𝑓″ y y∈𝑓∪𝑓′
 ∪-lemma₁ {𝑓 = x ∷ _} 𝑓⊆𝑓″ 𝑓′⊆𝑓″ _ here = 𝑓⊆𝑓″ x here
 ∪-lemma₁ {𝑓 = x ∷ 𝑓‴} 𝑓⊆𝑓″ 𝑓′⊆𝑓″ y (there y∈𝑓∪𝑓′)
-  = ∪-lemma₁ (⊆-trans (⊆-lemma₃ x) 𝑓⊆𝑓″) 𝑓′⊆𝑓″ y y∈𝑓∪𝑓′
+  = ∪-lemma₁ (⊆-trans ⊆-lemma₃ 𝑓⊆𝑓″) 𝑓′⊆𝑓″ y y∈𝑓∪𝑓′
 
-∪-lemma₂ : ∀ x → x ∈ (𝑓 ∪ 𝑓′) → (x ∈ 𝑓) ∨ (x ∈ 𝑓′)
-∪-lemma₂ {𝑓 = ∅} _ here = inr here
-∪-lemma₂ {𝑓 = ∅} _ (there x∈xs) = inr (there x∈xs)
-∪-lemma₂ {𝑓 = x ∷ _} _ here = inl here
-∪-lemma₂ {𝑓 = x ∷ 𝑓″} y (there y∈∪) with (∪-lemma₂ y y∈∪)
-∪-lemma₂ y (there y∈∪) | inl y∈𝑓″ = inl (there y∈𝑓″)
-∪-lemma₂ y (there y∈∪) | inr y∈𝑓′ = inr y∈𝑓′
+∪-lemma₂ : ∀ {x} → x ∈ (𝑓 ∪ 𝑓′) → (x ∈ 𝑓) ∨ (x ∈ 𝑓′)
+∪-lemma₂ {𝑓 = ∅} here = inr here
+∪-lemma₂ {𝑓 = ∅} (there x∈xs) = inr (there x∈xs)
+∪-lemma₂ {𝑓 = x ∷ _} here = inl here
+∪-lemma₂ {𝑓 = x ∷ 𝑓″} (there y∈∪) with (∪-lemma₂ y∈∪)
+∪-lemma₂ (there y∈∪) | inl y∈𝑓″ = inl (there y∈𝑓″)
+∪-lemma₂ (there y∈∪) | inr y∈𝑓′ = inr y∈𝑓′
 
-∪-lemma₃ : ∀ x → x ∈ 𝑓 → x ∈ (𝑓 ∪ 𝑓′)
-∪-lemma₃ {𝑓 = x ∷ 𝑓″} _ here = here
-∪-lemma₃ {𝑓 = x ∷ 𝑓″} y (there y∈𝑓″) = ⊆-lemma₃ x y y∈𝑓″∪𝑓′
-  where y∈𝑓″∪𝑓′ = ∪-lemma₃ y y∈𝑓″
+∪-lemma₃ : ∀ {x} → x ∈ 𝑓 → x ∈ (𝑓 ∪ 𝑓′)
+∪-lemma₃ {𝑓 = x ∷ 𝑓″} here = here
+∪-lemma₃ {𝑓 = x ∷ 𝑓″} {x = y} (there y∈𝑓″) = ⊆-lemma₃ y y∈𝑓″∪𝑓′
+  where y∈𝑓″∪𝑓′ = ∪-lemma₃ y∈𝑓″
 
-∪-lemma₄ : ∀ x → x ∈ 𝑓′ → x ∈ (𝑓 ∪ 𝑓′)
-∪-lemma₄ {𝑓 = ∅} x x∈𝑓′ = x∈𝑓′
-∪-lemma₄ {𝑓 = x ∷ 𝑓″} y y∈𝑓′ = ⊆-lemma₃ x y y∈𝑓″∪𝑓′
-  where y∈𝑓″∪𝑓′ = ∪-lemma₄ y y∈𝑓′
+∪-lemma₄ : ∀ {x} → x ∈ 𝑓′ → x ∈ (𝑓 ∪ 𝑓′)
+∪-lemma₄ {𝑓 = ∅} x∈𝑓′ = x∈𝑓′
+∪-lemma₄ {𝑓 = x ∷ 𝑓″} {x = y} y∈𝑓′ = ⊆-lemma₃ y y∈𝑓″∪𝑓′
+  where y∈𝑓″∪𝑓′ = ∪-lemma₄ y∈𝑓′
 
 ∪-lemma₅ : 𝑓 ⊆ 𝑓″ → 𝑓′ ⊆ 𝑓‴ → (𝑓 ∪ 𝑓′) ⊆ (𝑓″ ∪ 𝑓‴)
-∪-lemma₅  _ _ x x∈𝑓∪𝑓′ with (∪-lemma₂ x x∈𝑓∪𝑓′)
+∪-lemma₅  _ _ x x∈𝑓∪𝑓′ with (∪-lemma₂ x∈𝑓∪𝑓′)
 ∪-lemma₅ {𝑓″ = 𝑓″} {𝑓‴ = 𝑓‴} 𝑓⊆𝑓″ _ x x∈𝑓∪𝑓′ | inl x∈𝑓
-  = ∪-lemma₃ x (𝑓⊆𝑓″ x x∈𝑓)
+  = ∪-lemma₃ (𝑓⊆𝑓″ x x∈𝑓)
 ∪-lemma₅ _ 𝑓′⊆𝑓‴ x x∈𝑓∪𝑓′ | inr x∈𝑓′
-  = ∪-lemma₄ x (𝑓′⊆𝑓‴ x x∈𝑓′)
+  = ∪-lemma₄ (𝑓′⊆𝑓‴ x x∈𝑓′)
 
 ∪-lemma₆ : 𝑓 ⊆ (𝑓 ∪ 𝑓′)
-∪-lemma₆ x x∈𝑓 = ∪-lemma₃ x x∈𝑓
+∪-lemma₆ x x∈𝑓 = ∪-lemma₃ x∈𝑓
 
 ∪-lemma₇ : 𝑓′ ⊆ (𝑓 ∪ 𝑓′)
-∪-lemma₇ x x∈𝑓 = ∪-lemma₄ x x∈𝑓
+∪-lemma₇ x x∈𝑓 = ∪-lemma₄ x∈𝑓
 
 -- From a proof that a pair of neighborhoods is in the
 -- empty set, anything.

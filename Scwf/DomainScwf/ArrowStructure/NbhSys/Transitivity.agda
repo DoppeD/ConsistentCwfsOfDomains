@@ -83,9 +83,9 @@ shrinkExp {𝑓 = 𝑓} {𝑓″ = 𝑓″} 𝑓⊆𝑓′ 𝑓′⊑𝑓″
       }
   where preable𝑓′ = pre-cons {y = y} preable𝑓″ conxpre𝑓″
         postable𝑓′ = post-cons {x = x} postable𝑓″ conypost𝑓″
-        conTail = subsetIsCon (cff con𝑓) (⊆-lemma₃ < x , y >)
+        conTail = subsetIsCon (cff con𝑓) ⊆-lemma₃
         recur = Ω 𝑓″ 𝑓′ {conTail} {_} {preable𝑓″} {postable𝑓″}
-                (shrinkExp {con𝑓 = conTail} (⊆-lemma₃ < x , y >)
+                (shrinkExp {con𝑓 = conTail} ⊆-lemma₃
                 (⊑ₑ-intro₂ (< x , y > ∷ 𝑓″) 𝑓′ (cff con𝑓) _ p))
         sub′ = ⊑ₑ-proof₂.sub recur
         preablesub′ = ⊑ₑ-proof₂.preablesub recur

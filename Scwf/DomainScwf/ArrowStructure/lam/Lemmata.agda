@@ -71,7 +71,7 @@ preBiggest {preable𝑓 = pre-cons preable𝑓 conx′pre𝑓} (there xy∈𝑓)
         p𝑓′⊑p𝑓 = NbhSys.⊑-⊔-snd 𝐴 conxpre𝑓′
         p𝑓′𝑥⊑p𝑓𝑥 = ⊑ᵥ-cons (𝐴 :: Γ) _ _ p𝑓′⊑p𝑓
                   (NbhSys.⊑-refl (ValNbhSys _))
-        𝑡p𝑓′𝑥↦p𝑓′ = ↓closedLemma (subsetIsCon con𝑓 (⊆-lemma₃ _))
+        𝑡p𝑓′𝑥↦p𝑓′ = ↓closedLemma (subsetIsCon con𝑓 ⊆-lemma₃)
                    preable𝑓′ postable𝑓′
                    (shrinkLam (λ 𝑦 𝑦∈𝑓′ → there 𝑦∈𝑓′) lam𝑡𝑥↦𝑓)
         𝑡𝑓𝑥↦p𝑓′ = Appmap.↦-mono 𝑡 p𝑓′𝑥⊑p𝑓𝑥 𝑡p𝑓′𝑥↦p𝑓′

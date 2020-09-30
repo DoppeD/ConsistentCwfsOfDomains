@@ -71,7 +71,7 @@ smallest⇒exp' : (𝑓′ : NbhFinFun 𝐴 𝐵) → {con : ConFinFun 𝑓′} 
 smallest⇒exp' 𝑓′ x y (ig-inset xy∈𝑓′)
   = record
       { sub = < x , y > ∷ ∅
-      ; sub⊆𝑓 = ⊆-lemma₄ < x , y > xy∈𝑓′ ∅-isSubset
+      ; sub⊆𝑓 = ⊆-lemma₄ xy∈𝑓′ ∅-isSubset
       ; preablesub = pre-cons pre-nil (con⊥₂ 𝐴)
       ; postablesub = post-cons post-nil (con⊥₂ 𝐵)
       ; y⊑post = NbhSys.⊑-⊔-fst 𝐵 (con⊥₂ 𝐵)

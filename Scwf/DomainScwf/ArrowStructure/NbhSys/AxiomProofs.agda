@@ -20,7 +20,7 @@ open import Scwf.DomainScwf.ArrowStructure.Variables 𝐴 𝐵
 ⊑ₑ-refl {𝐹 𝑓 con𝑓} = ⊑ₑ-intro₂ 𝑓 𝑓 con𝑓 con𝑓 λ x y xy∈𝑓 →
   record
     { sub = < x , y > ∷ ∅
-    ; sub⊆𝑓 = ⊆-lemma₄ < x , y > xy∈𝑓 ∅-isSubset
+    ; sub⊆𝑓 = ⊆-lemma₄ xy∈𝑓 ∅-isSubset
     ; preablesub = singletonIsPreable
     ; postablesub = singletonIsPostable
     ; y⊑post = ⊑-⊔-lemma₄ 𝐵 (NbhSys.⊑-refl 𝐵) (con⊥₂ 𝐵)
@@ -35,7 +35,7 @@ open import Scwf.DomainScwf.ArrowStructure.Variables 𝐴 𝐵
          ∀ x y → < x , y > ∈ (𝑓′ ∪ 𝑓″) →
          ⊑ₑ-proof 𝑓 con𝑓 x y
 ⊑ₑ-⊔ₑ' {𝑓′ = 𝑓′} _ _ x y xy∈∪
-  with (∪-lemma₂  {𝑓 = 𝑓′} < x , y > xy∈∪)
+  with (∪-lemma₂  {𝑓 = 𝑓′} xy∈∪)
 ⊑ₑ-⊔ₑ' (⊑ₑ-intro₂ _ _ _ _ p) _ x y xy∈∪ | inl xy∈𝑓′
   = p x y xy∈𝑓′
 ⊑ₑ-⊔ₑ' _ (⊑ₑ-intro₂ _ _ _ _ p) x y xy∈∪ | inr xy∈𝑓″
@@ -57,8 +57,7 @@ open import Scwf.DomainScwf.ArrowStructure.Variables 𝐴 𝐵
   = ⊑ₑ-intro₂ 𝑓 (𝑓 ∪ 𝑓′) _ _ λ x y xy∈𝑓 →
   record
     { sub = < x , y > ∷ ∅
-    ; sub⊆𝑓 = ⊆-lemma₄ < x , y > (∪-lemma₃ < x , y > xy∈𝑓)
-              ∅-isSubset
+    ; sub⊆𝑓 = ⊆-lemma₄ (∪-lemma₃ xy∈𝑓) ∅-isSubset
     ; preablesub = singletonIsPreable
     ; postablesub = singletonIsPostable
     ; y⊑post = ⊑-⊔-lemma₄ 𝐵 (NbhSys.⊑-refl 𝐵) (con⊥₂ 𝐵)
@@ -73,8 +72,7 @@ open import Scwf.DomainScwf.ArrowStructure.Variables 𝐴 𝐵
   = ⊑ₑ-intro₂ 𝑓′ (𝑓 ∪ 𝑓′) _ _ λ x y xy∈𝑓′ →
   record
     { sub = < x , y > ∷ ∅
-    ; sub⊆𝑓 = ⊆-lemma₄ < x , y > (∪-lemma₄ < x , y > xy∈𝑓′)
-              ∅-isSubset
+    ; sub⊆𝑓 = ⊆-lemma₄ (∪-lemma₄ xy∈𝑓′) ∅-isSubset
     ; preablesub = singletonIsPreable
     ; postablesub = singletonIsPostable
     ; y⊑post = ⊑-⊔-lemma₄ 𝐵 (NbhSys.⊑-refl 𝐵) (con⊥₂ 𝐵)
