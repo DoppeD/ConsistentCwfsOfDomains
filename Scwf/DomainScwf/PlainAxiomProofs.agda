@@ -58,7 +58,7 @@ pConsLemma₂ : ∀ {𝑥 𝑦} → [ γ ] 𝑥 ↦ 𝑦 →
 pConsLemma₂ {γ = γ} {𝐴 = 𝐴} {𝑡} γ𝑥↦𝑦
   = ∘↦-intro γ𝑡𝑥↦⊥𝑦 p⊥𝑦↦𝑦
   where 𝑡𝑥↦⊥ = Appmap.↦-bottom 𝑡
-        γ𝑡𝑥↦⊥𝑦 = ⟨⟩↦-intro {𝑦 = ⟪ NbhSys.⊥ 𝐴 , _ ⟫} γ𝑥↦𝑦 𝑡𝑥↦⊥
+        γ𝑡𝑥↦⊥𝑦 = ⟨⟩↦-intro {𝑦 = ⟪ NbhSys.⊥ 𝐴 ,, _ ⟫} γ𝑥↦𝑦 𝑡𝑥↦⊥
         p⊥𝑦↦𝑦 = p↦-intro (NbhSys.⊑-refl (ValNbhSys _))
 
 pCons : (γ : tAppmap Δ Γ) → (𝑡 : tAppmap Δ [ 𝐴 ]) →
@@ -68,18 +68,18 @@ pCons γ 𝑡 = ≈-intro (≼-intro pConsLemma₁)
 
 qConsLemma₁ : ∀ {𝑥 𝑦} → [ q Γ 𝐴 ∘ ⟨ γ , 𝑡 ⟩ ] 𝑥 ↦ 𝑦 →
               [ 𝑡 ] 𝑥 ↦ 𝑦
-qConsLemma₁ {𝐴 = 𝐴} {𝑡 = 𝑡} {𝑦 = ⟪ y , ⟪⟫ ⟫}
+qConsLemma₁ {𝐴 = 𝐴} {𝑡 = 𝑡} {𝑦 = ⟪ y ,, ⟪⟫ ⟫}
   (∘↦-intro (⟨⟩↦-intro _ 𝑡𝑥↦z) (q↦-intro y⊑z))
   = Appmap.↦-↓closed 𝑡 tup-y⊑z 𝑡𝑥↦z
   where tup-y⊑z = ⊑ᵥ-cons [ 𝐴 ] y⊑z ⊑ᵥ-nil
 
 qConsLemma₂ : ∀ {𝑥 𝑦} → [ 𝑡 ] 𝑥 ↦ 𝑦 →
               [ q Γ 𝐴 ∘ ⟨ γ , 𝑡 ⟩ ] 𝑥 ↦ 𝑦
-qConsLemma₂ {𝐴 = 𝐴} {γ = γ} {𝑦 = ⟪ y , ⟪⟫ ⟫} 𝑡𝑥↦y =
+qConsLemma₂ {𝐴 = 𝐴} {γ = γ} {𝑦 = ⟪ y ,, ⟪⟫ ⟫} 𝑡𝑥↦y =
   ∘↦-intro γ𝑡𝑥↦y⊥ qy⊥↦y
   where γ𝑥↦⊥ = Appmap.↦-bottom γ
         qy⊥↦y = q↦-intro (NbhSys.⊑-refl 𝐴)
-        γ𝑡𝑥↦y⊥ = ⟨⟩↦-intro {𝑦 = ⟪ y , ⊥ᵥ ⟫} γ𝑥↦⊥ 𝑡𝑥↦y
+        γ𝑡𝑥↦y⊥ = ⟨⟩↦-intro {𝑦 = ⟪ y ,, ⊥ᵥ ⟫} γ𝑥↦⊥ 𝑡𝑥↦y
 
 qCons : (γ : tAppmap Δ Γ) → (𝑡 : tAppmap Δ [ 𝐴 ]) →
         ((q Γ 𝐴) ∘ ⟨ γ , 𝑡 ⟩) ≈ 𝑡

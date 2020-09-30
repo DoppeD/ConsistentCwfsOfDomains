@@ -16,16 +16,16 @@ pre : (𝑓 : NbhFinFun 𝐴 𝐵) → Preable 𝑓 → NbhSys.Nbh 𝐴
 data Preable where
   pre-nil : Preable ∅
   pre-cons : ∀ {x y 𝑓} → (preable𝑓 : Preable 𝑓) →
-             NbhSys.Con 𝐴 x (pre 𝑓 preable𝑓) → Preable (< x , y > ∷ 𝑓)
+             NbhSys.Con 𝐴 x (pre 𝑓 preable𝑓) → Preable ((x , y) ∷ 𝑓)
 
 pre ∅ _ = NbhSys.⊥ 𝐴
-pre (< x , y > ∷ 𝑓) (pre-cons preable𝑓 conxpre𝑓)
+pre ((x , y) ∷ 𝑓) (pre-cons preable𝑓 conxpre𝑓)
   = [ 𝐴 ] x ⊔ pre 𝑓 preable𝑓 [ conxpre𝑓 ]
 
 preableProofIrr : (preable𝑓₁ preable𝑓₂ : Preable 𝑓) →
                   [ 𝐴 ] (pre 𝑓 preable𝑓₁) ⊑ (pre 𝑓 preable𝑓₂)
 preableProofIrr {∅} pre-nil pre-nil = NbhSys.⊑-refl 𝐴
-preableProofIrr {< x , y > ∷ 𝑓} (pre-cons preable𝑓₁ conxpre𝑓₁)
+preableProofIrr {(x , y) ∷ 𝑓} (pre-cons preable𝑓₁ conxpre𝑓₁)
   (pre-cons preable𝑓₂ conxpre𝑓₂)
   = ⊑-⊔-lemma₃ 𝐴 _ _ (NbhSys.⊑-refl 𝐴)
     (preableProofIrr preable𝑓₁ preable𝑓₂)
@@ -44,12 +44,12 @@ preLemma₂ {𝑓 = _} {∅} = NbhSys.⊑-⊥ 𝐴
 preLemma₂ {𝑓 = ∅} {_ ∷ _} {preable𝑓′}
   = NbhSys.⊑-trans 𝐴 (NbhSys.⊑-refl 𝐴)
     (preableProofIrr preable𝑓′ _)
-preLemma₂ {𝑓 = < x , y > ∷ 𝑓} {< x′ , y′ > ∷ 𝑓′}
+preLemma₂ {𝑓 = (x , y) ∷ 𝑓} {(x′ , y′) ∷ 𝑓′}
   {pre-cons preable𝑓′tail conxpre𝑓′tail}
   {pre-cons preable∪tail x′con∪tail}
   = ⊑-⊔-lemma₅ 𝐴 rec x′con∪tail
   where preable𝑓′ = pre-cons preable𝑓′tail conxpre𝑓′tail
-        rec = preLemma₂ {𝑓 = 𝑓} {𝑓′ = < x′ , y′ > ∷ 𝑓′}
+        rec = preLemma₂ {𝑓 = 𝑓} {𝑓′ = (x′ , y′) ∷ 𝑓′}
               {preable𝑓′ = preable𝑓′}
 
 preLemma₃'' : (preable𝑓 : Preable 𝑓) → (preable𝑓′ : Preable 𝑓′) →
@@ -77,7 +77,7 @@ preLemma₃ : (preable𝑓 : Preable 𝑓) → (preable𝑓′ : Preable 𝑓′
             ([ 𝐴 ] (pre 𝑓 preable𝑓) ⊔ (pre 𝑓′ preable𝑓′) [ conpre ])
 preLemma₃ {∅} {𝑓′} pre-nil _ _ _
   = ⊑-⊔-lemma₅ 𝐴 (preableProofIrr {𝑓 = 𝑓′} _ _) _
-preLemma₃ {< x , y > ∷ 𝑓} {𝑓′} (pre-cons preable𝑓 conxpre𝑓) preable𝑓′
+preLemma₃ {(x , y) ∷ 𝑓} {𝑓′} (pre-cons preable𝑓 conxpre𝑓) preable𝑓′
   (pre-cons preable∪ conxpre∪) conpre₁
   = NbhSys.⊑-trans 𝐴 (⊑-⊔-lemma₃ 𝐴 _ conxpre⊔ (NbhSys.⊑-refl 𝐴)
     (preLemma₃ {𝑓} {𝑓′} _ _ preable∪ conpre₂))
@@ -93,7 +93,7 @@ preUnionLemma' : ∀ {max} → (preable𝑓 : Preable 𝑓) →
                  [ 𝐴 ] (pre (𝑓 ∪ 𝑓′) preable∪) ⊑ max
 preUnionLemma' {∅} {𝑓′} preable𝑓 preable𝑓′ preable∪ pre𝑓⊑max pre𝑓′⊑max
   = NbhSys.⊑-trans 𝐴 (preableProofIrr preable∪ preable𝑓′) pre𝑓′⊑max
-preUnionLemma' {< x , y > ∷ 𝑓} (pre-cons preable𝑓 conxpre𝑓) preable𝑓′
+preUnionLemma' {(x , y) ∷ 𝑓} (pre-cons preable𝑓 conxpre𝑓) preable𝑓′
   (pre-cons preable∪ conxpre∪) prexy𝑓⊑max pre𝑓′⊑max
   = NbhSys.⊑-⊔ 𝐴 x⊑max rec conxpre∪
   where pre𝑓⊑max = NbhSys.⊑-trans 𝐴 (NbhSys.⊑-⊔-snd 𝐴 conxpre𝑓) prexy𝑓⊑max
@@ -105,7 +105,7 @@ preUnionLemma : ∀ {max} → (preable𝑓 : Preable 𝑓) →
                 [ 𝐴 ] (pre 𝑓 preable𝑓) ⊑ max →
                 [ 𝐴 ] (pre 𝑓′ preable𝑓′) ⊑ max → Preable (𝑓 ∪ 𝑓′)
 preUnionLemma {∅} _ preable𝑓′ _ _ = preable𝑓′
-preUnionLemma {< x , y > ∷ 𝑓} (pre-cons preable𝑓 conxpre𝑓)
+preUnionLemma {(x , y) ∷ 𝑓} (pre-cons preable𝑓 conxpre𝑓)
   preable𝑓′ pre𝑓⊑x pre𝑓′⊑x
   = pre-cons rec (NbhSys.Con-⊔ 𝐴 x⊑max pre∪⊑max)
   where pre𝑓⊑max = NbhSys.⊑-trans 𝐴 (NbhSys.⊑-⊔-snd 𝐴 conxpre𝑓) pre𝑓⊑x
@@ -113,5 +113,5 @@ preUnionLemma {< x , y > ∷ 𝑓} (pre-cons preable𝑓 conxpre𝑓)
         x⊑max = NbhSys.⊑-trans 𝐴 (NbhSys.⊑-⊔-fst 𝐴 conxpre𝑓) pre𝑓⊑x
         pre∪⊑max = preUnionLemma' preable𝑓 preable𝑓′ rec pre𝑓⊑max pre𝑓′⊑x
 
-singletonIsPreable : ∀ {x y} → Preable (< x , y > ∷ ∅)
+singletonIsPreable : ∀ {x y} → Preable ((x , y) ∷ ∅)
 singletonIsPreable = pre-cons pre-nil (con⊥₂ 𝐴)

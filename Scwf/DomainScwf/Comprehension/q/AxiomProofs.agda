@@ -28,7 +28,7 @@ q↦-↓closed {𝐴 = 𝐴} (⊑ᵥ-cons _ y⊑z _) (q↦-intro z⊑x)
 q↦-↑directed : {𝑥 : Valuation (𝐴 :: Γ)} → ∀ {𝑦 𝑧} →
                𝑥 q↦ 𝑦 → 𝑥 q↦ 𝑧 → ∀ con𝑦𝑧 →
                𝑥 q↦ (𝑦 ⊔ᵥ 𝑧 [ con𝑦𝑧 ])
-q↦-↑directed {𝐴 = 𝐴} {𝑥 = ⟪ x , 𝑥 ⟫} {⟪ y , ⟪⟫ ⟫} {⟪ z , ⟪⟫ ⟫}
+q↦-↑directed {𝐴 = 𝐴} {𝑥 = ⟪ x ,, 𝑥 ⟫} {⟪ y ,, ⟪⟫ ⟫} {⟪ z ,, ⟪⟫ ⟫}
   (q↦-intro y⊑x) (q↦-intro z⊑x) (con-tup conyz con-nil)
   = q↦-intro y⊔z⊑x
   where y⊔z⊑x = NbhSys.⊑-⊔ 𝐴 y⊑x z⊑x conyz
@@ -36,7 +36,7 @@ q↦-↑directed {𝐴 = 𝐴} {𝑥 = ⟪ x , 𝑥 ⟫} {⟪ y , ⟪⟫ ⟫} {�
 q↦-con : {𝑥 : Valuation (𝐴 :: Γ)} → ∀ {𝑦 𝑥′ 𝑦′} →
          𝑥 q↦ 𝑦 → 𝑥′ q↦ 𝑦′ →
          ValCon _ 𝑥 𝑥′ → ValCon _ 𝑦 𝑦′
-q↦-con {𝐴 = 𝐴} {𝑦 = ⟪ y , ⟪⟫ ⟫} {𝑦′ = ⟪ y′ , ⟪⟫ ⟫}
+q↦-con {𝐴 = 𝐴} {𝑦 = ⟪ y ,, ⟪⟫ ⟫} {𝑦′ = ⟪ y′ ,, ⟪⟫ ⟫}
   (q↦-intro y⊑x) (q↦-intro y′⊑x′) (con-tup conxx′ con𝑥𝑥′)
   = NbhSys.Con-⊔ (ValNbhSys _) {z = ⟪ [ 𝐴 ] _ ⊔ _ [ conxx′ ] ⟫}
     y⊑x⊔x′ᵥ y′⊑x⊔x′ᵥ

@@ -33,11 +33,11 @@ open import Scwf.DomainScwf.Comprehension.Morphism.Relation
            {𝑢 : tAppmap (𝐴 :: Γ) [ 𝐵 ]} → ∀ {𝑥 𝑦} →
            [ ap (lam 𝑢) 𝑡 ] 𝑥 ↦ 𝑦 →
            [ 𝑢 ∘ ⟨ idMap Γ , 𝑡 ⟩ ] 𝑥 ↦ 𝑦
-β-lemma₁ {Γ = Γ} {𝑡} {𝑢} {𝑥} {⟪ y , ⟪⟫ ⟫} (ap↦-intro₁ p)
+β-lemma₁ {Γ = Γ} {𝑡} {𝑢} {𝑥} {⟪ y ,, ⟪⟫ ⟫} (ap↦-intro₁ p)
   = ∘↦-intro ⟨⟩𝑥↦⊥ 𝑢⊥↦y
   where id𝑥↦⊥ = Appmap.↦-bottom (idMap Γ)
         𝑡𝑥↦⊥ = Appmap.↦-bottom 𝑡
-        ⟨⟩𝑥↦⊥ = ⟨⟩↦-intro {𝑦 = ⟪ _ , ⊥ᵥ ⟫} id𝑥↦⊥ 𝑡𝑥↦⊥
+        ⟨⟩𝑥↦⊥ = ⟨⟩↦-intro {𝑦 = ⟪ _ ,, ⊥ᵥ ⟫} id𝑥↦⊥ 𝑡𝑥↦⊥
         tupy⊑⊥ = ⊑ᵥ-cons [ 𝐵 ] p ⊑ᵥ-nil
         𝑢⊥↦⊥ = Appmap.↦-bottom 𝑢
         𝑢⊥↦y = Appmap.↦-↓closed 𝑢 tupy⊑⊥ 𝑢⊥↦⊥
@@ -52,7 +52,7 @@ open import Scwf.DomainScwf.Comprehension.Morphism.Relation
            ; pre⊑x = pre⊑x
            ; sub⊆𝑓 = sub⊆𝑓
            }
-  = ∘↦-intro (⟨⟩↦-intro {𝑦 = ⟪ x , _ ⟫} id𝑥↦𝑥 𝑡𝑥↦x) 𝑢x𝑥↦y
+  = ∘↦-intro (⟨⟩↦-intro {𝑦 = ⟪ x ,, _ ⟫} id𝑥↦𝑥 𝑡𝑥↦x) 𝑢x𝑥↦y
   where id𝑥↦𝑥 = id↦-intro (NbhSys.⊑-refl (ValNbhSys _))
         y⊑post' = ⊑ᵥ-cons [ 𝐵 ] y⊑post ⊑ᵥ-nil
         pre𝑥⊑x𝑥 = ⊑ᵥ-cons (𝐴 :: Γ) pre⊑x
@@ -65,16 +65,16 @@ open import Scwf.DomainScwf.Comprehension.Morphism.Relation
         𝑢x𝑥↦y = Appmap.↦-↓closed 𝑢 y⊑post' 𝑢x𝑥↦post
 
 β-lemma₂' : {𝑢 : tAppmap (𝐴 :: Γ) [ 𝐵 ]} → ∀ {𝑥 x′ y′} →
-            [ 𝑢 ] ⟪ x′ , 𝑥 ⟫ ↦ ⟪ y′ ⟫ →
-            ∀ {x y} → < x , y > ∈ (< x′ , y′ > ∷ ∅) →
-            [ 𝑢 ] ⟪ x , 𝑥 ⟫ ↦ ⟪ y ⟫
+            [ 𝑢 ] ⟪ x′ ,, 𝑥 ⟫ ↦ ⟪ y′ ⟫ →
+            ∀ {x y} → (x , y) ∈ ((x′ , y′) ∷ ∅) →
+            [ 𝑢 ] ⟪ x ,, 𝑥 ⟫ ↦ ⟪ y ⟫
 β-lemma₂' 𝑢x′𝑥↦y′ here = 𝑢x′𝑥↦y′
 
 β-lemma₂ : {𝑡 : tAppmap Γ [ 𝐴 ]} →
            {𝑢 : tAppmap (𝐴 :: Γ) [ 𝐵 ]} →
            ∀ {𝑥 𝑦} → [ 𝑢 ∘ ⟨ idMap Γ , 𝑡 ⟩ ] 𝑥 ↦ 𝑦 →
            [ ap (lam 𝑢) 𝑡 ] 𝑥 ↦ 𝑦
-β-lemma₂ {Γ = Γ} {𝑢 = 𝑢} {𝑦 = ⟪ y , ⟪⟫ ⟫}
+β-lemma₂ {Γ = Γ} {𝑢 = 𝑢} {𝑦 = ⟪ y ,, ⟪⟫ ⟫}
   (∘↦-intro (⟨⟩↦-intro (id↦-intro 𝑥′⊑𝑥) 𝑡𝑥↦x) 𝑢x𝑥′↦y)
   = ap↦-intro₂ singletonIsCon singletonIsCon
     lam𝑥↦xy 𝑡𝑥↦x xy⊑xy

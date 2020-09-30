@@ -24,7 +24,7 @@ open import Scwf.DomainScwf.ArrowStructure.NbhSys.Relation 𝐴 𝐵
 -- The "containment" relation.
 data _⋐_ (𝑓 : NbhFinFun 𝐴 𝐵) (γ : Appmap 𝐴 𝐵) :
          Set where
-  ⋐-intro : (∀ {x y} → < x , y > ∈ 𝑓 → [ γ ] x ↦ y) →
+  ⋐-intro : (∀ {x y} → (x , y) ∈ 𝑓 → [ γ ] x ↦ y) →
             𝑓 ⋐ γ
 
 -- If an approximable mapping γ contains 𝑓, then it
@@ -41,7 +41,7 @@ pre↦post : (𝑓 : NbhFinFun 𝐴 𝐵) → (preable𝑓 : Preable 𝑓) →
            (postable𝑓 : Postable 𝑓) → (γ : Appmap 𝐴 𝐵) →
            𝑓 ⋐ γ → [ γ ] (pre 𝑓 preable𝑓) ↦ (post 𝑓 postable𝑓)
 pre↦post ∅ _ _ γ _ = Appmap.↦-bottom γ
-pre↦post (< x , y > ∷ 𝑓′) (pre-cons preable𝑓′ conxpre𝑓′)
+pre↦post ((x , y) ∷ 𝑓′) (pre-cons preable𝑓′ conxpre𝑓′)
   (post-cons postable𝑓′ conypost𝑓′) γ (⋐-intro p)
   = appmapLemma₃ {γ = γ} x (pre 𝑓′ preable𝑓′) y
     (post 𝑓′ _) _ _ (p here)
@@ -53,7 +53,7 @@ pre↦post (< x , y > ∷ 𝑓′) (pre-cons preable𝑓′ conxpre𝑓′)
 -- axioms.
 data AppmapClosure (𝑓 : NbhFinFun 𝐴 𝐵)
                    (con𝑓 : ConFinFun 𝑓) : ∀ x y → Set where
-  ig-inset : ∀ {x y} → < x , y > ∈ 𝑓 →
+  ig-inset : ∀ {x y} → (x , y) ∈ 𝑓 →
              AppmapClosure 𝑓 con𝑓 x y
   ig-bot  : ∀ {x} →
             AppmapClosure 𝑓 con𝑓 x (NbhSys.⊥ 𝐵)
@@ -70,7 +70,7 @@ smallest⇒exp' : (𝑓′ : NbhFinFun 𝐴 𝐵) → {con : ConFinFun 𝑓′} 
                 ⊑ₑ-proof 𝑓′ con x y
 smallest⇒exp' 𝑓′ {x = x} {y} (ig-inset xy∈𝑓′)
   = record
-      { sub = < x , y > ∷ ∅
+      { sub = (x , y) ∷ ∅
       ; sub⊆𝑓 = ⊆-lemma₄ xy∈𝑓′ ∅-isSubset
       ; preablesub = pre-cons pre-nil (con⊥₂ 𝐴)
       ; postablesub = post-cons post-nil (con⊥₂ 𝐵)
@@ -198,7 +198,7 @@ smallest⇒exp 𝑓 𝑓′ con𝑓 con𝑓′ (⋐-intro p)
 
 exp⇒smallest' : (𝑓 𝑓′ : NbhFinFun 𝐴 𝐵) → ∀ {con𝑓 con𝑓′} →
                 𝐹 𝑓 con𝑓 ⊑ₑ 𝐹 𝑓′ con𝑓′ →
-                ∀ {x y} → < x , y > ∈ 𝑓 →
+                ∀ {x y} → (x , y) ∈ 𝑓 →
                 [ SmallestAppmap 𝑓′ con𝑓′ ] x ↦ y
 exp⇒smallest' 𝑓 𝑓′ (⊑ₑ-intro₂ _ con p) xy∈𝑓 with (p xy∈𝑓)
 exp⇒smallest' 𝑓 𝑓′ (⊑ₑ-intro₂ _ con p) xy∈𝑓

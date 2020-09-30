@@ -18,8 +18,8 @@ open import Scwf.DomainScwf.ArrowStructure.Variables 𝐴 𝐵
 yboundlemma : {x : NbhSys.Nbh 𝐴} → ∀ {y sub} →
       ∀ postable𝑓 postable𝑓′ postable∪ →
       [ 𝐵 ] y ⊑ post 𝑓 postable𝑓 →
-      (∀ {x′ y′} → < x′ , y′ > ∈ sub → [ 𝐵 ] y′ ⊑ post 𝑓′ postable𝑓′) →
-      ∀ {x′ y′} → < x′ , y′ > ∈ (< x , y > ∷ sub) →
+      (∀ {x′ y′} → (x′ , y′) ∈ sub → [ 𝐵 ] y′ ⊑ post 𝑓′ postable𝑓′) →
+      ∀ {x′ y′} → (x′ , y′) ∈ ((x , y) ∷ sub) →
       [ 𝐵 ] y′ ⊑ post (𝑓 ∪ 𝑓′) postable∪
 yboundlemma {𝑓 = 𝑓} {𝑓′} postable𝑓 _ postable∪ y⊑post𝑓 _ here
   = NbhSys.⊑-trans 𝐵 y⊑post𝑓 post𝑓⊑post∪
@@ -36,7 +36,7 @@ record ⊑ₑ-proof₃ (𝑓 : NbhFinFun 𝐴 𝐵) (isCon : ConFinFun 𝑓)
     sub⊆𝑓 : sub ⊆ 𝑓
     preablesub : Preable sub
     postablesub : Postable sub
-    ybound : ∀ {x y} → < x , y > ∈ 𝑓′ → [ 𝐵 ] y ⊑ (post sub postablesub)
+    ybound : ∀ {x y} → (x , y) ∈ 𝑓′ → [ 𝐵 ] y ⊑ (post sub postablesub)
     pre⊑pre𝑓′ : [ 𝐴 ] (pre sub preablesub) ⊑ (pre 𝑓′ preable𝑓′)
 
 Con-⊔ₑ'' : ∀ {sub con𝑓 con𝑓′ con𝑓″} →
@@ -53,11 +53,11 @@ Con-⊔ₑ'' {sub = ∅} _ _ _ _
       ; ybound = xy∈∅-abs
       ; pre⊑pre𝑓′ = NbhSys.⊑-⊥ 𝐴
       }
-Con-⊔ₑ'' {𝑓 = 𝑓} {sub = < x , y > ∷ sub} _ _ sub⊆𝑓∪𝑓′ _
+Con-⊔ₑ'' {𝑓 = 𝑓} {sub = (x , y) ∷ sub} _ _ sub⊆𝑓∪𝑓′ _
   with (∪-lemma₂ {𝑓 = 𝑓} (sub⊆𝑓∪𝑓′ here))
-Con-⊔ₑ'' {sub = < x , y > ∷ sub} (⊑ₑ-intro₂ _ _ p) _ _ _
+Con-⊔ₑ'' {sub = (x , y) ∷ sub} (⊑ₑ-intro₂ _ _ p) _ _ _
   | inl xy∈𝑓 with (p xy∈𝑓)
-Con-⊔ₑ'' {sub = < x , y > ∷ sub} {con𝑓″ = cff p} 𝑓⊑𝑓″ 𝑓′⊑𝑓″
+Con-⊔ₑ'' {sub = (x , y) ∷ sub} {con𝑓″ = cff p} 𝑓⊑𝑓″ 𝑓′⊑𝑓″
   sub⊆𝑓∪𝑓′ (pre-cons preablesub conxpresub)
   | inl xy∈𝑓
   | record { sub = sub″
@@ -96,9 +96,9 @@ Con-⊔ₑ'' {sub = < x , y > ∷ sub} {con𝑓″ = cff p} 𝑓⊑𝑓″ 𝑓�
         consub″recsub = NbhSys.Con-⊔ 𝐴 {z = pre (sub″ ∪ recsub) preable∪}
                         (preLemma₁ {preable𝑓 = preablesub″} {preable∪})
                         (preLemma₂ {preable𝑓′ = recpreablesub} {preable∪})
-Con-⊔ₑ'' {sub = < x , y > ∷ sub} _ (⊑ₑ-intro₂ _ _ p) _ _
+Con-⊔ₑ'' {sub = (x , y) ∷ sub} _ (⊑ₑ-intro₂ _ _ p) _ _
   | inr xy∈𝑓′ with (p xy∈𝑓′)
-Con-⊔ₑ'' {sub = < x , y > ∷ sub} {con𝑓″ = cff p} 𝑓⊑𝑓″ 𝑓′⊑𝑓″
+Con-⊔ₑ'' {sub = (x , y) ∷ sub} {con𝑓″ = cff p} 𝑓⊑𝑓″ 𝑓′⊑𝑓″
   sub⊆𝑓∪𝑓′ (pre-cons preablesub conxpresub)
   | inr xy∈𝑓′
   | record { sub = sub″

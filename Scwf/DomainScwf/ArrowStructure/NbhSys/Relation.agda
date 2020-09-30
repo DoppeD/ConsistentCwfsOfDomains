@@ -26,5 +26,5 @@ record ⊑ₑ-proof (𝑓 : NbhFinFun 𝐴 𝐵) (isCon : ConFinFun 𝑓)
 data _⊑ₑ_ : ArrNbh → ArrNbh → Set where
   ⊑ₑ-intro₁ : ∀ {x} → ⊥ₑ ⊑ₑ x
   ⊑ₑ-intro₂ : ∀ {𝑓 𝑓′} → (con𝑓 : ConFinFun 𝑓) → (con𝑓′ : ConFinFun 𝑓′) →
-              (∀ {x y} → < x , y > ∈ 𝑓 → ⊑ₑ-proof 𝑓′ con𝑓′ x y) →
+              (∀ {x y} → (x , y) ∈ 𝑓 → ⊑ₑ-proof 𝑓′ con𝑓′ x y) →
               (𝐹 𝑓 con𝑓) ⊑ₑ (𝐹 𝑓′ con𝑓′)

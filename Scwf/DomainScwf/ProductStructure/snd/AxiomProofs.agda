@@ -30,10 +30,10 @@ snd↦-bottom {𝑥 = 𝑥} = snd-intro₁ (NbhSys.⊑-refl 𝐵)
 
 snd↦-↓closed : ∀ {𝑥 𝑦 𝑧} → ⊑ᵥ [ 𝐵 ] 𝑦 𝑧 → snd↦ 𝑡 𝑥 𝑧 →
                snd↦ 𝑡 𝑥 𝑦
-snd↦-↓closed {𝑥 = 𝑥} {⟪ y , ⟪⟫ ⟫}
+snd↦-↓closed {𝑥 = 𝑥} {⟪ y ,, ⟪⟫ ⟫}
   (⊑ᵥ-cons _ y⊑z ⊑ᵥ-nil) (snd-intro₁ z⊑⊥)
   = snd-intro₁ (NbhSys.⊑-trans 𝐵 y⊑z z⊑⊥)
-snd↦-↓closed {𝑥 = 𝑥} {⟪ y , ⟪⟫ ⟫}
+snd↦-↓closed {𝑥 = 𝑥} {⟪ y ,, ⟪⟫ ⟫}
   (⊑ᵥ-cons _ y⊑z₂ ⊑ᵥ-nil) (snd-intro₂ 𝑡𝑥↦z₁z₂)
   = snd-intro₂ 𝑡𝑥↦z₁y
   where z₁y⊑z₁z₂' = ⊑ₓ-intro₂ (NbhSys.⊑-refl 𝐴) y⊑z₂

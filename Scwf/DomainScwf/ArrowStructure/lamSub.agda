@@ -37,8 +37,8 @@ private
 
 lamSubLemma₁' : ∀ {𝑥 𝑓} → ∀ {con𝑓} →
                 [ lam 𝑡 ∘ γ ] 𝑥 ↦ ⟪ 𝐹 𝑓 con𝑓 ⟫ →
-                ∀ {x y} → < x , y > ∈ 𝑓 →
-                [ 𝑡 ∘ ⟨ γ ∘ (p Δ 𝐴) , q Δ 𝐴 ⟩ ] ⟪ x , 𝑥 ⟫ ↦ ⟪ y ⟫
+                ∀ {x y} → (x , y) ∈ 𝑓 →
+                [ 𝑡 ∘ ⟨ γ ∘ (p Δ 𝐴) , q Δ 𝐴 ⟩ ] ⟪ x ,, 𝑥 ⟫ ↦ ⟪ y ⟫
 lamSubLemma₁' (∘↦-intro γ𝑥↦𝑦 (lam↦-intro₂ 𝑓' p)) xy∈𝑓
   = ∘↦-intro γ∘pq↦ (p xy∈𝑓)
   where q↦ = q↦-intro (NbhSys.⊑-refl 𝐴)
@@ -48,10 +48,10 @@ lamSubLemma₁' (∘↦-intro γ𝑥↦𝑦 (lam↦-intro₂ 𝑓' p)) xy∈𝑓
 
 lamSubLemma₁ : ∀ {𝑥 𝑦} → [ lam 𝑡 ∘ γ ] 𝑥 ↦ 𝑦 →
                [ lam (𝑡 ∘ ⟨ (γ ∘ p Δ 𝐴) , q Δ 𝐴 ⟩) ] 𝑥 ↦ 𝑦
-lamSubLemma₁ {𝑡 = 𝑡} {Δ = Δ} {γ = γ} {𝑦 = ⟪ ⊥ₑ , ⟪⟫ ⟫}
+lamSubLemma₁ {𝑡 = 𝑡} {Δ = Δ} {γ = γ} {𝑦 = ⟪ ⊥ₑ ,, ⟪⟫ ⟫}
   (∘↦-intro γ𝑥↦𝑓' lam𝑓'↦𝑓)
   = Appmap.↦-bottom (lam (𝑡 ∘ ⟨ (γ ∘ p Δ 𝐴) , q Δ 𝐴 ⟩))
-lamSubLemma₁ {𝑦 = ⟪ 𝐹 𝑓 con𝑓 , ⟪⟫ ⟫} (∘↦-intro γ𝑥↦𝑓' lam𝑓'↦𝑓)
+lamSubLemma₁ {𝑦 = ⟪ 𝐹 𝑓 con𝑓 ,, ⟪⟫ ⟫} (∘↦-intro γ𝑥↦𝑓' lam𝑓'↦𝑓)
   = lam↦-intro₂ _ (lamSubLemma₁' lam𝑥↦𝑓)
   where lam𝑥↦𝑓 = ∘↦-intro γ𝑥↦𝑓' lam𝑓'↦𝑓
 
@@ -65,18 +65,18 @@ record P-Struct (γ : tAppmap Δ Γ) (𝑡 : tAppmap (𝐴 :: Γ) [ 𝐵 ])
   field
     𝑦 : Valuation Γ
     γ𝑥↦𝑦 : [ γ ] 𝑥 ↦ 𝑦
-    λ𝑡𝑦 : ∀ {x y} → < x , y > ∈ 𝑓 → [ 𝑡 ] ⟪ x , 𝑦 ⟫ ↦ ⟪ y ⟫
+    λ𝑡𝑦 : ∀ {x y} → (x , y) ∈ 𝑓 → [ 𝑡 ] ⟪ x ,, 𝑦 ⟫ ↦ ⟪ y ⟫
 
 getP-Struct' : {γ : tAppmap Δ Γ} →
                ∀ 𝑥 x y 𝑦 𝑧 → (𝑓 : NbhFinFun 𝐴 𝐵) →
                ∀ {con𝑦𝑧 conxy𝑓} →
                [ 𝑡 ∘ ⟨ γ ∘ p Δ 𝐴 , q Δ 𝐴 ⟩ ] 𝑥 lam↦
-               ⟪ 𝐹 (< x , y > ∷ 𝑓) conxy𝑓 ⟫ →
-               [ 𝑡 ] ⟪ x , 𝑦 ⟫ ↦ ⟪ y ⟫ →
-               (∀ {x′ y′} → < x′ , y′ > ∈ 𝑓 →
-               [ 𝑡 ] ⟪ x′ , 𝑧 ⟫ ↦ ⟪ y′ ⟫) →
-               ∀ {x′ y′} → < x′ , y′ > ∈ (< x , y > ∷ 𝑓) →
-               [ 𝑡 ] ⟪ x′ , 𝑦 ⊔ᵥ 𝑧 [ con𝑦𝑧 ] ⟫ ↦ ⟪ y′ ⟫
+               ⟪ 𝐹 ((x , y) ∷ 𝑓) conxy𝑓 ⟫ →
+               [ 𝑡 ] ⟪ x ,, 𝑦 ⟫ ↦ ⟪ y ⟫ →
+               (∀ {x′ y′} → (x′ , y′) ∈ 𝑓 →
+               [ 𝑡 ] ⟪ x′ ,, 𝑧 ⟫ ↦ ⟪ y′ ⟫) →
+               ∀ {x′ y′} → (x′ , y′) ∈ ((x , y) ∷ 𝑓) →
+               [ 𝑡 ] ⟪ x′ ,, 𝑦 ⊔ᵥ 𝑧 [ con𝑦𝑧 ] ⟫ ↦ ⟪ y′ ⟫
 getP-Struct' {Γ = Γ} {𝑡 = 𝑡} 𝑥 x y 𝑦 𝑧 𝑓 {con𝑦𝑧} _ 𝑡x𝑦↦y _ here
   = Appmap.↦-mono 𝑡 x𝑦⊑x⊔ 𝑡x𝑦↦y
   where 𝑦⊑⊔ = NbhSys.⊑-⊔-fst (ValNbhSys _) con𝑦𝑧
@@ -96,11 +96,11 @@ getP-Struct {Γ = Γ} {𝑡 = 𝑡} {γ = γ} 𝑥 ∅ _
            ; γ𝑥↦𝑦 = Appmap.↦-bottom γ
            ; λ𝑡𝑦 = xy∈∅-abs
            }
-getP-Struct 𝑥 (< x , y > ∷ 𝑓) (lam↦-intro₂ _ p)
+getP-Struct 𝑥 ((x , y) ∷ 𝑓) (lam↦-intro₂ _ p)
   with (p here)
-getP-Struct {Γ = Γ} {𝑡 = 𝑡} {γ = γ} 𝑥 (< x , y > ∷ 𝑓)
+getP-Struct {Γ = Γ} {𝑡 = 𝑡} {γ = γ} 𝑥 ((x , y) ∷ 𝑓)
   {con𝑓 = con𝑓} (lam↦-intro₂ _ p)
-  | ∘↦-intro {𝑦 = ⟪ z , 𝑧 ⟫}
+  | ∘↦-intro {𝑦 = ⟪ z ,, 𝑧 ⟫}
     (⟨⟩↦-intro (∘↦-intro (p↦-intro 𝑦⊑𝑥) γ𝑦↦𝑧)
     (q↦-intro z⊑x)) 𝑡z𝑧↦y
   = record { 𝑦 = big⊔

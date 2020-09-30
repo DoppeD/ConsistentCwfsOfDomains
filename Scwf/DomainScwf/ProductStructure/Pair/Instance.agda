@@ -2,7 +2,7 @@
 
 module Scwf.DomainScwf.ProductStructure.Pair.Instance where
 
-open import Base.Core hiding (<_,_>)
+open import Base.Core
 open import Base.Variables
 open import Scwf.DomainScwf.Appmap.Definition
 open import Scwf.DomainScwf.ProductStructure.NbhSys.Instance

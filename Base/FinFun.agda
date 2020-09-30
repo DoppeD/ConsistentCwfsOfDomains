@@ -96,5 +96,5 @@ _∪_ : FinFun A B → FinFun A B → FinFun A B
 -- From a proof that a pair of neighborhoods is in the
 -- empty set, anything.
 xy∈∅-abs : {p : Set} → ∀ {x y} →
-           _∈_ {A} {B} < x , y > ∅ → p
+           _∈_ {A} {B} (x , y) ∅ → p
 xy∈∅-abs ()

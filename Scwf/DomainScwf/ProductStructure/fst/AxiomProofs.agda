@@ -30,10 +30,10 @@ fst↦-bottom {𝑥 = 𝑥} = fst-intro₁ (NbhSys.⊑-refl 𝐴)
 
 fst↦-↓closed : ∀ {𝑥 𝑦 𝑧} → ⊑ᵥ [ 𝐴 ] 𝑦 𝑧 → fst↦ 𝑡 𝑥 𝑧 →
                fst↦ 𝑡 𝑥 𝑦
-fst↦-↓closed {𝑥 = 𝑥} {⟪ y , ⟪⟫ ⟫}
+fst↦-↓closed {𝑥 = 𝑥} {⟪ y ,, ⟪⟫ ⟫}
   (⊑ᵥ-cons _ y⊑z ⊑ᵥ-nil) (fst-intro₁ z⊑⊥)
   = fst-intro₁ (NbhSys.⊑-trans 𝐴 y⊑z z⊑⊥)
-fst↦-↓closed {𝑥 = 𝑥} {⟪ y , ⟪⟫ ⟫}
+fst↦-↓closed {𝑥 = 𝑥} {⟪ y ,, ⟪⟫ ⟫}
   (⊑ᵥ-cons _ y⊑z₁ ⊑ᵥ-nil) (fst-intro₂ 𝑡𝑥↦z₁z₂)
   = fst-intro₂ 𝑡𝑥↦yz₂
   where yz₂⊑z₁z₂' = ⊑ₓ-intro₂ y⊑z₁ (NbhSys.⊑-refl 𝐵)

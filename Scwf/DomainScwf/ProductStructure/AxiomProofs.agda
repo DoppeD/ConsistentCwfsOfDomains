@@ -1,6 +1,6 @@
 {-# OPTIONS --safe #-}
 
-open import Base.Core hiding (<_,_>)
+open import Base.Core
 
 module Scwf.DomainScwf.ProductStructure.AxiomProofs (𝐴 𝐵 : Ty) where
 
@@ -43,7 +43,7 @@ fstAxiomLemma₁ (fst-intro₂ (<>↦-intro₂ 𝑡𝑥↦y₁ _))
 
 fstAxiomLemma₂ : ∀ {𝑥 𝑦} → [ 𝑡 ] 𝑥 ↦ 𝑦 →
                  [ fst < 𝑡 , 𝑢 > ] 𝑥 ↦ 𝑦
-fstAxiomLemma₂ {𝑢 = 𝑢} {𝑦 = ⟪ y₁ , ⟪⟫ ⟫} 𝑡𝑥↦y₁
+fstAxiomLemma₂ {𝑢 = 𝑢} {𝑦 = ⟪ y₁ ,, ⟪⟫ ⟫} 𝑡𝑥↦y₁
   = fst-intro₂ ⟨⟩𝑥↦y₁⊥
   where 𝑢𝑥↦⊥ = Appmap.↦-bottom 𝑢
         ⟨⟩𝑥↦y₁⊥ = <>↦-intro₂ 𝑡𝑥↦y₁ 𝑢𝑥↦⊥
@@ -62,7 +62,7 @@ sndAxiomLemma₁ (snd-intro₂ (<>↦-intro₂ _ 𝑢𝑥↦y₂))
 
 sndAxiomLemma₂ : ∀ {𝑥 𝑦} → [ 𝑢 ] 𝑥 ↦ 𝑦 →
                  [ snd < 𝑡 , 𝑢 > ] 𝑥 ↦ 𝑦
-sndAxiomLemma₂ {𝑡 = 𝑡} {𝑦 = ⟪ y₁ , ⟪⟫ ⟫} 𝑡𝑥↦y₁
+sndAxiomLemma₂ {𝑡 = 𝑡} {𝑦 = ⟪ y₁ ,, ⟪⟫ ⟫} 𝑡𝑥↦y₁
   = snd-intro₂ ⟨⟩𝑥↦⊥y₁
   where 𝑡𝑥↦⊥ = Appmap.↦-bottom 𝑡
         ⟨⟩𝑥↦⊥y₁ = <>↦-intro₂ 𝑡𝑥↦⊥ 𝑡𝑥↦y₁

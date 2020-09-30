@@ -19,7 +19,7 @@ open import Scwf.DomainScwf.ArrowStructure.Variables 𝐴 𝐵
 ⊑ₑ-refl {⊥ₑ} = ⊑ₑ-intro₁
 ⊑ₑ-refl {𝐹 𝑓 con𝑓} = ⊑ₑ-intro₂ con𝑓 con𝑓 λ {x} {y} xy∈𝑓 →
   record
-    { sub = < x , y > ∷ ∅
+    { sub = (x , y) ∷ ∅
     ; sub⊆𝑓 = ⊆-lemma₄ xy∈𝑓 ∅-isSubset
     ; preablesub = singletonIsPreable
     ; postablesub = singletonIsPostable
@@ -32,7 +32,7 @@ open import Scwf.DomainScwf.ArrowStructure.Variables 𝐴 𝐵
 
 ⊑ₑ-⊔ₑ' : ∀ {𝑓 𝑓′ 𝑓″ con𝑓 con𝑓′ con𝑓″} →
          𝐹 𝑓′ con𝑓′ ⊑ₑ 𝐹 𝑓 con𝑓 → 𝐹 𝑓″ con𝑓″ ⊑ₑ 𝐹 𝑓 con𝑓 →
-         ∀ {x y} → < x , y > ∈ (𝑓′ ∪ 𝑓″) →
+         ∀ {x y} → (x , y) ∈ (𝑓′ ∪ 𝑓″) →
          ⊑ₑ-proof 𝑓 con𝑓 x y
 ⊑ₑ-⊔ₑ' {𝑓′ = 𝑓′} _ _ xy∈∪
   with (∪-lemma₂  {𝑓 = 𝑓′} xy∈∪)
@@ -56,7 +56,7 @@ open import Scwf.DomainScwf.ArrowStructure.Variables 𝐴 𝐵
 ⊑ₑ-⊔ₑ-fst {𝐹 𝑓 _} {𝐹 𝑓′ _} (ArrCon.con-∪ _ _ _)
   = ⊑ₑ-intro₂ _ _ λ {x} {y} xy∈𝑓 →
   record
-    { sub = < x , y > ∷ ∅
+    { sub = (x , y) ∷ ∅
     ; sub⊆𝑓 = ⊆-lemma₄ (∪-lemma₃ xy∈𝑓) ∅-isSubset
     ; preablesub = singletonIsPreable
     ; postablesub = singletonIsPostable
@@ -71,7 +71,7 @@ open import Scwf.DomainScwf.ArrowStructure.Variables 𝐴 𝐵
 ⊑ₑ-⊔ₑ-snd {𝐹 𝑓 _} {𝐹 𝑓′ _} (ArrCon.con-∪ _ _ _)
   = ⊑ₑ-intro₂ _ _ λ {x} {y} xy∈𝑓′ →
   record
-    { sub = < x , y > ∷ ∅
+    { sub = (x , y) ∷ ∅
     ; sub⊆𝑓 = ⊆-lemma₄ (∪-lemma₄ xy∈𝑓′) ∅-isSubset
     ; preablesub = singletonIsPreable
     ; postablesub = singletonIsPostable

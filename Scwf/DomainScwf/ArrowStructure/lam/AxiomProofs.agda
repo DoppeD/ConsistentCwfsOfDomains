@@ -39,8 +39,8 @@ lam↦-bottom = lam↦-intro₁
 lam↦-↓closed' : ∀ {𝑥 𝑓 𝑓′ con𝑓 con𝑓′} →
                 [ ArrNbhSys 𝐴 𝐵 ] 𝐹 𝑓 con𝑓 ⊑ 𝐹 𝑓′ con𝑓′ →
                 [ 𝑡 ] 𝑥 lam↦ ⟪ 𝐹 𝑓′ con𝑓′ ⟫ → ∀ {x y} →
-                < x , y > ∈ 𝑓 →
-                [ 𝑡 ] ⟪ x , 𝑥 ⟫ ↦ ⟪ y ⟫
+                (x , y) ∈ 𝑓 →
+                [ 𝑡 ] ⟪ x ,, 𝑥 ⟫ ↦ ⟪ y ⟫
 lam↦-↓closed' (⊑ₑ-intro₂ _ _ p) _ xy∈𝑓
   with (p xy∈𝑓)
 lam↦-↓closed' {𝑥 = 𝑥} {con𝑓′ = con𝑓′} _ 𝑡𝑥↦𝑓′ xy∈𝑓
@@ -63,21 +63,21 @@ lam↦-↓closed' {𝑥 = 𝑥} {con𝑓′ = con𝑓′} _ 𝑡𝑥↦𝑓′ x
 lam↦-↓closed : ∀ {𝑥 𝑦 𝑧} →
                ⊑ᵥ [ ArrNbhSys 𝐴 𝐵 ] 𝑦 𝑧 →
                [ 𝑡 ] 𝑥 lam↦ 𝑧 → [ 𝑡 ] 𝑥 lam↦ 𝑦
-lam↦-↓closed {𝑦 = ⟪ _ , ⟪⟫ ⟫}
+lam↦-↓closed {𝑦 = ⟪ _ ,, ⟪⟫ ⟫}
   (⊑ᵥ-cons _ ⊑ₑ-intro₁ ⊑ᵥ-nil) lam↦-intro₁
   = lam↦-intro₁
-lam↦-↓closed {𝑦 = ⟪ ⊥ₑ , ⟪⟫ ⟫}
+lam↦-↓closed {𝑦 = ⟪ ⊥ₑ ,, ⟪⟫ ⟫}
   (⊑ᵥ-cons _ y⊑𝑓′ ⊑ᵥ-nil) (lam↦-intro₂ _ p)
   = lam↦-intro₁
-lam↦-↓closed {𝑥 = 𝑥} {⟪ 𝐹 𝑓 _ , ⟪⟫ ⟫}
+lam↦-↓closed {𝑥 = 𝑥} {⟪ 𝐹 𝑓 _ ,, ⟪⟫ ⟫}
   (⊑ᵥ-cons _ 𝑓⊑𝑓′ ⊑ᵥ-nil) (lam↦-intro₂ _ p)
   = lam↦-intro₂ _ (lam↦-↓closed' 𝑓⊑𝑓′ (lam↦-intro₂ _ p))
 
 lam↦-↑directed' : ∀ {𝑓 𝑓′ 𝑥 con𝑓 con𝑓′} →
                   [ 𝑡 ] 𝑥 lam↦ ⟪ 𝐹 𝑓 con𝑓 ⟫ →
                   [ 𝑡 ] 𝑥 lam↦ ⟪ 𝐹 𝑓′ con𝑓′ ⟫ → ∀ {x y} →
-                  < x , y > ∈ (𝑓 ∪ 𝑓′) →
-                  [ 𝑡 ] ⟪ x , 𝑥 ⟫ ↦ ⟪ y ⟫
+                  (x , y) ∈ (𝑓 ∪ 𝑓′) →
+                  [ 𝑡 ] ⟪ x ,, 𝑥 ⟫ ↦ ⟪ y ⟫
 lam↦-↑directed' {𝑓 = 𝑓} _ _ xy∈𝑓⊔𝑓′
   with (∪-lemma₂ {𝑓 = 𝑓} xy∈𝑓⊔𝑓′)
 lam↦-↑directed' (lam↦-intro₂ _ p) _ _ | inl xy∈𝑓
@@ -89,7 +89,7 @@ lam↦-↑directed : ∀ {𝑥 𝑦 𝑧} →
                  [ 𝑡 ] 𝑥 lam↦ 𝑦 → [ 𝑡 ] 𝑥 lam↦ 𝑧 →
                  (con𝑦𝑧 : ValCon _ 𝑦 𝑧) →
                  [ 𝑡 ] 𝑥 lam↦ (𝑦 ⊔ᵥ 𝑧 [ con𝑦𝑧 ])
-lam↦-↑directed {𝑥 = 𝑥} {𝑧 = ⟪ z , ⟪⟫ ⟫} lam↦-intro₁ 𝑡𝑥↦z
+lam↦-↑directed {𝑥 = 𝑥} {𝑧 = ⟪ z ,, ⟪⟫ ⟫} lam↦-intro₁ 𝑡𝑥↦z
  (con-tup con⊥z _)
  rewrite (⊥⊔x≡x z {con⊥z}) = 𝑡𝑥↦z
 lam↦-↑directed {𝑥 = 𝑥} (lam↦-intro₂ con𝑓 p) lam↦-intro₁

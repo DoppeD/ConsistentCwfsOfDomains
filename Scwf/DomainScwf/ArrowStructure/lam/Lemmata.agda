@@ -34,7 +34,7 @@ shrinkLam {𝑓 = 𝑓} 𝑓⊆𝑓′ (lam↦-intro₂  _ p)
 
 -- The first component of any pair in a FinFun 𝑓 is smaller
 -- than pre 𝑓.
-preBiggest : ∀ {x y 𝑓 preable𝑓} → < x , y > ∈ 𝑓 →
+preBiggest : ∀ {x y 𝑓 preable𝑓} → (x , y) ∈ 𝑓 →
              [ 𝐴 ] x ⊑ pre 𝑓 preable𝑓
 preBiggest {preable𝑓 = pre-nil} = xy∈∅-abs
 preBiggest {preable𝑓 = pre-cons preable𝑓 conx′pre𝑓} here
@@ -45,8 +45,8 @@ preBiggest {preable𝑓 = pre-cons preable𝑓 conx′pre𝑓} (there xy∈𝑓)
 
 ↓closedLemma' : {𝑥 : Valuation Γ} → ∀ con𝑓 preable𝑓 →
                 [ 𝑡 ] 𝑥 lam↦ ⟪ 𝐹 𝑓 con𝑓 ⟫ →
-                ∀ x y → < x , y > ∈ 𝑓 →
-                [ 𝑡 ] ⟪ pre 𝑓 preable𝑓 , 𝑥 ⟫ ↦ ⟪ y ⟫
+                ∀ x y → (x , y) ∈ 𝑓 →
+                [ 𝑡 ] ⟪ pre 𝑓 preable𝑓 ,, 𝑥 ⟫ ↦ ⟪ y ⟫
 ↓closedLemma'  {𝑓 = (x ∷ 𝑓′)} {𝑥 = 𝑥} _ preable
   (lam↦-intro₂ _ p) x′ y′ x′y′∈𝑓
   = Appmap.↦-mono 𝑡 a𝑥⊑p𝑓𝑥 (p x′y′∈𝑓)
@@ -57,14 +57,14 @@ preBiggest {preable𝑓 = pre-cons preable𝑓 conx′pre𝑓} (there xy∈𝑓)
 ↓closedLemma : {𝑥 : Valuation Γ} →
                ∀ con𝑓 preable𝑓 postable𝑓 →
                [ 𝑡 ] 𝑥 lam↦ ⟪ 𝐹 𝑓 con𝑓 ⟫ →
-               [ 𝑡 ] ⟪ pre 𝑓 preable𝑓 , 𝑥 ⟫ ↦ ⟪ post 𝑓 postable𝑓 ⟫
+               [ 𝑡 ] ⟪ pre 𝑓 preable𝑓 ,, 𝑥 ⟫ ↦ ⟪ post 𝑓 postable𝑓 ⟫
 ↓closedLemma {𝑓 = ∅} _ _ _ _ = Appmap.↦-bottom 𝑡
-↓closedLemma {𝑓 = (< x , y > ∷ 𝑓′)} {𝑥 = 𝑥}
+↓closedLemma {𝑓 = ((x , y) ∷ 𝑓′)} {𝑥 = 𝑥}
   con𝑓 (pre-cons preable𝑓′ conxpre𝑓′)
   (post-cons postable𝑓′ conypost𝑓′) lam𝑡𝑥↦𝑓
   = Appmap.↦-↑directed 𝑡 𝑡pre𝑓'↦y 𝑡𝑓𝑥↦p𝑓′
     (con-tup _ con-nil)
-  where 𝑓' = < x , y > ∷ 𝑓′
+  where 𝑓' = (x , y) ∷ 𝑓′
         𝑡pre𝑓'↦y = ↓closedLemma' _ (pre-cons preable𝑓′ conxpre𝑓′)
                   lam𝑡𝑥↦𝑓 x y here
         p𝑓′⊑p𝑓 = NbhSys.⊑-⊔-snd 𝐴 conxpre𝑓′

@@ -46,7 +46,7 @@ open import Scwf.DomainScwf.Appmap.Valuation.Relation
 ∘↦-con : ∀ {𝑥 𝑦 𝑥′ 𝑦′} → _∘↦_ δ γ 𝑥 𝑦 → _∘↦_ δ γ 𝑥′ 𝑦′ →
          ValCon Γ 𝑥 𝑥′ → ValCon Θ 𝑦 𝑦′
 ∘↦-con {𝑦 = ⟪⟫} {𝑦′ = ⟪⟫} _ _ _ = con-nil
-∘↦-con {𝑦 = ⟪ y , 𝑦 ⟫} {𝑦′ = ⟪ y′ , 𝑦′ ⟫}
+∘↦-con {𝑦 = ⟪ y ,, 𝑦 ⟫} {𝑦′ = ⟪ y′ ,, 𝑦′ ⟫}
   (∘↦-intro γ𝑥↦𝑧 δ𝑧↦𝑦) (∘↦-intro γ𝑥′↦𝑧′ δ𝑧′↦𝑦′) con𝑥𝑥′
   with (Appmap.↦-con δ δ𝑧↦𝑦 δ𝑧′↦𝑦′ con𝑧𝑧′)
   where con𝑧𝑧′ = Appmap.↦-con γ γ𝑥↦𝑧 γ𝑥′↦𝑧′ con𝑥𝑥′
