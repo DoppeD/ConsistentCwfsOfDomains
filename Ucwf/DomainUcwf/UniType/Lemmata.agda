@@ -30,7 +30,7 @@ shrink⊑ᵤ : ∀ {i j} → {𝑓 𝑓′ : FinFunₛ {i}} →
            {𝑓″ : FinFunₛ {j}} → λᵤ 𝑓′ ⊑ᵤ λᵤ 𝑓″ → 𝑓 ⊆ₛ 𝑓′ →
            λᵤ 𝑓 ⊑ᵤ λᵤ 𝑓″
 shrink⊑ᵤ {𝑓 = 𝑓} {𝑓′} {𝑓″} (⊑ᵤ-intro₂ _ _ p) 𝑓⊆𝑓′
-  = ⊑ᵤ-intro₂ 𝑓 𝑓″ (λ x y xy∈𝑓 → p x y (𝑓⊆𝑓′ < x , y >ₛ xy∈𝑓))
+  = ⊑ᵤ-intro₂ 𝑓 𝑓″ (λ x y xy∈𝑓 → p x y (𝑓⊆𝑓′ xy∈𝑓))
 
 ∅-⊥ᵤ : ∀ {𝑓} → (λᵤ ∅) ⊑ᵤ (λᵤ 𝑓)
 ∅-⊥ᵤ {𝑓} = ⊑ᵤ-intro₂ ∅ 𝑓 (λ x y → xy∈∅-abs)
@@ -43,8 +43,7 @@ shrink⊑ᵤ {𝑓 = 𝑓} {𝑓′} {𝑓″} (⊑ᵤ-intro₂ _ _ p) 𝑓⊆�
   = ⊑ᵤ-intro₂ 𝑓 𝑓′ p
 ⊑ᵤ-⊔ᵤ-lemma₁ (λᵤ 𝑓) (λᵤ 𝑓′) (λᵤ 𝑓″) (⊑ᵤ-intro₂ _ _ p) =
   ⊑ᵤ-intro₂ 𝑓 (𝑓′ ∪ₛ 𝑓″) (λ x′ y′ x′y′∈𝑓 →
-    lift⊑ᵤ-proof 𝑓′ (𝑓′ ∪ₛ 𝑓″) x′ y′ (λ q q∈𝑓′ →
-      ∪ₛ-lemma₃ q q∈𝑓′) (p x′ y′ x′y′∈𝑓))
+    lift⊑ᵤ-proof 𝑓′ (𝑓′ ∪ₛ 𝑓″) x′ y′ ∪ₛ-lemma₃ (p x′ y′ x′y′∈𝑓))
 
 ⊑ᵤ-⊔ᵤ-lemma₂ : ∀ {i j} → (x : UniNbh {i}) →
                (y z : UniNbh {j}) → x ⊑ᵤ z →
@@ -54,8 +53,7 @@ shrink⊑ᵤ {𝑓 = 𝑓} {𝑓′} {𝑓″} (⊑ᵤ-intro₂ _ _ p) 𝑓⊆�
   = ⊑ᵤ-intro₂ 𝑓 𝑓″ p
 ⊑ᵤ-⊔ᵤ-lemma₂ (λᵤ 𝑓) (λᵤ 𝑓′) (λᵤ 𝑓″) (⊑ᵤ-intro₂ _ _ p)
   = ⊑ᵤ-intro₂ 𝑓 (𝑓′ ∪ₛ 𝑓″) (λ x′ y′ x′y′∈𝑓 →
-      lift⊑ᵤ-proof 𝑓″ (𝑓′ ∪ₛ 𝑓″) x′ y′ (λ q q∈𝑓″ →
-        ∪ₛ-lemma₄ q q∈𝑓″) (p x′ y′ x′y′∈𝑓))
+      lift⊑ᵤ-proof 𝑓″ (𝑓′ ∪ₛ 𝑓″) x′ y′ ∪ₛ-lemma₄ (p x′ y′ x′y′∈𝑓))
 
 ⊑ᵤ-⊔ᵤ-lemma₃' : ∀ {i j} → {𝑓 𝑓′ : FinFunₛ {i}} →
                 {𝑓″ 𝑓‴ : FinFunₛ {j}} → (λᵤ 𝑓) ⊑ᵤ (λᵤ 𝑓″) →
@@ -63,7 +61,7 @@ shrink⊑ᵤ {𝑓 = 𝑓} {𝑓′} {𝑓″} (⊑ᵤ-intro₂ _ _ p) 𝑓⊆�
                 ∀ x y → < x , y >ₛ ∈ₛ (𝑓 ∪ₛ 𝑓′) →
                 ⊑ᵤ-proof (𝑓″ ∪ₛ 𝑓‴) x y
 ⊑ᵤ-⊔ᵤ-lemma₃' {𝑓 = 𝑓} {𝑓′} _ _ x y xy∈∪
-  with (∪ₛ-lemma₂ {𝑓 = 𝑓} < x , y >ₛ xy∈∪)
+  with (∪ₛ-lemma₂ {𝑓 = 𝑓} xy∈∪)
 ⊑ᵤ-⊔ᵤ-lemma₃' (⊑ᵤ-intro₂ _ _ p) _ x y _
   | inl xy∈𝑓 with (p x y xy∈𝑓)
 ⊑ᵤ-⊔ᵤ-lemma₃' {𝑓″ = 𝑓″} {𝑓‴} _ _ _ _ _ | _
@@ -75,8 +73,7 @@ shrink⊑ᵤ {𝑓 = 𝑓} {𝑓′} {𝑓″} (⊑ᵤ-intro₂ _ _ p) 𝑓⊆�
   = record { sub = sub
            ; y⊑ᵤpost = y⊑ᵤpost
            ; pre⊑ᵤx = pre⊑ᵤx
-           ; sub⊆𝑓′ = λ x′y′ x′y′∈sub →
-               ∪ₛ-lemma₃ x′y′ (sub⊆𝑓′ x′y′ x′y′∈sub)
+           ; sub⊆𝑓′ = λ x′y′∈sub → ∪ₛ-lemma₃ (sub⊆𝑓′ x′y′∈sub)
            }
 ⊑ᵤ-⊔ᵤ-lemma₃' _ (⊑ᵤ-intro₂ _ _ p) x y _
   | inr xy∈𝑓′ with (p x y xy∈𝑓′)
@@ -89,8 +86,7 @@ shrink⊑ᵤ {𝑓 = 𝑓} {𝑓′} {𝑓″} (⊑ᵤ-intro₂ _ _ p) 𝑓⊆�
   = record { sub = sub
            ; y⊑ᵤpost = y⊑ᵤpost
            ; pre⊑ᵤx = pre⊑ᵤx
-           ; sub⊆𝑓′ = λ x′y′ x′y′∈sub →
-               ∪ₛ-lemma₄ x′y′ (sub⊆𝑓′ x′y′ x′y′∈sub)
+           ; sub⊆𝑓′ = λ x′y′∈sub → ∪ₛ-lemma₄ (sub⊆𝑓′ x′y′∈sub)
            }
 
 ⊑ᵤ-⊔ᵤ-lemma₃ : ∀ {i j} → (x y : UniNbh {i}) →

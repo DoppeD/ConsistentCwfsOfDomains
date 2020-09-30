@@ -29,7 +29,7 @@ pre-biggest (< x′ , y′ >ₛ ∷ 𝑓′) x y (there xy∈𝑓′)
 shrinklam : ∀ {𝑥 𝑓 𝑓′} → 𝑓 ⊆ₛ 𝑓′ →
             [ 𝑡 ] 𝑥 lam↦ ⟪ λᵤ 𝑓′ ⟫ → [ 𝑡 ] 𝑥 lam↦ ⟪ λᵤ 𝑓 ⟫
 shrinklam {𝑓 = 𝑓} 𝑓⊆𝑓′ (lam↦-intro₂ p)
-  = lam↦-intro₂ (λ xy∈𝑓 → p (𝑓⊆𝑓′ < _ , _ >ₛ xy∈𝑓))
+  = lam↦-intro₂ (λ xy∈𝑓 → p (𝑓⊆𝑓′ xy∈𝑓))
 
 ↓closed-lemma' : ∀ 𝑥 𝑓 → [ 𝑡 ] 𝑥 lam↦ ⟪ λᵤ 𝑓 ⟫ →
                  ∀ x y → < x , y >ₛ ∈ₛ 𝑓 →
@@ -53,6 +53,6 @@ shrinklam {𝑓 = 𝑓} 𝑓⊆𝑓′ (lam↦-intro₂ p)
         p𝑓′𝑥⊑p𝑓𝑥 = ⊑ᵥ-cons (nToCtx (suc n)) p𝑓′⊑p𝑓
                    (NbhSys.⊑-refl (ValNbhSys _))
         𝑡p𝑓′𝑥↦p𝑓′ = ↓closed-lemma 𝑥 𝑓′
-                    (shrinklam (λ 𝑦 𝑦∈𝑓′ → there 𝑦∈𝑓′)
+                    (shrinklam (λ 𝑦∈𝑓′ → there 𝑦∈𝑓′)
                     lam𝑡𝑥↦𝑓)
         𝑡𝑓𝑥↦p𝑓′ = Appmap.↦-mono 𝑡 p𝑓′𝑥⊑p𝑓𝑥 𝑡p𝑓′𝑥↦p𝑓′
