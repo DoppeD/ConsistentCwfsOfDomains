@@ -29,6 +29,6 @@ record Appmap (𝒟 𝒟′ : NbhSys) : Set₁ where
 [ γ ] x ↦ y = Appmap._↦_ γ x y
 
 -- A (trivial) proof that approximable mappings are total.
-↦-total : (γ : Appmap 𝒟 𝒟′) → ∀ x →
+↦-total : (γ : Appmap 𝒟 𝒟′) → ∀ {x} →
           Σ (NbhSys.Nbh 𝒟′) λ y → [ γ ] x ↦ y
-↦-total {𝒟′ = 𝒟′} γ x = NbhSys.⊥ 𝒟′ , Appmap.↦-bottom γ
+↦-total {𝒟′ = 𝒟′} γ = NbhSys.⊥ 𝒟′ , Appmap.↦-bottom γ
