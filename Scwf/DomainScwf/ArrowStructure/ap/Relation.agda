@@ -18,7 +18,7 @@ data [_,_]_ap↦_ (𝑡 : tAppmap Γ [ ArrNbhSys 𝐴 𝐵 ])
                 Valuation [ 𝐵 ] → Set where
   ap↦-intro₁ : ∀ {x} → [ 𝐵 ] x ⊑ NbhSys.⊥ 𝐵 →
                [ 𝑡 , 𝑢 ] 𝑥 ap↦ ⟪ x ⟫
-  ap↦-intro₂ : ∀ x y 𝑓 con𝑓 conxy →
+  ap↦-intro₂ : ∀ {x y 𝑓} con𝑓 conxy →
                [ 𝑡 ] 𝑥 ↦ ⟪ 𝐹 𝑓 con𝑓 ⟫ → [ 𝑢 ] 𝑥 ↦ ⟪ x ⟫ →
                [ ArrNbhSys 𝐴 𝐵 ] (𝐹 (< x , y > ∷ ∅) conxy) ⊑ (𝐹 𝑓 con𝑓) →
                [ 𝑡 , 𝑢 ] 𝑥 ap↦ ⟪ y ⟫

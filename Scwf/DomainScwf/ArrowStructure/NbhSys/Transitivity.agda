@@ -32,7 +32,7 @@ shrinkExp' : ∀ {con𝑓′ con𝑓″} →
              𝑓 ⊆ 𝑓′ → (𝐹 𝑓′ con𝑓′) ⊑ₑ (𝐹 𝑓″ con𝑓″) →
              ∀ x y → < x , y > ∈ 𝑓 →
              ⊑ₑ-proof 𝑓″ con𝑓″ x y
-shrinkExp' 𝑓⊆𝑓′ (⊑ₑ-intro₂ _ _ 𝑓 𝑓′ p) x y xy∈𝑓
+shrinkExp' 𝑓⊆𝑓′ (⊑ₑ-intro₂ _ _ p) x y xy∈𝑓
   = p x y (𝑓⊆𝑓′ < x , y > xy∈𝑓)
 
 -- If 𝑓 ⊆ 𝑓′ and 𝑓′ ⊑ₑ 𝑓″, then we can adapt the ⊑ₑ-proof
@@ -41,7 +41,7 @@ shrinkExp : ∀ {con𝑓 con𝑓′ con𝑓″} →
             𝑓 ⊆ 𝑓′ → (𝐹 𝑓′ con𝑓′) ⊑ₑ (𝐹 𝑓″ con𝑓″) →
             (𝐹 𝑓 con𝑓) ⊑ₑ (𝐹 𝑓″ con𝑓″)
 shrinkExp {𝑓 = 𝑓} {𝑓″ = 𝑓″} 𝑓⊆𝑓′ 𝑓′⊑𝑓″
-   = ⊑ₑ-intro₂ 𝑓 𝑓″ _ _ (shrinkExp' 𝑓⊆𝑓′ 𝑓′⊑𝑓″)
+   = ⊑ₑ-intro₂ _ _ (shrinkExp' 𝑓⊆𝑓′ 𝑓′⊑𝑓″)
 
 Ω : (𝑓 𝑓′ : NbhFinFun 𝐴 𝐵) →
     ∀ {con𝑓 con𝑓′ preable𝑓 postable𝑓} →
@@ -55,10 +55,10 @@ shrinkExp {𝑓 = 𝑓} {𝑓″ = 𝑓″} 𝑓⊆𝑓′ 𝑓′⊑𝑓″
            ; pre⊑p𝑓 = NbhSys.⊑-refl 𝐴
            ; sub⊆𝑓′ = ∅-isSubset
            }
-Ω (< x , y > ∷ 𝑓″) 𝑓′ (⊑ₑ-intro₂ _ _ _ _ p) with (p x y here)
+Ω (< x , y > ∷ 𝑓″) 𝑓′ (⊑ₑ-intro₂ _ _ p) with (p x y here)
 Ω (< x , y > ∷ 𝑓″) 𝑓′ {cff con𝑓} {cff con𝑓′}
   {pre-cons preable𝑓″ conxpre𝑓″} {post-cons postable𝑓″ conypost𝑓″}
-  (⊑ₑ-intro₂ _ _ _ _ p)
+  (⊑ₑ-intro₂ _ _ p)
   | record { sub = sub
            ; sub⊆𝑓 = sub⊆𝑓
            ; preablesub = preablesub
@@ -86,7 +86,7 @@ shrinkExp {𝑓 = 𝑓} {𝑓″ = 𝑓″} 𝑓⊆𝑓′ 𝑓′⊑𝑓″
         conTail = subsetIsCon (cff con𝑓) ⊆-lemma₃
         recur = Ω 𝑓″ 𝑓′ {conTail} {_} {preable𝑓″} {postable𝑓″}
                 (shrinkExp {con𝑓 = conTail} ⊆-lemma₃
-                (⊑ₑ-intro₂ (< x , y > ∷ 𝑓″) 𝑓′ (cff con𝑓) _ p))
+                (⊑ₑ-intro₂ (cff con𝑓) _ p))
         sub′ = ⊑ₑ-proof₂.sub recur
         preablesub′ = ⊑ₑ-proof₂.preablesub recur
         postablesub′ = ⊑ₑ-proof₂.postablesub recur
@@ -107,8 +107,8 @@ shrinkExp {𝑓 = 𝑓} {𝑓″ = 𝑓″} 𝑓⊆𝑓′ 𝑓′⊑𝑓″
 ⊑ₑ-trans' : ∀ {con𝑓 con𝑓′ con𝑓″} →
             (𝐹 𝑓 con𝑓) ⊑ₑ (𝐹 𝑓′ con𝑓′) → (𝐹 𝑓′ con𝑓′) ⊑ₑ (𝐹 𝑓″ con𝑓″) →
             ∀ x y → < x , y > ∈ 𝑓 → ⊑ₑ-proof 𝑓″ con𝑓″ x y
-⊑ₑ-trans' {𝑓} {𝑓′} {𝑓″} {con𝑓} {con𝑓′} (⊑ₑ-intro₂ _ _ _ _ p₁)
-  (⊑ₑ-intro₂ _ _ preable𝑓′ preable𝑓″ p₂) x y xy∈𝑓
+⊑ₑ-trans' {𝑓} {𝑓′} {𝑓″} {con𝑓} {con𝑓′} (⊑ₑ-intro₂ _ _ p₁)
+  (⊑ₑ-intro₂ preable𝑓′ preable𝑓″ p₂) x y xy∈𝑓
   = record
       { sub = 𝑓″sub
       ; sub⊆𝑓 = ⊑ₑ-proof₂.sub⊆𝑓′ 𝑓″proof₂
@@ -128,11 +128,11 @@ shrinkExp {𝑓 = 𝑓} {𝑓″ = 𝑓″} 𝑓⊆𝑓′ 𝑓′⊑𝑓″
                    {preable𝑓 = 𝑓′subpreable} {𝑓′subpostable}
                    (shrinkExp
                    (⊑ₑ-proof.sub⊆𝑓 𝑓′proof)
-                   (⊑ₑ-intro₂ 𝑓′ 𝑓″ preable𝑓′ preable𝑓″ p₂))
+                   (⊑ₑ-intro₂ preable𝑓′ preable𝑓″ p₂))
         𝑓″sub = ⊑ₑ-proof₂.sub 𝑓″proof₂
 
 ⊑ₑ-trans : ∀ {x y z} → x ⊑ₑ y → y ⊑ₑ z → x ⊑ₑ z
 ⊑ₑ-trans {x = ⊥ₑ} _ _ = ⊑ₑ-intro₁
 ⊑ₑ-trans {x = 𝐹 𝑓 _} {⊥ₑ} {⊥ₑ} x⊑y ⊑ₑ-intro₁ = x⊑y
 ⊑ₑ-trans {x = 𝐹 𝑓 _} {𝐹 𝑓′ _} {𝐹 𝑓″ _} x⊑y y⊑z
-  = ⊑ₑ-intro₂ 𝑓 𝑓″ _ _ (⊑ₑ-trans' x⊑y y⊑z)
+  = ⊑ₑ-intro₂ _ _ (⊑ₑ-trans' x⊑y y⊑z)

@@ -37,8 +37,7 @@ fstAxiomLemma₁ : ∀ 𝑥 𝑦 → [ fst < 𝑡 , 𝑢 > ] 𝑥 ↦ 𝑦 →
                  [ 𝑡 ] 𝑥 ↦ 𝑦
 fstAxiomLemma₁ {𝑡 = 𝑡} 𝑥 _ (fst-intro₁ _ y y⊑⊥)
   = Appmap.↦-↓closed 𝑡 tup-y⊑⊥ (Appmap.↦-bottom 𝑡)
-  where tup-y⊑⊥ = ⊑ᵥ-cons [ 𝐴 ] ⟪ y ⟫ ⟪ NbhSys.⊥ 𝐴 ⟫
-                  y⊑⊥ ⊑ᵥ-nil
+  where tup-y⊑⊥ = ⊑ᵥ-cons [ 𝐴 ] y⊑⊥ ⊑ᵥ-nil
 fstAxiomLemma₁ 𝑥 _
   (fst-intro₂ _ y₁ _ (<>↦-intro₂ _ _ _ 𝑡𝑥↦y₁ _))
   = 𝑡𝑥↦y₁
@@ -58,8 +57,7 @@ sndAxiomLemma₁ : ∀ 𝑥 𝑦 → [ snd < 𝑡 , 𝑢 > ] 𝑥 ↦ 𝑦 →
                  [ 𝑢 ] 𝑥 ↦ 𝑦
 sndAxiomLemma₁ {𝑢 = 𝑢} 𝑥 _ (snd-intro₁ _ y y⊑⊥)
   = Appmap.↦-↓closed 𝑢 tup-y⊑⊥ (Appmap.↦-bottom 𝑢)
-  where tup-y⊑⊥ = ⊑ᵥ-cons [ 𝐵 ] ⟪ y ⟫ ⟪ NbhSys.⊥ 𝐵 ⟫
-                  y⊑⊥ ⊑ᵥ-nil
+  where tup-y⊑⊥ = ⊑ᵥ-cons [ 𝐵 ] y⊑⊥ ⊑ᵥ-nil
 sndAxiomLemma₁ 𝑥 _
   (snd-intro₂ _ _ y₂ (<>↦-intro₂ _ _ _ _ 𝑢𝑥↦y₂))
   = 𝑢𝑥↦y₂

@@ -12,7 +12,7 @@ open import Agda.Builtin.Nat
 data ⊑ᵥ : (Γ : Ctx n) → (𝑥 𝑦 : Valuation Γ) →
           Set where
   ⊑ᵥ-nil : ⊑ᵥ [] ⟪⟫ ⟪⟫
-  ⊑ᵥ-cons : (Γ : Ctx (suc n)) → ∀ 𝑥 𝑦 →
+  ⊑ᵥ-cons : (Γ : Ctx (suc n)) → ∀ {𝑥 𝑦} →
             [ head Γ ] (ctHead 𝑥) ⊑ (ctHead 𝑦) →
             ⊑ᵥ (tail Γ) (ctTail 𝑥) (ctTail 𝑦) →
             ⊑ᵥ Γ 𝑥 𝑦

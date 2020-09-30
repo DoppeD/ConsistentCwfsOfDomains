@@ -55,7 +55,7 @@ Con-⊔ₑ'' {sub = ∅} _ _ _ _
       }
 Con-⊔ₑ'' {𝑓 = 𝑓} {sub = < x , y > ∷ sub} _ _ sub⊆𝑓∪𝑓′ _
   with (∪-lemma₂ {𝑓 = 𝑓} (sub⊆𝑓∪𝑓′ < x , y > here))
-Con-⊔ₑ'' {sub = < x , y > ∷ sub} (⊑ₑ-intro₂ _ _ _ _ p) _ _ _
+Con-⊔ₑ'' {sub = < x , y > ∷ sub} (⊑ₑ-intro₂ _ _ p) _ _ _
   | inl xy∈𝑓 with (p x y xy∈𝑓)
 Con-⊔ₑ'' {sub = < x , y > ∷ sub} {con𝑓″ = cff p} 𝑓⊑𝑓″ 𝑓′⊑𝑓″
   sub⊆𝑓∪𝑓′ (pre-cons preablesub conxpresub)
@@ -96,7 +96,7 @@ Con-⊔ₑ'' {sub = < x , y > ∷ sub} {con𝑓″ = cff p} 𝑓⊑𝑓″ 𝑓�
         consub″recsub = NbhSys.Con-⊔ 𝐴 {z = pre (sub″ ∪ recsub) preable∪}
                         (preLemma₁ {preable𝑓 = preablesub″} {preable∪})
                         (preLemma₂ {preable𝑓′ = recpreablesub} {preable∪})
-Con-⊔ₑ'' {sub = < x , y > ∷ sub} _ (⊑ₑ-intro₂ _ _ _ _ p) _ _
+Con-⊔ₑ'' {sub = < x , y > ∷ sub} _ (⊑ₑ-intro₂ _ _ p) _ _
   | inr xy∈𝑓′ with (p x y xy∈𝑓′)
 Con-⊔ₑ'' {sub = < x , y > ∷ sub} {con𝑓″ = cff p} 𝑓⊑𝑓″ 𝑓′⊑𝑓″
   sub⊆𝑓∪𝑓′ (pre-cons preablesub conxpresub)

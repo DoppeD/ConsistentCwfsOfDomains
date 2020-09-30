@@ -13,7 +13,7 @@ open import Scwf.DomainScwf.Appmap.Valuation.Relation
 open import Scwf.DomainScwf.Comprehension.p.Relation
 
 p↦-mono : ∀ {𝑥 𝑦 𝑧} → ⊑ᵥ (𝐴 :: Γ) 𝑥 𝑦 → 𝑥 p↦ 𝑧 → 𝑦 p↦ 𝑧
-p↦-mono {𝑦 = 𝑦} {𝑧} (⊑ᵥ-cons _ _ _ _ 𝑥⊑𝑦) (p↦-intro _ _ 𝑧⊑𝑥)
+p↦-mono {𝑦 = 𝑦} {𝑧} (⊑ᵥ-cons _ _ 𝑥⊑𝑦) (p↦-intro _ _ 𝑧⊑𝑥)
   = p↦-intro 𝑦 𝑧 𝑧⊑tail𝑦
   where 𝑧⊑tail𝑦 = NbhSys.⊑-trans (ValNbhSys _) 𝑧⊑𝑥 𝑥⊑𝑦
 

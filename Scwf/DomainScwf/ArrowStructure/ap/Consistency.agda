@@ -32,17 +32,17 @@ ap↦-con {𝑦′ = ⟪ y' , ⟪⟫ ⟫} (ap↦-intro₁ y⊑⊥) ap𝑥′↦�
   = NbhSys.Con-⊔ (ValNbhSys [ 𝐵 ]) 𝑦⊑𝑦′ 𝑦′⊑𝑦′
   where 𝑦′⊑𝑦′ = NbhSys.⊑-refl (ValNbhSys _)
         y⊑y′ = NbhSys.⊑-trans 𝐵 y⊑⊥ (NbhSys.⊑-⊥ 𝐵)
-        𝑦⊑𝑦′ = ⊑ᵥ-cons _ _ _ y⊑y′ ⊑ᵥ-nil
-ap↦-con (ap↦-intro₂ _ _ _ _ _ _ _ _) (ap↦-intro₁ y′⊑⊥) _
+        𝑦⊑𝑦′ = ⊑ᵥ-cons _ y⊑y′ ⊑ᵥ-nil
+ap↦-con (ap↦-intro₂ _ _ _ _ _) (ap↦-intro₁ y′⊑⊥) _
   = NbhSys.Con-⊔ (ValNbhSys [ 𝐵 ]) 𝑦⊑𝑦 𝑦′⊑𝑦
   where 𝑦⊑𝑦 = NbhSys.⊑-refl (ValNbhSys _)
         y′⊑y = NbhSys.⊑-trans 𝐵 y′⊑⊥ (NbhSys.⊑-⊥ 𝐵)
-        𝑦′⊑𝑦 = ⊑ᵥ-cons _ _ _ y′⊑y ⊑ᵥ-nil
+        𝑦′⊑𝑦 = ⊑ᵥ-cons _ y′⊑y ⊑ᵥ-nil
 ap↦-con
-  (ap↦-intro₂ x y 𝑓 con𝑓 conxy 𝑡𝑥↦𝑓 𝑢𝑥↦x
-  (⊑ₑ-intro₂ _ _ _ _ p₁))
-  (ap↦-intro₂ x′ y′ 𝑓′ con𝑓′ conx′y′ 𝑡𝑥′↦𝑓′ 𝑢𝑥′↦x′
-  (⊑ₑ-intro₂ _ _ _ _ p₂))
+  (ap↦-intro₂ {x} {y} con𝑓 conxy 𝑡𝑥↦𝑓 𝑢𝑥↦x
+  (⊑ₑ-intro₂ _ _ p₁))
+  (ap↦-intro₂ {x′} {y′} con𝑓′ conx′y′ 𝑡𝑥′↦𝑓′ 𝑢𝑥′↦x′
+  (⊑ₑ-intro₂ _ _ p₂))
   con𝑥𝑥′
   with (fromValCon (Appmap.↦-con 𝑡 𝑡𝑥↦𝑓 𝑡𝑥′↦𝑓′ con𝑥𝑥′))
 ... | con-∪ _ _ (cff p) = toValCon conyy′

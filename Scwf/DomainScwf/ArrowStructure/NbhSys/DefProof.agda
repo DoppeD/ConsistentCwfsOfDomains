@@ -192,16 +192,16 @@ smallest⇒exp : (𝑓 𝑓′ : NbhFinFun 𝐴 𝐵) →
                𝑓 ⋐ SmallestAppmap 𝑓′ con𝑓′ →
                𝐹 𝑓 con𝑓 ⊑ₑ 𝐹 𝑓′ con𝑓′
 smallest⇒exp 𝑓 𝑓′ con𝑓 con𝑓′ (⋐-intro p)
-  = ⊑ₑ-intro₂ 𝑓 𝑓′ con𝑓 con𝑓′ (λ x y xy∈𝑓 →
+  = ⊑ₑ-intro₂ con𝑓 con𝑓′ (λ x y xy∈𝑓 →
     smallest⇒exp' 𝑓′ {con𝑓′} x y (p x y xy∈𝑓))
 
 exp⇒smallest' : (𝑓 𝑓′ : NbhFinFun 𝐴 𝐵) → ∀ {con𝑓 con𝑓′} →
                 𝐹 𝑓 con𝑓 ⊑ₑ 𝐹 𝑓′ con𝑓′ →
                 ∀ x y → < x , y > ∈ 𝑓 →
                 [ SmallestAppmap 𝑓′ con𝑓′ ] x ↦ y
-exp⇒smallest' 𝑓 𝑓′ (⊑ₑ-intro₂ _ _ _ con p) x y xy∈𝑓
+exp⇒smallest' 𝑓 𝑓′ (⊑ₑ-intro₂ _ con p) x y xy∈𝑓
   with (p x y xy∈𝑓)
-exp⇒smallest' 𝑓 𝑓′ (⊑ₑ-intro₂ _ _ _ con p) x y xy∈𝑓
+exp⇒smallest' 𝑓 𝑓′ (⊑ₑ-intro₂ _ con p) x y xy∈𝑓
   | record { sub = 𝑓″
            ; sub⊆𝑓 = sub⊆𝑓
            ; preablesub = preable𝑓″

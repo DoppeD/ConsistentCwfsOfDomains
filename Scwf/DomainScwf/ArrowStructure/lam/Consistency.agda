@@ -34,10 +34,10 @@ lamPrePost {x} {y} {𝑓} {𝑥}
   preable𝑓 conxpre𝑓 postable𝑓 conypost𝑓 𝑡x𝑥↦y 𝑡x𝑥↦post𝑓
   = Appmap.↦-↑directed 𝑡 𝑡x⊔pre𝑓𝑥↦y 𝑡x⊔pre𝑓𝑥↦post𝑓
     (toValCon conypost𝑓)
-  where x𝑥⊑prexy𝑓𝑥 = ⊑ᵥ-cons _ _ _ (NbhSys.⊑-⊔-fst 𝐴 conxpre𝑓)
+  where x𝑥⊑prexy𝑓𝑥 = ⊑ᵥ-cons _ (NbhSys.⊑-⊔-fst 𝐴 conxpre𝑓)
                      ⊑ᵥ-refl
         𝑡x⊔pre𝑓𝑥↦y = Appmap.↦-mono 𝑡 x𝑥⊑prexy𝑓𝑥 𝑡x𝑥↦y
-        pre𝑓𝑥⊑prexy𝑓𝑥 = ⊑ᵥ-cons _ _ _ (NbhSys.⊑-⊔-snd 𝐴 conxpre𝑓)
+        pre𝑓𝑥⊑prexy𝑓𝑥 = ⊑ᵥ-cons _ (NbhSys.⊑-⊔-snd 𝐴 conxpre𝑓)
                         ⊑ᵥ-refl
         𝑡x⊔pre𝑓𝑥↦post𝑓 = Appmap.↦-mono 𝑡 pre𝑓𝑥⊑prexy𝑓𝑥 𝑡x𝑥↦post𝑓
 
@@ -79,10 +79,10 @@ lam↦-con' {𝑓} {con𝑥𝑥′ = con𝑥𝑥′} p₁ p₂ x y xy∈∪
   with (∪-lemma₂ {𝑓 = 𝑓} xy∈∪)
 ... | inl xy∈𝑓 = Appmap.↦-mono 𝑡 x𝑥⊑x𝑥⊔𝑥′ (p₁ x y xy∈𝑓)
   where 𝑥⊑𝑥⊔𝑥′ = NbhSys.⊑-⊔-fst (ValNbhSys Γ) con𝑥𝑥′
-        x𝑥⊑x𝑥⊔𝑥′ = ⊑ᵥ-cons _ _ _ (NbhSys.⊑-refl 𝐴) 𝑥⊑𝑥⊔𝑥′
+        x𝑥⊑x𝑥⊔𝑥′ = ⊑ᵥ-cons _ (NbhSys.⊑-refl 𝐴) 𝑥⊑𝑥⊔𝑥′
 ... | inr xy∈𝑓′ = Appmap.↦-mono 𝑡 x𝑥′⊑x𝑥⊔𝑥′ (p₂ x y xy∈𝑓′)
   where 𝑥′⊑𝑥⊔𝑥′ = NbhSys.⊑-⊔-snd (ValNbhSys Γ) con𝑥𝑥′
-        x𝑥′⊑x𝑥⊔𝑥′ = ⊑ᵥ-cons _ _ _ (NbhSys.⊑-refl 𝐴) 𝑥′⊑𝑥⊔𝑥′
+        x𝑥′⊑x𝑥⊔𝑥′ = ⊑ᵥ-cons _ (NbhSys.⊑-refl 𝐴) 𝑥′⊑𝑥⊔𝑥′
 
 from⊑ₑ-proof₄ : ∀ {𝑓 𝑓′ 𝑥 𝑥′ sub} →
                (∀ x y → < x , y > ∈ 𝑓 → [ 𝑡 ] ⟪ x , 𝑥 ⟫ ↦ ⟪ y ⟫) →

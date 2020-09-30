@@ -38,13 +38,13 @@ open import Scwf.DomainScwf.Comprehension.Morphism.Relation
   where id𝑥↦⊥ = Appmap.↦-bottom (idMap Γ)
         𝑡𝑥↦⊥ = Appmap.↦-bottom 𝑡
         ⟨⟩𝑥↦⊥ = ⟨⟩↦-intro 𝑥 ⊥ᵥ id𝑥↦⊥ 𝑡𝑥↦⊥
-        tupy⊑⊥ = ⊑ᵥ-cons [ 𝐵 ] ⟪ y ⟫ ⊥ᵥ p ⊑ᵥ-nil
+        tupy⊑⊥ = ⊑ᵥ-cons [ 𝐵 ] p ⊑ᵥ-nil
         𝑢⊥↦⊥ = Appmap.↦-bottom 𝑢
         𝑢⊥↦y = Appmap.↦-↓closed 𝑢 tupy⊑⊥ 𝑢⊥↦⊥
-β-lemma₁ _ _ (ap↦-intro₂ x y _ _ _ _ _ (⊑ₑ-intro₂ _ _ _ _ p))
-  with (p x y here)
+β-lemma₁ _ _ (ap↦-intro₂ _ _ _ _ (⊑ₑ-intro₂ _ _ p))
+  with (p _ _ here)
 β-lemma₁ {Γ = Γ} {𝑢 = 𝑢} 𝑥 _
-  (ap↦-intro₂ x y 𝑓 con𝑓 _ lam𝑢𝑥↦𝑓 𝑡𝑥↦x _)
+  (ap↦-intro₂ {x = x} {y} con𝑓 _ lam𝑢𝑥↦𝑓 𝑡𝑥↦x _)
   | record { sub = sub
            ; postablesub = postablesub
            ; preablesub = preablesub
@@ -55,10 +55,8 @@ open import Scwf.DomainScwf.Comprehension.Morphism.Relation
   = ∘↦-intro 𝑥 ⟪ x , 𝑥 ⟫ ⟪ y ⟫
     (⟨⟩↦-intro 𝑥 ⟪ x , 𝑥 ⟫ id𝑥↦𝑥 𝑡𝑥↦x) 𝑢x𝑥↦y
   where id𝑥↦𝑥 = id↦-intro 𝑥 𝑥 (NbhSys.⊑-refl (ValNbhSys _))
-        y⊑post' = ⊑ᵥ-cons [ 𝐵 ] ⟪ y ⟫ ⟪ post sub postablesub ⟫
-                  y⊑post ⊑ᵥ-nil
-        pre𝑥⊑x𝑥 = ⊑ᵥ-cons (𝐴 :: Γ) ⟪ pre sub preablesub , 𝑥 ⟫
-                  ⟪ x , 𝑥 ⟫ pre⊑x
+        y⊑post' = ⊑ᵥ-cons [ 𝐵 ] y⊑post ⊑ᵥ-nil
+        pre𝑥⊑x𝑥 = ⊑ᵥ-cons (𝐴 :: Γ) pre⊑x
                   (NbhSys.⊑-refl (ValNbhSys _))
         𝑢pre𝑥↦post𝑥 = ↓closedLemma 𝑢 (subsetIsCon con𝑓 sub⊆𝑓)
                       preablesub postablesub
@@ -80,11 +78,10 @@ open import Scwf.DomainScwf.Comprehension.Morphism.Relation
 β-lemma₂ {Γ = Γ} {𝑢 = 𝑢} 𝑥 ⟪ y , ⟪⟫ ⟫
   (∘↦-intro _ ⟪ x , 𝑥′ ⟫ _
   (⟨⟩↦-intro _ _ (id↦-intro _ _ 𝑥′⊑𝑥) 𝑡𝑥↦x) 𝑢x𝑥′↦y)
-  = ap↦-intro₂ x y (< x , y > ∷ ∅) singletonIsCon singletonIsCon
+  = ap↦-intro₂ singletonIsCon singletonIsCon
     lam𝑥↦xy 𝑡𝑥↦x xy⊑xy
   where xy⊑xy = NbhSys.⊑-refl (ArrNbhSys 𝐴 𝐵)
-        x𝑥′⊑x𝑥 = ⊑ᵥ-cons (𝐴 :: Γ) ⟪ x , 𝑥′ ⟫ ⟪ x , 𝑥 ⟫
-                 (NbhSys.⊑-refl 𝐴) 𝑥′⊑𝑥
+        x𝑥′⊑x𝑥 = ⊑ᵥ-cons (𝐴 :: Γ) (NbhSys.⊑-refl 𝐴) 𝑥′⊑𝑥
         𝑢x𝑥↦y = Appmap.↦-mono 𝑢 x𝑥′⊑x𝑥 𝑢x𝑥′↦y
         lam𝑥↦xy = lam↦-intro₂ 𝑥 (< x , y > ∷ ∅)
                   singletonIsCon (β-lemma₂' {𝑢 = 𝑢} 𝑥 x y 𝑢x𝑥↦y)

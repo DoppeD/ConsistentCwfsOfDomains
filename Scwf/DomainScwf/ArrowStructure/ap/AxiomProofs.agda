@@ -29,8 +29,8 @@ open import Scwf.DomainScwf.ArrowStructure.NbhSys.Relation 𝐴 𝐵
 ap↦-mono : ∀ {𝑥 𝑦 𝑧} → ⊑ᵥ Γ 𝑥 𝑦 →
            [ 𝑡 , 𝑢 ] 𝑥 ap↦ 𝑧 → [ 𝑡 , 𝑢 ] 𝑦 ap↦ 𝑧
 ap↦-mono _ (ap↦-intro₁ p) = ap↦-intro₁ p
-ap↦-mono {𝑥} {𝑦} 𝑥⊑𝑦 (ap↦-intro₂ x y 𝑓 _ _ 𝑡𝑥↦𝑓 𝑢𝑥↦x xy⊑𝑓)
-  = ap↦-intro₂ x y 𝑓 _ _ 𝑡𝑦↦𝑓 𝑢𝑦↦x xy⊑𝑓
+ap↦-mono {𝑥} {𝑦} 𝑥⊑𝑦 (ap↦-intro₂ _ _ 𝑡𝑥↦𝑓 𝑢𝑥↦x xy⊑𝑓)
+  = ap↦-intro₂ _ _ 𝑡𝑦↦𝑓 𝑢𝑦↦x xy⊑𝑓
   where 𝑡𝑦↦𝑓 = Appmap.↦-mono 𝑡 𝑥⊑𝑦 𝑡𝑥↦𝑓
         𝑢𝑦↦x = Appmap.↦-mono 𝑢 𝑥⊑𝑦 𝑢𝑥↦x
 ap↦-bottom : ∀ {𝑥} → [ 𝑡 , 𝑢 ] 𝑥 ap↦ ⟪ NbhSys.⊥ 𝐵 , ⟪⟫ ⟫
@@ -40,7 +40,7 @@ ap↦-↓closed' : ∀ {𝑓 x y y′} → ∀ conxy con𝑓 → [ 𝐵 ] y′ �
                [ ArrNbhSys 𝐴 𝐵 ] 𝐹 (< x , y > ∷ ∅)  conxy ⊑ 𝐹 𝑓 con𝑓 →
                ∀ x″ y″ → < x″ , y″ > ∈ (< x , y′ > ∷ ∅) →
                ⊑ₑ-proof 𝑓 con𝑓 x″ y″
-ap↦-↓closed' {x = x} {y} {y′} conxy con𝑓 y′⊑y (⊑ₑ-intro₂ _ _ _ _ p) _ _ here
+ap↦-↓closed' {x = x} {y} {y′} conxy con𝑓 y′⊑y (⊑ₑ-intro₂ _ _ p) _ _ here
   = record { sub = sub
            ; y⊑post = NbhSys.⊑-trans 𝐵 y′⊑y y⊑post
            ; pre⊑x = pre⊑x
@@ -55,23 +55,23 @@ ap↦-↓closed' {x = x} {y} {y′} conxy con𝑓 y′⊑y (⊑ₑ-intro₂ _ _ 
 ap↦-↓closed : ∀ {𝑥 𝑦 𝑧} → ⊑ᵥ [ 𝐵 ] 𝑦 𝑧 →
               [ 𝑡 , 𝑢 ] 𝑥 ap↦ 𝑧 → [ 𝑡 , 𝑢 ] 𝑥 ap↦ 𝑦
 ap↦-↓closed {𝑦 = ⟪ y , ⟪⟫ ⟫}
-  (⊑ᵥ-cons _ _ ⟪ y′ , ⟪⟫ ⟫ y⊑y′ ⊑ᵥ-nil) (ap↦-intro₁ y′⊑⊥)
+  (⊑ᵥ-cons _ y⊑y′ ⊑ᵥ-nil) (ap↦-intro₁ y′⊑⊥)
   = ap↦-intro₁ (NbhSys.⊑-trans 𝐵 y⊑y′ y′⊑⊥)
 ap↦-↓closed {𝑦 = ⟪ y , ⟪⟫ ⟫}
-  (⊑ᵥ-cons _ _ ⟪ y′ , ⟪⟫ ⟫ y⊑y′ ⊑ᵥ-nil)
-  (ap↦-intro₂ x′ y′ 𝑓 _ _ 𝑡𝑥↦𝑓 𝑢𝑥↦x′ x′y′⊑𝑓′)
-  = ap↦-intro₂ x′ y 𝑓 _ _ 𝑡𝑥↦𝑓 𝑢𝑥↦x′ x′y⊑𝑓
+  (⊑ᵥ-cons _ y⊑y′ ⊑ᵥ-nil)
+  (ap↦-intro₂ _ _ 𝑡𝑥↦𝑓 𝑢𝑥↦x′ x′y′⊑𝑓′)
+  = ap↦-intro₂ _ _ 𝑡𝑥↦𝑓 𝑢𝑥↦x′ x′y⊑𝑓
   where x′y⊑𝑓' = ap↦-↓closed' _ _ y⊑y′ x′y′⊑𝑓′
-        x′y⊑𝑓 = ⊑ₑ-intro₂ (< x′ , y > ∷ ∅) 𝑓 singletonIsCon _ x′y⊑𝑓'
+        x′y⊑𝑓 = ⊑ₑ-intro₂ singletonIsCon _ x′y⊑𝑓'
 
 ap↦-↑directed''' : ∀ {x y z 𝑔 con𝑔 conxy} → ∀ conyz →
                    [ ArrNbhSys 𝐴 𝐵 ] (𝐹 (< x , y > ∷ ∅) conxy) ⊑ (𝐹 𝑔 con𝑔) →
                    [ 𝐵 ] z ⊑ NbhSys.⊥ 𝐵 → ∀ x′ y′ →
                    < x′ , y′ > ∈ (< x , [ 𝐵 ] y ⊔ z [ conyz ] > ∷ ∅) →
                    ⊑ₑ-proof 𝑔 con𝑔 x′ y′
-ap↦-↑directed''' {x = x} {y} _ (⊑ₑ-intro₂ _ _ _ _ p) _ _ _ here
+ap↦-↑directed''' {x = x} {y} _ (⊑ₑ-intro₂ _ _ p) _ _ _ here
   with (p x y here)
-ap↦-↑directed''' conyz (⊑ₑ-intro₂ _ _ _ _ p) z⊑⊥ x _ here
+ap↦-↑directed''' conyz (⊑ₑ-intro₂ _ _ p) z⊑⊥ x _ here
   | record { sub = sub
            ; y⊑post = y⊑post
            ; pre⊑x = pre⊑x
@@ -90,7 +90,7 @@ ap↦-↑directed'' : ∀ x y z 𝑔 → ∀ {con𝑔 conxz} → ∀ conyz →
                   [ 𝐵 ] y ⊑ NbhSys.⊥ 𝐵 → ∀ x′ y′ →
                   < x′ , y′ > ∈ (< x , [ 𝐵 ] y ⊔ z [ conyz ] > ∷ ∅) →
                   ⊑ₑ-proof 𝑔 con𝑔 x′ y′
-ap↦-↑directed'' x _ z _ _ (⊑ₑ-intro₂ _ _ _ _ p) _ _ _ here
+ap↦-↑directed'' x _ z _ _ (⊑ₑ-intro₂ _ _ p) _ _ _ here
   with (p x z here)
 ap↦-↑directed'' x y z _ conyz _ y⊑⊥ _ _ here
   | record { sub = sub
@@ -111,10 +111,11 @@ ap↦-↑directed' : {𝑓 𝑓′ : NbhFinFun 𝐴 𝐵} → ∀ {x x′ y y′
                  (𝐹 (< x , y > ∷ ∅) conxy) ⊑ₑ (𝐹 𝑓 con𝑓) →
                  (𝐹 (< x′ , y′ > ∷ ∅) conx′y′) ⊑ₑ (𝐹 𝑓′ con𝑓′) →
                  ∀ x″ y″ →
-                 < x″ , y″ > ∈ (< [ 𝐴 ] x ⊔ x′ [ conxx′ ] , [ 𝐵 ] y ⊔ y′ [ conyy′ ] > ∷ ∅) →
+                 < x″ , y″ > ∈ (< [ 𝐴 ] x ⊔ x′ [ conxx′ ] ,
+                   [ 𝐵 ] y ⊔ y′ [ conyy′ ] > ∷ ∅) →
                  ⊑ₑ-proof (𝑓 ∪ 𝑓′) con∪ x″ y″
 ap↦-↑directed' {x = x} {x′} {y} {y′} {con∪ = cff con∪} conxx′ conyy′ _ _
-  (⊑ₑ-intro₂ _ _ _ _ p₁) (⊑ₑ-intro₂ _ _ _ _ p₂) x″ y″ here
+  (⊑ₑ-intro₂ _ _ p₁) (⊑ₑ-intro₂ _ _ p₂) x″ y″ here
   = record { sub = p₁sub ∪ p₂sub
            ; y⊑post = NbhSys.⊑-trans 𝐵
                       (⊑-⊔-lemma₃ 𝐵 conyy′ conposts p₁y⊑post p₂y⊑post)
@@ -156,28 +157,28 @@ ap↦-↑directed (ap↦-intro₁ p₁) (ap↦-intro₁ p₂) (con-tup _ _)
   = ap↦-intro₁ (NbhSys.⊑-⊔ 𝐵 p₁ p₂ _)
 
 ap↦-↑directed {𝑦 = ⟪ y , ⟪⟫ ⟫} {⟪ z , ⟪⟫ ⟫} (ap↦-intro₁ p)
-  (ap↦-intro₂ x′ _ 𝑔′ con𝑔′ conxz  𝑡𝑥↦𝑔′ 𝑢𝑥↦x′ x′z⊑𝑔′)
+  (ap↦-intro₂ con𝑔′ conxz  𝑡𝑥↦𝑔′ 𝑢𝑥↦x′ x′z⊑𝑔′)
   (con-tup _ _)
-  = ap↦-intro₂ x′ _ 𝑔′ con𝑔′ singletonIsCon 𝑡𝑥↦𝑔′ 𝑢𝑥↦x′ x′y⊔z⊑𝑔′
-  where x′y⊔z⊑𝑔′ = ⊑ₑ-intro₂ _ _ _ _
+  = ap↦-intro₂ con𝑔′ singletonIsCon 𝑡𝑥↦𝑔′ 𝑢𝑥↦x′ x′y⊔z⊑𝑔′
+  where x′y⊔z⊑𝑔′ = ⊑ₑ-intro₂ _ _
                    (ap↦-↑directed'' _ _ _ _ _ x′z⊑𝑔′ p)
 ap↦-↑directed {𝑦 = ⟪ y , ⟪⟫ ⟫} {⟪ z , ⟪⟫ ⟫}
-  (ap↦-intro₂ x _ 𝑔 _ _ 𝑡𝑥↦𝑔 𝑢𝑥↦x xy⊑𝑔) (ap↦-intro₁ p)
+  (ap↦-intro₂ _ _ 𝑡𝑥↦𝑔 𝑢𝑥↦x xy⊑𝑔) (ap↦-intro₁ p)
   (con-tup _ _)
-  = ap↦-intro₂ _ _ _ _ singletonIsCon 𝑡𝑥↦𝑔 𝑢𝑥↦x xy⊔z⊑𝑔
-  where xy⊔z⊑𝑔 = ⊑ₑ-intro₂ _ _ _ _
+  = ap↦-intro₂ _ singletonIsCon 𝑡𝑥↦𝑔 𝑢𝑥↦x xy⊔z⊑𝑔
+  where xy⊔z⊑𝑔 = ⊑ₑ-intro₂ _ _
                  (ap↦-↑directed''' _ xy⊑𝑔 p)
 ap↦-↑directed {𝑦 = ⟪ y , ⟪⟫ ⟫} {⟪ z , ⟪⟫ ⟫}
-  (ap↦-intro₂ x _ 𝑔 _ _ 𝑡𝑥↦𝑔 𝑢𝑥↦x xy⊑𝑔)
-  (ap↦-intro₂ x′ _ 𝑔′ _ _ 𝑡𝑥↦𝑔′ 𝑢𝑥↦x′ x′z⊑𝑔′)
+  (ap↦-intro₂ _ _ 𝑡𝑥↦𝑔 𝑢𝑥↦x xy⊑𝑔)
+  (ap↦-intro₂ _ _ 𝑡𝑥↦𝑔′ 𝑢𝑥↦x′ x′z⊑𝑔′)
   (con-tup _ _)
   with (fromValCon (Appmap.↦-con 𝑡 𝑡𝑥↦𝑔 𝑡𝑥↦𝑔′ valConRefl))
 ... | con-∪ _ _ con𝑔∪𝑔′ =
-  ap↦-intro₂ _ _ (𝑔 ∪ 𝑔′) con𝑔∪𝑔′ singletonIsCon 𝑡𝑥↦𝑔∪𝑔′ 𝑢𝑥↦x⊔x′ ⊔⊑∪
+  ap↦-intro₂ con𝑔∪𝑔′ singletonIsCon 𝑡𝑥↦𝑔∪𝑔′ 𝑢𝑥↦x⊔x′ ⊔⊑∪
   where conxx′ = fromValCon (Appmap.↦-con 𝑢 𝑢𝑥↦x 𝑢𝑥↦x′ valConRefl)
         𝑡𝑥↦𝑔∪𝑔′ = Appmap.↦-↑directed 𝑡 𝑡𝑥↦𝑔 𝑡𝑥↦𝑔′
                   (con-tup (con-∪ _ _ con𝑔∪𝑔′) con-nil)
         𝑢𝑥↦x⊔x′ = Appmap.↦-↑directed 𝑢 𝑢𝑥↦x 𝑢𝑥↦x′
                   (con-tup conxx′ con-nil)
-        ⊔⊑∪ = ⊑ₑ-intro₂ (< [ 𝐴 ] _ ⊔ _ [ conxx′ ] , _ > ∷ ∅) _ _ con𝑔∪𝑔′
+        ⊔⊑∪ = ⊑ₑ-intro₂ _ con𝑔∪𝑔′
               (ap↦-↑directed' conxx′ _ _ _ xy⊑𝑔 x′z⊑𝑔′)

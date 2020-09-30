@@ -83,16 +83,12 @@ getP-Struct' {Γ = Γ} {𝑡 = 𝑡}
   𝑥 x y 𝑦 𝑧 𝑓 {con𝑦𝑧} _ 𝑡x𝑦↦y _ _ _ here
   = Appmap.↦-mono 𝑡 x𝑦⊑x⊔ 𝑡x𝑦↦y
   where 𝑦⊑⊔ = NbhSys.⊑-⊔-fst (ValNbhSys _) con𝑦𝑧
-        x𝑦⊑x⊔ = ⊑ᵥ-cons (𝐴 :: Γ) ⟪ x , 𝑦 ⟫
-                ⟪ x , 𝑦 ⊔ᵥ 𝑧 [ con𝑦𝑧 ] ⟫
-                (NbhSys.⊑-refl 𝐴) 𝑦⊑⊔
+        x𝑦⊑x⊔ = ⊑ᵥ-cons (𝐴 :: Γ) (NbhSys.⊑-refl 𝐴) 𝑦⊑⊔
 getP-Struct' {Γ = Γ} {𝑡 = 𝑡}
   𝑥 x y 𝑦 𝑧 𝑓 {con𝑦𝑧} _ _ p x′ y′ (there x′y′∈𝑓)
   = Appmap.↦-mono 𝑡 x′r⊑x′⊔ (p x′ y′ x′y′∈𝑓)
   where r⊑⊔ = NbhSys.⊑-⊔-snd (ValNbhSys _) con𝑦𝑧
-        x′r⊑x′⊔ = ⊑ᵥ-cons (𝐴 :: Γ) ⟪ x′ , 𝑧 ⟫
-                  ⟪ x′ , 𝑦 ⊔ᵥ 𝑧 [ con𝑦𝑧 ] ⟫
-                  (NbhSys.⊑-refl 𝐴) r⊑⊔
+        x′r⊑x′⊔ = ⊑ᵥ-cons (𝐴 :: Γ) (NbhSys.⊑-refl 𝐴) r⊑⊔
 
 getP-Struct : {γ : tAppmap Δ Γ} →
               ∀ 𝑥 → (𝑓 : NbhFinFun 𝐴 𝐵) → ∀ {con𝑓} →
@@ -124,8 +120,8 @@ getP-Struct {Γ = Γ} {𝑡 = 𝑡} {γ = γ} 𝑥 (< x , y > ∷ 𝑓)
         rec-γ𝑥↦𝑦 = P-Struct.γ𝑥↦𝑦 rec
         rec-λ𝑡𝑦 = P-Struct.λ𝑡𝑦 rec
         γ𝑥↦𝑧 = Appmap.↦-mono γ 𝑦⊑𝑥 γ𝑦↦𝑧
-        z𝑧⊑x𝑧 = ⊑ᵥ-cons (𝐴 :: Γ) ⟪ z , 𝑧 ⟫ ⟪ x , 𝑧 ⟫
-                z⊑x (NbhSys.⊑-refl (ValNbhSys _))
+        z𝑧⊑x𝑧 = ⊑ᵥ-cons (𝐴 :: Γ) z⊑x
+                (NbhSys.⊑-refl (ValNbhSys _))
         𝑡x𝑧↦y = Appmap.↦-mono 𝑡 z𝑧⊑x𝑧 𝑡z𝑧↦y
         con𝑦𝑥 = NbhSys.Con-⊔ (ValNbhSys _) 𝑦⊑𝑥
                 (NbhSys.⊑-refl (ValNbhSys _))

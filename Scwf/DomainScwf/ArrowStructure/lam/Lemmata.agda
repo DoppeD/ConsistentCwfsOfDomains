@@ -51,8 +51,7 @@ preBiggest {preable𝑓 = pre-cons preable𝑓 conx′pre𝑓} (there xy∈𝑓)
   (lam↦-intro₂ _ _ _ p) x′ y′ x′y′∈𝑓
   = Appmap.↦-mono 𝑡 a𝑥⊑p𝑓𝑥 (p x′ y′ x′y′∈𝑓)
   where a⊑p𝑓 = preBiggest x′y′∈𝑓
-        a𝑥⊑p𝑓𝑥 = ⊑ᵥ-cons (𝐴 :: Γ) ⟪ x′ , 𝑥 ⟫
-                 ⟪ pre (x ∷ 𝑓′) preable , 𝑥 ⟫ a⊑p𝑓
+        a𝑥⊑p𝑓𝑥 = ⊑ᵥ-cons (𝐴 :: Γ) a⊑p𝑓
                  (NbhSys.⊑-refl (ValNbhSys _))
 
 ↓closedLemma : {𝑥 : Valuation Γ} →
@@ -69,7 +68,7 @@ preBiggest {preable𝑓 = pre-cons preable𝑓 conx′pre𝑓} (there xy∈𝑓)
         𝑡pre𝑓'↦y = ↓closedLemma' _ (pre-cons preable𝑓′ conxpre𝑓′)
                   lam𝑡𝑥↦𝑓 x y here
         p𝑓′⊑p𝑓 = NbhSys.⊑-⊔-snd 𝐴 conxpre𝑓′
-        p𝑓′𝑥⊑p𝑓𝑥 = ⊑ᵥ-cons (𝐴 :: Γ) _ _ p𝑓′⊑p𝑓
+        p𝑓′𝑥⊑p𝑓𝑥 = ⊑ᵥ-cons (𝐴 :: Γ) p𝑓′⊑p𝑓
                   (NbhSys.⊑-refl (ValNbhSys _))
         𝑡p𝑓′𝑥↦p𝑓′ = ↓closedLemma (subsetIsCon con𝑓 ⊆-lemma₃)
                    preable𝑓′ postable𝑓′
