@@ -64,7 +64,7 @@ preBiggest {preable𝑓 = pre-cons preable𝑓 conx′pre𝑓} (there xy∈𝑓)
   con𝑓 (pre-cons preable𝑓′ conxpre𝑓′)
   (post-cons postable𝑓′ conypost𝑓′) lam𝑡𝑥↦𝑓
   = Appmap.↦-↑directed 𝑡 𝑡pre𝑓'↦y 𝑡𝑓𝑥↦p𝑓′
-    (con-tup _ _ _ _ _ con-nil)
+    (con-tup _ con-nil)
   where 𝑓' = < x , y > ∷ 𝑓′
         𝑡pre𝑓'↦y = ↓closedLemma' _ (pre-cons preable𝑓′ conxpre𝑓′)
                   lam𝑡𝑥↦𝑓 x y here

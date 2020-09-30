@@ -50,5 +50,5 @@ open import Scwf.DomainScwf.Appmap.Valuation.Relation
   (∘↦-intro _ 𝑧 _ γ𝑥↦𝑧 δ𝑧↦𝑦) (∘↦-intro _ 𝑧′ _ γ𝑥′↦𝑧′ δ𝑧′↦𝑦′) con𝑥𝑥′
   with (Appmap.↦-con δ δ𝑧↦𝑦 δ𝑧′↦𝑦′ con𝑧𝑧′)
   where con𝑧𝑧′ = Appmap.↦-con γ γ𝑥↦𝑧 γ𝑥′↦𝑧′ con𝑥𝑥′
-... | con-tup _ _ conyy′ _ _ con𝑦𝑦′
-  = con-tup _ _ conyy′ _ _ con𝑦𝑦′
+... | con-tup conyy′ con𝑦𝑦′
+  = con-tup conyy′ con𝑦𝑦′

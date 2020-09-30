@@ -36,7 +36,7 @@ open import Scwf.DomainScwf.Comprehension.Morphism.Relation
                 [⟨ γ , 𝑡 ⟩] 𝑥 ↦ (𝑦 ⊔ᵥ 𝑧 [ con𝑦𝑧 ])
 ⟨⟩↦-↑directed {𝑥 = 𝑥} {⟪ y , 𝑦 ⟫} {⟪ z , 𝑧 ⟫}
   (⟨⟩↦-intro _ _ γ𝑥↦𝑦 𝑡𝑥↦y) (⟨⟩↦-intro _ _ γ𝑥↦𝑧 𝑡𝑥↦z)
-  (con-tup _ _ conyz _ _ con𝑦𝑧)
+  (con-tup conyz con𝑦𝑧)
   = ⟨⟩↦-intro 𝑥 (⟪ y , 𝑦 ⟫ ⊔ᵥ ⟪ z , 𝑧 ⟫ [ _ ]) γ𝑥↦y⊔𝑧 𝑡𝑥↦y⊔z
     where γ𝑥↦y⊔𝑧 = Appmap.↦-↑directed γ γ𝑥↦𝑦 γ𝑥↦𝑧 con𝑦𝑧
           𝑡𝑥↦y⊔z = Appmap.↦-↑directed 𝑡 𝑡𝑥↦y 𝑡𝑥↦z (toValCon conyz)
@@ -46,6 +46,6 @@ open import Scwf.DomainScwf.Comprehension.Morphism.Relation
           ValCon _ 𝑦 𝑦′
 ⟨⟩↦-con {𝑦 = ⟪ y , 𝑦 ⟫} {𝑦′ = ⟪ y′ , 𝑦′ ⟫}
   (⟨⟩↦-intro _ _ γ𝑥↦𝑦 𝑡𝑥↦y) (⟨⟩↦-intro _ _ γ𝑥′↦𝑦′ 𝑡𝑥′↦y′) con𝑥𝑥′
-  = con-tup _ _ conyy′ _ _ con𝑦𝑦′
+  = con-tup conyy′ con𝑦𝑦′
   where conyy′ = fromValCon (Appmap.↦-con 𝑡 𝑡𝑥↦y 𝑡𝑥′↦y′ con𝑥𝑥′)
         con𝑦𝑦′ = Appmap.↦-con γ γ𝑥↦𝑦 γ𝑥′↦𝑦′ con𝑥𝑥′

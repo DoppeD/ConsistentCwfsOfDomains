@@ -94,14 +94,14 @@ lam↦-↑directed : ∀ {𝑥 𝑦 𝑧} →
                  (con𝑦𝑧 : ValCon _ 𝑦 𝑧) →
                  [ 𝑡 ] 𝑥 lam↦ (𝑦 ⊔ᵥ 𝑧 [ con𝑦𝑧 ])
 lam↦-↑directed {𝑥 = 𝑥} {𝑧 = ⟪ z , ⟪⟫ ⟫} lam↦-intro₁ 𝑡𝑥↦z
- (con-tup _ _ con⊥z _ _ _)
+ (con-tup con⊥z _)
  rewrite (⊥⊔x≡x z {con⊥z}) = 𝑡𝑥↦z
 lam↦-↑directed {𝑥 = 𝑥} (lam↦-intro₂ _ 𝑓 con𝑓 p) lam↦-intro₁
- (con-tup _ _ con𝑓z _ _ _)
+ (con-tup con𝑓z _)
   rewrite (x⊔⊥≡x (𝐹 𝑓 con𝑓) {con𝑓z}) = lam↦-intro₂ 𝑥 𝑓 _ p
 lam↦-↑directed {𝑥 = 𝑥} (lam↦-intro₂ _ 𝑓 _ p₁)
   (lam↦-intro₂ _ 𝑓′ _ p₂)
- (con-tup _ _ (con-∪ con𝑓 con𝑓′ _) _ _ _)
+ (con-tup (con-∪ con𝑓 con𝑓′ _) _)
   = lam↦-intro₂ 𝑥 (𝑓 ∪ 𝑓′) _ 𝑡x𝑥↦y
   where 𝑡x𝑥↦y = lam↦-↑directed'
                 (lam↦-intro₂ _ _ con𝑓 p₁)

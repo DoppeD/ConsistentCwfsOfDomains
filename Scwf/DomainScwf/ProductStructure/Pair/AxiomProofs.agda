@@ -49,17 +49,17 @@ open import Scwf.DomainScwf.ProductStructure.Pair.Relation
 <>↦-↑directed : ∀ {𝑥 𝑦 𝑧} → <>↦ 𝑡 𝑢 𝑥 𝑦 → <>↦ 𝑡 𝑢 𝑥 𝑧 →
                 (con : ValCon [ 𝐴 × 𝐵 ] 𝑦 𝑧) →
                 <>↦ 𝑡 𝑢 𝑥 (𝑦 ⊔ᵥ 𝑧 [ con ])
-<>↦-↑directed <>↦-intro₁ <>↦-intro₁ (con-tup _ _ _ _ _ _)
+<>↦-↑directed <>↦-intro₁ <>↦-intro₁ (con-tup _ _)
   = <>↦-intro₁
 <>↦-↑directed {𝑥 = 𝑥} <>↦-intro₁
-  (<>↦-intro₂ _ z₁ z₂ 𝑡𝑥↦z₁ 𝑢𝑥↦z₂) (con-tup _ _ _ _ _ _)
+  (<>↦-intro₂ _ z₁ z₂ 𝑡𝑥↦z₁ 𝑢𝑥↦z₂) (con-tup _ _)
   = <>↦-intro₂ 𝑥 z₁ z₂ 𝑡𝑥↦z₁ 𝑢𝑥↦z₂
 <>↦-↑directed {𝑥 = 𝑥} (<>↦-intro₂ _ y₁ y₂ 𝑡𝑥↦y₁ 𝑢𝑥↦y₂)
-  <>↦-intro₁ (con-tup _ _ _ _ _ _)
+  <>↦-intro₁ (con-tup _ _)
   = <>↦-intro₂ 𝑥 y₁ y₂ 𝑡𝑥↦y₁ 𝑢𝑥↦y₂
 <>↦-↑directed {𝑥 = 𝑥} (<>↦-intro₂ _ y₁ y₂ 𝑡𝑥↦y₁ 𝑢𝑥↦y₂)
   (<>↦-intro₂ _ z₁ z₂ 𝑡𝑥↦z₁ 𝑢𝑥↦z₂)
-  (con-tup _ _ (con-pair cony₁z₁ cony₂z₂) _ _ _)
+  (con-tup (con-pair cony₁z₁ cony₂z₂) _)
   = <>↦-intro₂ 𝑥 [ 𝐴 ] y₁ ⊔ z₁ [ cony₁z₁ ] [ 𝐵 ] y₂ ⊔ z₂ [ cony₂z₂ ] 𝑡𝑥↦y₁⊔z₁ 𝑢𝑥↦y₂⊔z₂
   where 𝑡𝑥↦y₁⊔z₁ = Appmap.↦-↑directed 𝑡 𝑡𝑥↦y₁ 𝑡𝑥↦z₁ (toValCon cony₁z₁)
         𝑢𝑥↦y₂⊔z₂ = Appmap.↦-↑directed 𝑢 𝑢𝑥↦y₂ 𝑢𝑥↦z₂ (toValCon cony₂z₂)
@@ -67,13 +67,13 @@ open import Scwf.DomainScwf.ProductStructure.Pair.Relation
 <>↦-con : ∀ {𝑥 𝑦 𝑥′ 𝑦′} → <>↦ 𝑡 𝑢 𝑥 𝑦 → <>↦ 𝑡 𝑢 𝑥′ 𝑦′ →
           ValCon Γ 𝑥 𝑥′ → ValCon [ 𝐴 × 𝐵 ] 𝑦 𝑦′
 <>↦-con <>↦-intro₁ <>↦-intro₁ _
-  = con-tup _ _ conₓ-⊥₁ _ _ con-nil
+  = con-tup conₓ-⊥₁ con-nil
 <>↦-con <>↦-intro₁ (<>↦-intro₂ _ _ _ _ _) _
-  = con-tup _ _ conₓ-⊥₂ _ _ con-nil
+  = con-tup conₓ-⊥₂ con-nil
 <>↦-con (<>↦-intro₂ _ _ _ _ _) <>↦-intro₁ _
-  = con-tup _ _ conₓ-⊥₁ _ _ con-nil
+  = con-tup conₓ-⊥₁ con-nil
 <>↦-con (<>↦-intro₂ _ _ _ 𝑡𝑥↦y₁ 𝑢𝑥↦y₂) (<>↦-intro₂ _ _ _ 𝑡𝑥↦y₃ 𝑢𝑥↦y₄) con𝑥𝑥′
-  = con-tup _ _ cony₁y₂y₃y₄ _ _ con-nil
+  = con-tup cony₁y₂y₃y₄ con-nil
   where cony₁y₂ = fromValCon (Appmap.↦-con 𝑡 𝑡𝑥↦y₁ 𝑡𝑥↦y₃ con𝑥𝑥′)
         cony₃y₄ = fromValCon (Appmap.↦-con 𝑢 𝑢𝑥↦y₂ 𝑢𝑥↦y₄ con𝑥𝑥′)
         cony₁y₂y₃y₄ = con-pair cony₁y₂ cony₃y₄

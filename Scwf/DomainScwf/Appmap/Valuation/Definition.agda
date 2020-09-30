@@ -18,15 +18,15 @@ data Valuation : Ctx n → Set where
 
 data ValCon : (Γ : Ctx n) → (𝑥 𝑦 : Valuation Γ) → Set where
   con-nil : ValCon [] ⟪⟫ ⟪⟫
-  con-tup : ∀ {Γ : Ctx n} → (x y : NbhSys.Nbh 𝐴) → NbhSys.Con 𝐴 x y →
-            (𝑥 𝑦 : Valuation Γ) → ValCon Γ 𝑥 𝑦 →
+  con-tup : ∀ {Γ : Ctx n} → ∀ {x y 𝑥 𝑦} →
+            NbhSys.Con 𝐴 x y → ValCon Γ 𝑥 𝑦 →
             ValCon (𝐴 :: Γ) ⟪ x , 𝑥 ⟫ ⟪ y , 𝑦 ⟫
 
 -- The supremum of valuations is defined component-wise.
 _⊔ᵥ_[_] : (𝑥 : Valuation Γ) → (𝑦 : Valuation Γ) → ValCon Γ 𝑥 𝑦 →
           Valuation Γ
 _⊔ᵥ_[_] ⟪⟫ ⟪⟫ _ = ⟪⟫
-_⊔ᵥ_[_] {Γ = h :: _} ⟪ x , 𝑥 ⟫ ⟪ y , 𝑦 ⟫ (con-tup _ _ conxy _ _ con𝑥𝑦)
+_⊔ᵥ_[_] {Γ = h :: _} ⟪ x , 𝑥 ⟫ ⟪ y , 𝑦 ⟫ (con-tup conxy con𝑥𝑦)
   = ⟪ [ h ] x ⊔ y [ conxy ] , 𝑥 ⊔ᵥ 𝑦 [ con𝑥𝑦 ] ⟫
 
 ⊥ᵥ : Valuation Γ
@@ -43,8 +43,8 @@ ctTail ⟪ _ , 𝑥 ⟫ = 𝑥
 
 toValCon : ∀ {𝒟 x y} → (conxy : NbhSys.Con 𝒟 x y) →
            ValCon [ 𝒟 ] ⟪ x ⟫ ⟪ y ⟫
-toValCon conxy = con-tup _ _ conxy ⟪⟫ ⟪⟫ con-nil
+toValCon conxy = con-tup conxy con-nil
 
 fromValCon : ∀ {𝒟 x y} → (conxy : ValCon [ 𝒟 ] ⟪ x ⟫ ⟪ y ⟫) →
              NbhSys.Con 𝒟 x y
-fromValCon (con-tup _ _ conxy _ _ _) = conxy
+fromValCon (con-tup conxy _) = conxy

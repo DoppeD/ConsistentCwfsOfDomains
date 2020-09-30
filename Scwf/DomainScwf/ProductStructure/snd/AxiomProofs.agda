@@ -47,11 +47,11 @@ snd↦-↑directed : ∀ {𝑥 𝑦 𝑧} → snd↦ 𝑡 𝑥 𝑦 → snd↦ �
                  (con : ValCon [ 𝐵 ] 𝑦 𝑧) →
                  snd↦ 𝑡 𝑥 (𝑦 ⊔ᵥ 𝑧 [ con ])
 snd↦-↑directed {𝑥 = 𝑥} (snd-intro₁ _ y y⊑⊥)
-  (snd-intro₁ _ z z⊑⊥) (con-tup _ _ conyz _ _ _)
+  (snd-intro₁ _ z z⊑⊥) (con-tup conyz _)
   = snd-intro₁ 𝑥 ([ 𝐵 ] y ⊔ z [ conyz ]) (NbhSys.⊑-⊔ 𝐵 y⊑⊥ z⊑⊥ conyz)
 snd↦-↑directed {𝑥 = 𝑥}
   (snd-intro₂ _ y₁ y₂ 𝑡𝑥↦y₁y₂) (snd-intro₁ _ z z⊑⊥)
-  (con-tup _ _ cony₂z _ _ _)
+  (con-tup cony₂z _)
   = snd-intro₂ 𝑥 y₁ ([ 𝐵 ] y₂ ⊔ z [ cony₂z ]) 𝑡𝑥↦y₁y₂⊔z
   where z⊑y₂ = NbhSys.⊑-trans 𝐵 z⊑⊥ (NbhSys.⊑-⊥ 𝐵)
         y₂⊔z⊑y₂ = NbhSys.⊑-⊔ 𝐵 (NbhSys.⊑-refl 𝐵) z⊑y₂ cony₂z
@@ -62,7 +62,7 @@ snd↦-↑directed {𝑥 = 𝑥}
                       ⟪ < y₁ , y₂ > ⟫ y₁y₂⊔z⊑y₁y₂' ⊑ᵥ-nil
         𝑡𝑥↦y₁y₂⊔z = Appmap.↦-↓closed 𝑡 y₁y₂⊔z⊑y₁y₂ 𝑡𝑥↦y₁y₂
 snd↦-↑directed {𝑥 = 𝑥} (snd-intro₁ _ y y⊑⊥)
-  (snd-intro₂ _ z₁ z₂ 𝑡𝑥↦z₁z₂) (con-tup _ _ conyz₂ _ _ _)
+  (snd-intro₂ _ z₁ z₂ 𝑡𝑥↦z₁z₂) (con-tup conyz₂ _)
   = snd-intro₂ 𝑥 z₁ ([ 𝐵 ] y ⊔ z₂ [ conyz₂ ]) 𝑡𝑥↦z₁y⊔z₂
   where y⊑z₂ = NbhSys.⊑-trans 𝐵 y⊑⊥ (NbhSys.⊑-⊥ 𝐵)
         y⊔z₂⊑z₂ = NbhSys.⊑-⊔ 𝐵 y⊑z₂ (NbhSys.⊑-refl 𝐵) conyz₂
@@ -75,12 +75,13 @@ snd↦-↑directed {𝑥 = 𝑥} (snd-intro₁ _ y y⊑⊥)
 snd↦-↑directed {𝑥 = 𝑥}
   (snd-intro₂ _ y₁ y₂ 𝑡𝑥↦y₁y₂)
   (snd-intro₂ _ z₁ z₂ 𝑡𝑥↦z₁z₂)
-  (con-tup _ _ cony₂z₂ _ _ _)
+  (con-tup cony₂z₂ _)
   with (Appmap.↦-con 𝑡 𝑡𝑥↦y₁y₂ 𝑡𝑥↦z₁z₂ valConRefl)
-... | con-tup _ _ (con-pair cony₁z₁ _) _ _ _
-  = snd-intro₂ 𝑥 ([ 𝐴 ] y₁ ⊔ z₁ [ cony₁z₁ ]) ([ 𝐵 ] y₂ ⊔ z₂ [ cony₂z₂ ]) 𝑡𝑥↦⊔
+... | con-tup (con-pair cony₁z₁ _) _
+  = snd-intro₂ 𝑥 ([ 𝐴 ] y₁ ⊔ z₁ [ cony₁z₁ ]) ([ 𝐵 ]
+    y₂ ⊔ z₂ [ cony₂z₂ ]) 𝑡𝑥↦⊔
   where 𝑡𝑥↦⊔ = Appmap.↦-↑directed 𝑡 𝑡𝑥↦y₁y₂ 𝑡𝑥↦z₁z₂
-               (con-tup _ _ (con-pair cony₁z₁ cony₂z₂) _ _ con-nil)
+               (con-tup (con-pair cony₁z₁ cony₂z₂) con-nil)
 
 snd↦-con : ∀ {𝑥 𝑦 𝑥′ 𝑦′} → snd↦ 𝑡 𝑥 𝑦 → snd↦ 𝑡 𝑥′ 𝑦′ → ValCon Γ 𝑥 𝑥′ →
            ValCon [ 𝐵 ] 𝑦 𝑦′
@@ -92,6 +93,7 @@ snd↦-con (snd-intro₁ _ y y⊑⊥) (snd-intro₂ _ y′₁ y′₂ _) _
 snd↦-con (snd-intro₂ _ y₁ y₂ _) (snd-intro₁ _ y′ y′⊑⊥) _
   = toValCon (NbhSys.Con-⊔ 𝐵 (NbhSys.⊑-refl 𝐵) y′₁⊑y)
   where y′₁⊑y = NbhSys.⊑-trans 𝐵 y′⊑⊥ (NbhSys.⊑-⊥ 𝐵)
-snd↦-con (snd-intro₂ _ y₁ y₂ 𝑡𝑥↦y₁y₂) (snd-intro₂ _ y′₁ y′₂ 𝑡𝑥′↦y′₁y′₂) con
+snd↦-con (snd-intro₂ _ y₁ y₂ 𝑡𝑥↦y₁y₂)
+  (snd-intro₂ _ y′₁ y′₂ 𝑡𝑥′↦y′₁y′₂) con
   with (Appmap.↦-con 𝑡 𝑡𝑥↦y₁y₂ 𝑡𝑥′↦y′₁y′₂ con)
-... | con-tup _ _ (con-pair _ cony′₁y′₂) _ _ _ = toValCon cony′₁y′₂
+... | con-tup (con-pair _ cony′₁y′₂) _ = toValCon cony′₁y′₂

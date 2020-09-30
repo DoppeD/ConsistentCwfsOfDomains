@@ -152,32 +152,32 @@ ap↦-↑directed : ∀ {𝑥 𝑦 𝑧} →
                 [ 𝑡 , 𝑢 ] 𝑥 ap↦ 𝑦 → [ 𝑡 , 𝑢 ] 𝑥 ap↦ 𝑧 →
                 (con𝑦𝑧 : ValCon _ 𝑦 𝑧) →
                 [ 𝑡 , 𝑢 ] 𝑥 ap↦ (𝑦 ⊔ᵥ 𝑧 [ con𝑦𝑧 ])
-ap↦-↑directed (ap↦-intro₁ p₁) (ap↦-intro₁ p₂) (con-tup _ _ _ _ _ _)
+ap↦-↑directed (ap↦-intro₁ p₁) (ap↦-intro₁ p₂) (con-tup _ _)
   = ap↦-intro₁ (NbhSys.⊑-⊔ 𝐵 p₁ p₂ _)
 
 ap↦-↑directed {𝑦 = ⟪ y , ⟪⟫ ⟫} {⟪ z , ⟪⟫ ⟫} (ap↦-intro₁ p)
   (ap↦-intro₂ x′ _ 𝑔′ con𝑔′ conxz  𝑡𝑥↦𝑔′ 𝑢𝑥↦x′ x′z⊑𝑔′)
-  (con-tup _ _ _ _ _ _)
+  (con-tup _ _)
   = ap↦-intro₂ x′ _ 𝑔′ con𝑔′ singletonIsCon 𝑡𝑥↦𝑔′ 𝑢𝑥↦x′ x′y⊔z⊑𝑔′
   where x′y⊔z⊑𝑔′ = ⊑ₑ-intro₂ _ _ _ _
                    (ap↦-↑directed'' _ _ _ _ _ x′z⊑𝑔′ p)
 ap↦-↑directed {𝑦 = ⟪ y , ⟪⟫ ⟫} {⟪ z , ⟪⟫ ⟫}
   (ap↦-intro₂ x _ 𝑔 _ _ 𝑡𝑥↦𝑔 𝑢𝑥↦x xy⊑𝑔) (ap↦-intro₁ p)
-  (con-tup _ _ _ _ _ _)
+  (con-tup _ _)
   = ap↦-intro₂ _ _ _ _ singletonIsCon 𝑡𝑥↦𝑔 𝑢𝑥↦x xy⊔z⊑𝑔
   where xy⊔z⊑𝑔 = ⊑ₑ-intro₂ _ _ _ _
                  (ap↦-↑directed''' _ xy⊑𝑔 p)
 ap↦-↑directed {𝑦 = ⟪ y , ⟪⟫ ⟫} {⟪ z , ⟪⟫ ⟫}
   (ap↦-intro₂ x _ 𝑔 _ _ 𝑡𝑥↦𝑔 𝑢𝑥↦x xy⊑𝑔)
   (ap↦-intro₂ x′ _ 𝑔′ _ _ 𝑡𝑥↦𝑔′ 𝑢𝑥↦x′ x′z⊑𝑔′)
-  (con-tup _ _ _ _ _ _)
+  (con-tup _ _)
   with (fromValCon (Appmap.↦-con 𝑡 𝑡𝑥↦𝑔 𝑡𝑥↦𝑔′ valConRefl))
 ... | con-∪ _ _ con𝑔∪𝑔′ =
   ap↦-intro₂ _ _ (𝑔 ∪ 𝑔′) con𝑔∪𝑔′ singletonIsCon 𝑡𝑥↦𝑔∪𝑔′ 𝑢𝑥↦x⊔x′ ⊔⊑∪
   where conxx′ = fromValCon (Appmap.↦-con 𝑢 𝑢𝑥↦x 𝑢𝑥↦x′ valConRefl)
         𝑡𝑥↦𝑔∪𝑔′ = Appmap.↦-↑directed 𝑡 𝑡𝑥↦𝑔 𝑡𝑥↦𝑔′
-                  (con-tup _ _ (con-∪ _ _ con𝑔∪𝑔′) _ _ con-nil)
+                  (con-tup (con-∪ _ _ con𝑔∪𝑔′) con-nil)
         𝑢𝑥↦x⊔x′ = Appmap.↦-↑directed 𝑢 𝑢𝑥↦x 𝑢𝑥↦x′
-                  (con-tup _ _ conxx′ _ _ con-nil)
+                  (con-tup conxx′ con-nil)
         ⊔⊑∪ = ⊑ₑ-intro₂ (< [ 𝐴 ] _ ⊔ _ [ conxx′ ] , _ > ∷ ∅) _ _ con𝑔∪𝑔′
               (ap↦-↑directed' conxx′ _ _ _ xy⊑𝑔 x′z⊑𝑔′)

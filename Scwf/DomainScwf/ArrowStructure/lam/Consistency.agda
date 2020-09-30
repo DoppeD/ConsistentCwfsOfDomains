@@ -67,7 +67,7 @@ lam↦-con'' {𝑓 = < x , y > ∷ 𝑓}
         rec𝑡pre↦post = ⊑ₑ-proof₄.𝑡pre↦post rec
         conypost𝑓 = fromValCon (Appmap.↦-con 𝑡
                       (p x y here) rec𝑡pre↦post
-                      (con-tup _ _ conxpre𝑓 _ _ valConRefl))
+                      (con-tup conxpre𝑓 valConRefl))
         postablexy𝑓 = post-cons recpostable𝑓 conypost𝑓
 
 lam↦-con' : ∀ {𝑓 𝑓′ 𝑥 𝑥′ con𝑥𝑥′} →
@@ -106,5 +106,5 @@ lam↦-con (lam↦-intro₂ _ _ _ _) lam↦-intro₁ _
   = toValCon conₑ-⊥₁
 lam↦-con (lam↦-intro₂ _ 𝑓 con𝑓 p₁)
   (lam↦-intro₂ _ 𝑓′ con𝑓′ p₂) con𝑥𝑥′
-  = con-tup _ _ (con-∪ _ _ con𝑓∪𝑓′) _ _ con-nil
+  = con-tup (con-∪ _ _ con𝑓∪𝑓′) con-nil
   where con𝑓∪𝑓′ = cff (from⊑ₑ-proof₄ p₁ p₂ con𝑥𝑥′)
