@@ -46,8 +46,8 @@ ap↦-con
   con𝑥𝑥′
   with (fromValCon (Appmap.↦-con 𝑡 𝑡𝑥↦𝑓 𝑡𝑥′↦𝑓′ con𝑥𝑥′))
 ... | con-∪ _ _ (cff p) = toValCon conyy′
-  where p₁proof = p₁ x y here
-        p₂proof = p₂ x′ y′ here
+  where p₁proof = p₁ here
+        p₂proof = p₂ here
         p₁sub = ⊑ₑ-proof.sub p₁proof
         p₂sub = ⊑ₑ-proof.sub p₂proof
         p₁sub⊆𝑓 = ⊑ₑ-proof.sub⊆𝑓 p₁proof

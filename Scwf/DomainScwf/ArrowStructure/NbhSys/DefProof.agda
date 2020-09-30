@@ -24,7 +24,7 @@ open import Scwf.DomainScwf.ArrowStructure.NbhSys.Relation 𝐴 𝐵
 -- The "containment" relation.
 data _⋐_ (𝑓 : NbhFinFun 𝐴 𝐵) (γ : Appmap 𝐴 𝐵) :
          Set where
-  ⋐-intro : (∀ x y → < x , y > ∈ 𝑓 → [ γ ] x ↦ y) →
+  ⋐-intro : (∀ {x y} → < x , y > ∈ 𝑓 → [ γ ] x ↦ y) →
             𝑓 ⋐ γ
 
 -- If an approximable mapping γ contains 𝑓, then it
@@ -33,7 +33,7 @@ data _⋐_ (𝑓 : NbhFinFun 𝐴 𝐵) (γ : Appmap 𝐴 𝐵) :
           (γ : Appmap 𝐴 𝐵) →
           𝑓 ⋐ γ → 𝑓' ⋐ γ
 ⋐-lemma 𝑓' 𝑓 𝑓'⊆𝑓 γ (⋐-intro p)
-  = ⋐-intro λ x y xy∈𝑓' → p x y (𝑓'⊆𝑓 < x , y > xy∈𝑓')
+  = ⋐-intro λ xy∈𝑓' → p (𝑓'⊆𝑓 xy∈𝑓')
 
 -- If 𝑓 is contained in the mapping γ, then γ maps (pre 𝑓)
 -- to (post 𝑓)
@@ -44,9 +44,9 @@ pre↦post ∅ _ _ γ _ = Appmap.↦-bottom γ
 pre↦post (< x , y > ∷ 𝑓′) (pre-cons preable𝑓′ conxpre𝑓′)
   (post-cons postable𝑓′ conypost𝑓′) γ (⋐-intro p)
   = appmapLemma₃ {γ = γ} x (pre 𝑓′ preable𝑓′) y
-    (post 𝑓′ _) _ _ (p x y here)
-    (pre↦post 𝑓′ preable𝑓′ postable𝑓′ γ (⋐-intro (λ x′ y′ x′y′∈𝑓′ →
-    p x′ y′ (there x′y′∈𝑓′))))
+    (post 𝑓′ _) _ _ (p here)
+    (pre↦post 𝑓′ preable𝑓′ postable𝑓′ γ (⋐-intro (λ x′y′∈𝑓′ →
+    p (there x′y′∈𝑓′))))
 
 -- A predicate describing that γ maps x to y iff either (x, y) ∈ 𝑓
 -- or γ : x ↦ y is inductively generated from the approximable mapping
@@ -66,9 +66,9 @@ data AppmapClosure (𝑓 : NbhFinFun 𝐴 𝐵)
             AppmapClosure 𝑓 con𝑓 x ([ 𝐵 ] y ⊔ y′ [ con ])
 
 smallest⇒exp' : (𝑓′ : NbhFinFun 𝐴 𝐵) → {con : ConFinFun 𝑓′} →
-                ∀ x y → AppmapClosure 𝑓′ con x y →
+                ∀ {x y} → AppmapClosure 𝑓′ con x y →
                 ⊑ₑ-proof 𝑓′ con x y
-smallest⇒exp' 𝑓′ x y (ig-inset xy∈𝑓′)
+smallest⇒exp' 𝑓′ {x = x} {y} (ig-inset xy∈𝑓′)
   = record
       { sub = < x , y > ∷ ∅
       ; sub⊆𝑓 = ⊆-lemma₄ xy∈𝑓′ ∅-isSubset
@@ -78,7 +78,7 @@ smallest⇒exp' 𝑓′ x y (ig-inset xy∈𝑓′)
       ; pre⊑x = NbhSys.⊑-⊔ 𝐴 (NbhSys.⊑-refl 𝐴)
                 (NbhSys.⊑-⊥ 𝐴) (con⊥₂ 𝐴)
       }
-smallest⇒exp' 𝑓′ x y ig-bot
+smallest⇒exp' 𝑓′ ig-bot
   = record
       { sub = ∅
       ; sub⊆𝑓 = ∅-isSubset
@@ -87,7 +87,7 @@ smallest⇒exp' 𝑓′ x y ig-bot
       ; y⊑post = NbhSys.⊑-⊥ 𝐵
       ; pre⊑x = NbhSys.⊑-⊥ 𝐴
       }
-smallest⇒exp' 𝑓′ {con} x y (ig-mono {x′ = x′} x′⊑x idGen)
+smallest⇒exp' 𝑓′ {con} {x} {y} (ig-mono {x′ = x′} x′⊑x idGen)
   = record
       { sub = ⊑ₑ-proof.sub rec
       ; sub⊆𝑓 = ⊑ₑ-proof.sub⊆𝑓 rec
@@ -96,8 +96,8 @@ smallest⇒exp' 𝑓′ {con} x y (ig-mono {x′ = x′} x′⊑x idGen)
       ; y⊑post = ⊑ₑ-proof.y⊑post rec
       ; pre⊑x = NbhSys.⊑-trans 𝐴 (⊑ₑ-proof.pre⊑x rec) x′⊑x
       }
-  where rec = smallest⇒exp' 𝑓′ {con} x′ y idGen
-smallest⇒exp' 𝑓′ {con} x y (ig-↓clo {y′ = y′} y⊑y′ idGen)
+  where rec = smallest⇒exp' 𝑓′ {con} {x′} {y} idGen
+smallest⇒exp' 𝑓′ {con} {x} {y} (ig-↓clo {y′ = y′} y⊑y′ idGen)
   = record
       { sub = ⊑ₑ-proof.sub rec
       ; sub⊆𝑓 = ⊑ₑ-proof.sub⊆𝑓 rec
@@ -106,11 +106,11 @@ smallest⇒exp' 𝑓′ {con} x y (ig-↓clo {y′ = y′} y⊑y′ idGen)
       ; y⊑post = NbhSys.⊑-trans 𝐵 y⊑y′ (⊑ₑ-proof.y⊑post rec)
       ; pre⊑x = ⊑ₑ-proof.pre⊑x rec
       }
-  where rec = smallest⇒exp' 𝑓′ {con} x y′ idGen
-smallest⇒exp' 𝑓′ {cff p} x _
-  (ig-↑dir {y = y} {y′} idGeny idGeny′ conyy′)
-  with (smallest⇒exp' 𝑓′ {cff p} x y idGeny)
-  | smallest⇒exp' 𝑓′ {cff p} x y′ idGeny′
+  where rec = smallest⇒exp' 𝑓′ {con} {x} {y′} idGen
+smallest⇒exp' 𝑓′ {cff p} {x} (ig-↑dir {y = y} {y′}
+  idGeny idGeny′ conyy′)
+  with (smallest⇒exp' 𝑓′ {cff p} {x} {y} idGeny)
+  | smallest⇒exp' 𝑓′ {cff p} {x} {y′} idGeny′
 ... | record { sub = sub
              ; sub⊆𝑓 = sub⊆𝑓′
              ; preablesub = preable
@@ -150,8 +150,9 @@ appmapClosureCon : ∀ {𝑓 con𝑓 x y x′ y′} →
                    NbhSys.Con 𝐴 x x′ →
                    NbhSys.Con 𝐵 y y′
 appmapClosureCon {𝑓} {cff p} {x} {y} {x′} {y′}
-  apcloxy apclox′y′ conxx′ with
-  (smallest⇒exp' 𝑓 x y apcloxy) | smallest⇒exp' 𝑓 x′ y′ apclox′y′
+  apcloxy apclox′y′ conxx′
+  with (smallest⇒exp' 𝑓 {x = x} {y} apcloxy)
+  | smallest⇒exp' 𝑓 {x = x′} {y′} apclox′y′
 ... | record { sub = sub
              ; sub⊆𝑓 = sub⊆𝑓
              ; preablesub = preable
@@ -192,16 +193,15 @@ smallest⇒exp : (𝑓 𝑓′ : NbhFinFun 𝐴 𝐵) →
                𝑓 ⋐ SmallestAppmap 𝑓′ con𝑓′ →
                𝐹 𝑓 con𝑓 ⊑ₑ 𝐹 𝑓′ con𝑓′
 smallest⇒exp 𝑓 𝑓′ con𝑓 con𝑓′ (⋐-intro p)
-  = ⊑ₑ-intro₂ con𝑓 con𝑓′ (λ x y xy∈𝑓 →
-    smallest⇒exp' 𝑓′ {con𝑓′} x y (p x y xy∈𝑓))
+  = ⊑ₑ-intro₂ con𝑓 con𝑓′ (λ xy∈𝑓 →
+    smallest⇒exp' 𝑓′ {con𝑓′} (p xy∈𝑓))
 
 exp⇒smallest' : (𝑓 𝑓′ : NbhFinFun 𝐴 𝐵) → ∀ {con𝑓 con𝑓′} →
                 𝐹 𝑓 con𝑓 ⊑ₑ 𝐹 𝑓′ con𝑓′ →
-                ∀ x y → < x , y > ∈ 𝑓 →
+                ∀ {x y} → < x , y > ∈ 𝑓 →
                 [ SmallestAppmap 𝑓′ con𝑓′ ] x ↦ y
-exp⇒smallest' 𝑓 𝑓′ (⊑ₑ-intro₂ _ con p) x y xy∈𝑓
-  with (p x y xy∈𝑓)
-exp⇒smallest' 𝑓 𝑓′ (⊑ₑ-intro₂ _ con p) x y xy∈𝑓
+exp⇒smallest' 𝑓 𝑓′ (⊑ₑ-intro₂ _ con p) xy∈𝑓 with (p xy∈𝑓)
+exp⇒smallest' 𝑓 𝑓′ (⊑ₑ-intro₂ _ con p) xy∈𝑓
   | record { sub = 𝑓″
            ; sub⊆𝑓 = sub⊆𝑓
            ; preablesub = preable𝑓″
@@ -213,7 +213,7 @@ exp⇒smallest' 𝑓 𝑓′ (⊑ₑ-intro₂ _ con p) x y xy∈𝑓
   where γ' = SmallestAppmap 𝑓′ con
         γpre𝑓″↦post𝑓″ = pre↦post 𝑓″ preable𝑓″ postable𝑓″ γ'
                         (⋐-lemma 𝑓″ 𝑓′ sub⊆𝑓 γ'
-                        (⋐-intro (λ x y → ig-inset)))
+                        (⋐-intro ig-inset))
         γx↦post = Appmap.↦-mono γ' pre⊑x γpre𝑓″↦post𝑓″
 
 exp⇒smallest : (𝑓 𝑓′ : NbhFinFun 𝐴 𝐵) →

@@ -17,7 +17,7 @@ open import Scwf.DomainScwf.ArrowStructure.Variables 𝐴 𝐵
 
 ⊑ₑ-refl : ∀ {x} → x ⊑ₑ x
 ⊑ₑ-refl {⊥ₑ} = ⊑ₑ-intro₁
-⊑ₑ-refl {𝐹 𝑓 con𝑓} = ⊑ₑ-intro₂ con𝑓 con𝑓 λ x y xy∈𝑓 →
+⊑ₑ-refl {𝐹 𝑓 con𝑓} = ⊑ₑ-intro₂ con𝑓 con𝑓 λ {x} {y} xy∈𝑓 →
   record
     { sub = < x , y > ∷ ∅
     ; sub⊆𝑓 = ⊆-lemma₄ xy∈𝑓 ∅-isSubset
@@ -32,14 +32,14 @@ open import Scwf.DomainScwf.ArrowStructure.Variables 𝐴 𝐵
 
 ⊑ₑ-⊔ₑ' : ∀ {𝑓 𝑓′ 𝑓″ con𝑓 con𝑓′ con𝑓″} →
          𝐹 𝑓′ con𝑓′ ⊑ₑ 𝐹 𝑓 con𝑓 → 𝐹 𝑓″ con𝑓″ ⊑ₑ 𝐹 𝑓 con𝑓 →
-         ∀ x y → < x , y > ∈ (𝑓′ ∪ 𝑓″) →
+         ∀ {x y} → < x , y > ∈ (𝑓′ ∪ 𝑓″) →
          ⊑ₑ-proof 𝑓 con𝑓 x y
-⊑ₑ-⊔ₑ' {𝑓′ = 𝑓′} _ _ x y xy∈∪
+⊑ₑ-⊔ₑ' {𝑓′ = 𝑓′} _ _ xy∈∪
   with (∪-lemma₂  {𝑓 = 𝑓′} xy∈∪)
-⊑ₑ-⊔ₑ' (⊑ₑ-intro₂ _ _ p) _ x y xy∈∪ | inl xy∈𝑓′
-  = p x y xy∈𝑓′
-⊑ₑ-⊔ₑ' _ (⊑ₑ-intro₂ _ _ p) x y xy∈∪ | inr xy∈𝑓″
-  = p x y xy∈𝑓″
+⊑ₑ-⊔ₑ' (⊑ₑ-intro₂ _ _ p) _ xy∈∪ | inl xy∈𝑓′
+  = p xy∈𝑓′
+⊑ₑ-⊔ₑ' _ (⊑ₑ-intro₂ _ _ p) xy∈∪ | inr xy∈𝑓″
+  = p xy∈𝑓″
 
 ⊑ₑ-⊔ₑ : ∀ {x y z} → y ⊑ₑ x → z ⊑ₑ x → (conyz : ArrCon y z) →
         (y ⊔ₑ z [ conyz ]) ⊑ₑ x
@@ -54,7 +54,7 @@ open import Scwf.DomainScwf.ArrowStructure.Variables 𝐴 𝐵
 ⊑ₑ-⊔ₑ-fst {⊥ₑ} _ = ⊑ₑ-intro₁
 ⊑ₑ-⊔ₑ-fst {𝐹 𝑓 _} {⊥ₑ} _ = ⊑ₑ-refl
 ⊑ₑ-⊔ₑ-fst {𝐹 𝑓 _} {𝐹 𝑓′ _} (ArrCon.con-∪ _ _ _)
-  = ⊑ₑ-intro₂ _ _ λ x y xy∈𝑓 →
+  = ⊑ₑ-intro₂ _ _ λ {x} {y} xy∈𝑓 →
   record
     { sub = < x , y > ∷ ∅
     ; sub⊆𝑓 = ⊆-lemma₄ (∪-lemma₃ xy∈𝑓) ∅-isSubset
@@ -69,7 +69,7 @@ open import Scwf.DomainScwf.ArrowStructure.Variables 𝐴 𝐵
 ⊑ₑ-⊔ₑ-snd {y = ⊥ₑ} _ = ⊑ₑ-intro₁
 ⊑ₑ-⊔ₑ-snd {⊥ₑ} {𝐹 𝑓 _} _ = ⊑ₑ-refl
 ⊑ₑ-⊔ₑ-snd {𝐹 𝑓 _} {𝐹 𝑓′ _} (ArrCon.con-∪ _ _ _)
-  = ⊑ₑ-intro₂ _ _ λ x y xy∈𝑓′ →
+  = ⊑ₑ-intro₂ _ _ λ {x} {y} xy∈𝑓′ →
   record
     { sub = < x , y > ∷ ∅
     ; sub⊆𝑓 = ⊆-lemma₄ (∪-lemma₄ xy∈𝑓′) ∅-isSubset

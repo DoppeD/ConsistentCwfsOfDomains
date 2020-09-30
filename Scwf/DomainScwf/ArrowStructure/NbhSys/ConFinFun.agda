@@ -26,7 +26,7 @@ singletonIsCon'' : ∀ {x y} → {𝑓 : NbhFinFun 𝐴 𝐵} →
                    𝑓 ⊆ (< x , y > ∷ ∅) →
                    ∀ {x′ y′} → < x′ , y′ > ∈ 𝑓 →
                    [ 𝐵 ] y′ ⊑ y
-singletonIsCon'' 𝑓⊆xy x′y′∈𝑓 with (𝑓⊆xy _ x′y′∈𝑓)
+singletonIsCon'' 𝑓⊆xy x′y′∈𝑓 with (𝑓⊆xy x′y′∈𝑓)
 ... | here = NbhSys.⊑-refl 𝐵
 
 singletonIsCon' : ∀ {x y 𝑓} → 𝑓 ⊆ (< x , y > ∷ ∅) →

@@ -18,8 +18,8 @@ lamCongLemma : {𝑡 𝑡′ : tAppmap (𝐴 :: Γ) [ 𝐵 ]} →
                [ lam 𝑡 ] 𝑥 ↦ 𝑦 → [ lam 𝑡′ ] 𝑥 ↦ 𝑦
 lamCongLemma (≼-intro p₁) lam↦-intro₁
   = lam↦-intro₁
-lamCongLemma (≼-intro p₁) (lam↦-intro₂ _ _ _ p₂)
-  = lam↦-intro₂ _ _ _ (λ x y xy∈𝑓 → p₁ (p₂ x y xy∈𝑓))
+lamCongLemma (≼-intro p₁) (lam↦-intro₂ _ p₂)
+  = lam↦-intro₂ _ (λ xy∈𝑓 → p₁ (p₂ xy∈𝑓))
 
 lamCong : {𝑡 𝑡′ : tAppmap (𝐴 :: Γ) [ 𝐵 ]} → 𝑡 ≈ 𝑡′ →
           lam 𝑡 ≈ lam 𝑡′

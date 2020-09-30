@@ -30,10 +30,10 @@ record ⊑ₑ-proof₂ (𝑓 𝑓′ : NbhFinFun 𝐴 𝐵) (preable𝑓 : Preab
 
 shrinkExp' : ∀ {con𝑓′ con𝑓″} →
              𝑓 ⊆ 𝑓′ → (𝐹 𝑓′ con𝑓′) ⊑ₑ (𝐹 𝑓″ con𝑓″) →
-             ∀ x y → < x , y > ∈ 𝑓 →
+             ∀ {x y} → < x , y > ∈ 𝑓 →
              ⊑ₑ-proof 𝑓″ con𝑓″ x y
-shrinkExp' 𝑓⊆𝑓′ (⊑ₑ-intro₂ _ _ p) x y xy∈𝑓
-  = p x y (𝑓⊆𝑓′ < x , y > xy∈𝑓)
+shrinkExp' 𝑓⊆𝑓′ (⊑ₑ-intro₂ _ _ p) xy∈𝑓
+  = p (𝑓⊆𝑓′ xy∈𝑓)
 
 -- If 𝑓 ⊆ 𝑓′ and 𝑓′ ⊑ₑ 𝑓″, then we can adapt the ⊑ₑ-proof
 -- of 𝑓′ and 𝑓″ to one for 𝑓 and 𝑓″.
@@ -55,7 +55,7 @@ shrinkExp {𝑓 = 𝑓} {𝑓″ = 𝑓″} 𝑓⊆𝑓′ 𝑓′⊑𝑓″
            ; pre⊑p𝑓 = NbhSys.⊑-refl 𝐴
            ; sub⊆𝑓′ = ∅-isSubset
            }
-Ω (< x , y > ∷ 𝑓″) 𝑓′ (⊑ₑ-intro₂ _ _ p) with (p x y here)
+Ω (< x , y > ∷ 𝑓″) 𝑓′ (⊑ₑ-intro₂ _ _ p) with (p here)
 Ω (< x , y > ∷ 𝑓″) 𝑓′ {cff con𝑓} {cff con𝑓′}
   {pre-cons preable𝑓″ conxpre𝑓″} {post-cons postable𝑓″ conypost𝑓″}
   (⊑ₑ-intro₂ _ _ p)
@@ -106,9 +106,9 @@ shrinkExp {𝑓 = 𝑓} {𝑓″ = 𝑓″} 𝑓⊆𝑓′ 𝑓′⊑𝑓″
 
 ⊑ₑ-trans' : ∀ {con𝑓 con𝑓′ con𝑓″} →
             (𝐹 𝑓 con𝑓) ⊑ₑ (𝐹 𝑓′ con𝑓′) → (𝐹 𝑓′ con𝑓′) ⊑ₑ (𝐹 𝑓″ con𝑓″) →
-            ∀ x y → < x , y > ∈ 𝑓 → ⊑ₑ-proof 𝑓″ con𝑓″ x y
+            ∀ {x y} → < x , y > ∈ 𝑓 → ⊑ₑ-proof 𝑓″ con𝑓″ x y
 ⊑ₑ-trans' {𝑓} {𝑓′} {𝑓″} {con𝑓} {con𝑓′} (⊑ₑ-intro₂ _ _ p₁)
-  (⊑ₑ-intro₂ preable𝑓′ preable𝑓″ p₂) x y xy∈𝑓
+  (⊑ₑ-intro₂ preable𝑓′ preable𝑓″ p₂) xy∈𝑓
   = record
       { sub = 𝑓″sub
       ; sub⊆𝑓 = ⊑ₑ-proof₂.sub⊆𝑓′ 𝑓″proof₂
@@ -119,7 +119,7 @@ shrinkExp {𝑓 = 𝑓} {𝑓″ = 𝑓″} 𝑓⊆𝑓′ 𝑓′⊑𝑓″
       ; pre⊑x = NbhSys.⊑-trans 𝐴 (⊑ₑ-proof₂.pre⊑p𝑓 𝑓″proof₂)
                 (⊑ₑ-proof.pre⊑x 𝑓′proof)
       }
-  where 𝑓′proof = p₁ x y xy∈𝑓
+  where 𝑓′proof = p₁ xy∈𝑓
         𝑓′sub = ⊑ₑ-proof.sub 𝑓′proof
         𝑓′subcon = subsetIsCon con𝑓′ (⊑ₑ-proof.sub⊆𝑓 𝑓′proof)
         𝑓′subpreable = ⊑ₑ-proof.preablesub 𝑓′proof

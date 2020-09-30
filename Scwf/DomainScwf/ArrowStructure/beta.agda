@@ -42,7 +42,7 @@ open import Scwf.DomainScwf.Comprehension.Morphism.Relation
         𝑢⊥↦⊥ = Appmap.↦-bottom 𝑢
         𝑢⊥↦y = Appmap.↦-↓closed 𝑢 tupy⊑⊥ 𝑢⊥↦⊥
 β-lemma₁ (ap↦-intro₂ _ _ _ _ (⊑ₑ-intro₂ _ _ p))
-  with (p _ _ here)
+  with (p here)
 β-lemma₁ {Γ = Γ} {𝑢 = 𝑢}
   (ap↦-intro₂ {x = x} {y} con𝑓 _ lam𝑢𝑥↦𝑓 𝑡𝑥↦x _)
   | record { sub = sub
@@ -66,9 +66,9 @@ open import Scwf.DomainScwf.Comprehension.Morphism.Relation
 
 β-lemma₂' : {𝑢 : tAppmap (𝐴 :: Γ) [ 𝐵 ]} → ∀ {𝑥 x′ y′} →
             [ 𝑢 ] ⟪ x′ , 𝑥 ⟫ ↦ ⟪ y′ ⟫ →
-            ∀ x y → < x , y > ∈ (< x′ , y′ > ∷ ∅) →
+            ∀ {x y} → < x , y > ∈ (< x′ , y′ > ∷ ∅) →
             [ 𝑢 ] ⟪ x , 𝑥 ⟫ ↦ ⟪ y ⟫
-β-lemma₂' 𝑢x′𝑥↦y′ _ _ here = 𝑢x′𝑥↦y′
+β-lemma₂' 𝑢x′𝑥↦y′ here = 𝑢x′𝑥↦y′
 
 β-lemma₂ : {𝑡 : tAppmap Γ [ 𝐴 ]} →
            {𝑢 : tAppmap (𝐴 :: Γ) [ 𝐵 ]} →
@@ -81,7 +81,8 @@ open import Scwf.DomainScwf.Comprehension.Morphism.Relation
   where xy⊑xy = NbhSys.⊑-refl (ArrNbhSys 𝐴 𝐵)
         x𝑥′⊑x𝑥 = ⊑ᵥ-cons (𝐴 :: Γ) (NbhSys.⊑-refl 𝐴) 𝑥′⊑𝑥
         𝑢x𝑥↦y = Appmap.↦-mono 𝑢 x𝑥′⊑x𝑥 𝑢x𝑥′↦y
-        lam𝑥↦xy = lam↦-intro₂ _ _ singletonIsCon (β-lemma₂' {𝑢 = 𝑢} 𝑢x𝑥↦y)
+        lam𝑥↦xy = lam↦-intro₂ singletonIsCon
+                  (β-lemma₂' {𝑢 = 𝑢} 𝑢x𝑥↦y)
 
 β-equal : {𝑡 : tAppmap Γ [ 𝐴 ]} →
           {𝑢 : tAppmap (𝐴 :: Γ) [ 𝐵 ]} →

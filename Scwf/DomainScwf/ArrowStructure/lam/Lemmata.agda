@@ -29,8 +29,8 @@ open import Agda.Builtin.Equality
 shrinkLam : ∀ {𝑥 con𝑓 con𝑓′} → 𝑓 ⊆ 𝑓′ →
             [ 𝑡 ] 𝑥 lam↦ ⟪ 𝐹 𝑓′ con𝑓′ ⟫ →
             [ 𝑡 ] 𝑥 lam↦ ⟪ 𝐹 𝑓 con𝑓 ⟫
-shrinkLam {𝑓 = 𝑓} 𝑓⊆𝑓′ (lam↦-intro₂ 𝑥 𝑓′ _ p)
-  = lam↦-intro₂ 𝑥 𝑓 _ (λ x y xy∈𝑓 → p x y (𝑓⊆𝑓′ < x , y > xy∈𝑓))
+shrinkLam {𝑓 = 𝑓} 𝑓⊆𝑓′ (lam↦-intro₂  _ p)
+  = lam↦-intro₂ _ (λ xy∈𝑓 → p (𝑓⊆𝑓′ xy∈𝑓))
 
 -- The first component of any pair in a FinFun 𝑓 is smaller
 -- than pre 𝑓.
@@ -48,8 +48,8 @@ preBiggest {preable𝑓 = pre-cons preable𝑓 conx′pre𝑓} (there xy∈𝑓)
                 ∀ x y → < x , y > ∈ 𝑓 →
                 [ 𝑡 ] ⟪ pre 𝑓 preable𝑓 , 𝑥 ⟫ ↦ ⟪ y ⟫
 ↓closedLemma'  {𝑓 = (x ∷ 𝑓′)} {𝑥 = 𝑥} _ preable
-  (lam↦-intro₂ _ _ _ p) x′ y′ x′y′∈𝑓
-  = Appmap.↦-mono 𝑡 a𝑥⊑p𝑓𝑥 (p x′ y′ x′y′∈𝑓)
+  (lam↦-intro₂ _ p) x′ y′ x′y′∈𝑓
+  = Appmap.↦-mono 𝑡 a𝑥⊑p𝑓𝑥 (p x′y′∈𝑓)
   where a⊑p𝑓 = preBiggest x′y′∈𝑓
         a𝑥⊑p𝑓𝑥 = ⊑ᵥ-cons (𝐴 :: Γ) a⊑p𝑓
                  (NbhSys.⊑-refl (ValNbhSys _))
@@ -72,7 +72,7 @@ preBiggest {preable𝑓 = pre-cons preable𝑓 conx′pre𝑓} (there xy∈𝑓)
                   (NbhSys.⊑-refl (ValNbhSys _))
         𝑡p𝑓′𝑥↦p𝑓′ = ↓closedLemma (subsetIsCon con𝑓 ⊆-lemma₃)
                    preable𝑓′ postable𝑓′
-                   (shrinkLam (λ 𝑦 𝑦∈𝑓′ → there 𝑦∈𝑓′) lam𝑡𝑥↦𝑓)
+                   (shrinkLam (λ 𝑦∈𝑓′ → there 𝑦∈𝑓′) lam𝑡𝑥↦𝑓)
         𝑡𝑓𝑥↦p𝑓′ = Appmap.↦-mono 𝑡 p𝑓′𝑥⊑p𝑓𝑥 𝑡p𝑓′𝑥↦p𝑓′
 
 ⊥⊔x≡x : ∀ x → ∀ {con⊥x} →
