@@ -44,7 +44,7 @@ Ty = NbhSys
 Ctx : Nat → Set₁
 Ctx n = List n Ty
 
--- The below is adapted from the standard library.
+-- The below code is adapted from the standard library.
 -- The point is to remove any dependencies on libraries.
 -- For the purpose of the project, universe levels can be fixed.
 
