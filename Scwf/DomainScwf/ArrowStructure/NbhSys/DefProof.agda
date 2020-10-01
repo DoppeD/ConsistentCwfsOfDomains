@@ -48,9 +48,8 @@ pre↦post ((x , y) ∷ 𝑓′) (pre-cons preable𝑓′ conxpre𝑓′)
     (pre↦post 𝑓′ preable𝑓′ postable𝑓′ γ (⋐-intro (λ x′y′∈𝑓′ →
     p (there x′y′∈𝑓′))))
 
--- A predicate describing that γ maps x to y iff either (x, y) ∈ 𝑓
--- or γ : x ↦ y is inductively generated from the approximable mapping
--- axioms.
+-- A pair (x, y) is in this relation iff (x, y) ∈ 𝑓, or if
+-- it can be derived from the approximable mapping axioms.
 data AppmapClosure (𝑓 : NbhFinFun 𝐴 𝐵)
                    (con𝑓 : ConFinFun 𝑓) : ∀ x y → Set where
   ig-inset : ∀ {x y} → (x , y) ∈ 𝑓 →
