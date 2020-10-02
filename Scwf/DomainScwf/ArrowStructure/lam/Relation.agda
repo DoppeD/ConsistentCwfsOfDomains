@@ -17,7 +17,7 @@ data [_]_lam↦_ (𝑡 : tAppmap (𝐴 :: Γ) [ 𝐵 ]) :
                Valuation Γ → Valuation [ ArrNbhSys 𝐴 𝐵 ] →
                Set where
   lam↦-intro₁ : ∀ {𝑥} → [ 𝑡 ] 𝑥 lam↦ ⟪ ⊥ₑ ⟫
-  lam↦-intro₂ : {𝑥 : Valuation Γ} → {𝑓 : NbhFinFun 𝐴 𝐵} →
+  lam↦-intro₂ : ∀ {𝑥} → {𝑓 : NbhFinFun 𝐴 𝐵} →
                 (con𝑓 : ConFinFun 𝑓) →
                 (∀ {x y} → (x , y) ∈ 𝑓 →
                 [ 𝑡 ] ⟪ x ,, 𝑥 ⟫ ↦ ⟪ y ⟫) →

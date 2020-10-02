@@ -32,7 +32,7 @@ lam↦-bottom = lam↦-intro₁
 
 lam↦-↓closed' : ∀ {𝑥 𝑓 𝑓′} → [ UniType ] λᵤ 𝑓 ⊑ λᵤ 𝑓′ →
                 [ 𝑡 ] 𝑥 lam↦ ⟪ λᵤ 𝑓′ ⟫ →
-                ∀ {x y} → < x , y >ₛ ∈ₛ 𝑓 →
+                ∀ {x y} → (x , y) ∈ₛ 𝑓 →
                 [ 𝑡 ] ⟪ x ,, 𝑥 ⟫ ↦ ⟪ y ⟫
 lam↦-↓closed' (⊑ᵤ-intro₂ _ _ p) _ xy∈𝑓 with (p _ _ xy∈𝑓)
 lam↦-↓closed' {𝑥 = 𝑥} _ 𝑡𝑥↦𝑓′ xy∈𝑓
@@ -59,7 +59,7 @@ lam↦-↓closed {𝑥 = 𝑥} {⟪ λᵤ 𝑓 ,, _ ⟫} {⟪ λᵤ 𝑓′ ,, _
 
 lam↦-↑directed' : ∀ {𝑥 𝑓 𝑓′} → [ 𝑡 ] 𝑥 lam↦ ⟪ λᵤ 𝑓 ⟫ →
                   [ 𝑡 ] 𝑥 lam↦ ⟪ λᵤ 𝑓′ ⟫ → ∀ {x y} →
-                  < x , y >ₛ ∈ₛ (𝑓 ∪ₛ 𝑓′) →
+                  (x , y) ∈ₛ (𝑓 ∪ₛ 𝑓′) →
                   [ 𝑡 ] ⟪ x ,, 𝑥 ⟫ ↦ ⟪ y ⟫
 lam↦-↑directed' {𝑓 = 𝑓} _ _ xy∈𝑓∪𝑓′
   with (∪ₛ-lemma₂ {𝑓 = 𝑓} xy∈𝑓∪𝑓′)

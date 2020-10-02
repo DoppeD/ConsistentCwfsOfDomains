@@ -2,7 +2,7 @@
 
 module Ucwf.DomainUcwf.UniType.AxiomProofs where
 
-open import Base.Core
+open import Base.Core hiding (_,_)
 open import NbhSys.Definition
 open import Ucwf.DomainUcwf.UniType.Definition
 open import Ucwf.DomainUcwf.UniType.Lemmata
@@ -13,9 +13,9 @@ private
   variable
     x y z : UniNbh
 
-⊑ᵤ-refl' : ∀ 𝑓 x y → < x , y >ₛ ∈ₛ 𝑓 → ⊑ᵤ-proof 𝑓 x y
-⊑ᵤ-refl' (< x′ , y′ >ₛ ∷ 𝑓′) x y (there xy∈𝑓)
-  = lift⊑ᵤ-proof 𝑓′ (< x′ , y′ >ₛ ∷ 𝑓′) x y
+⊑ᵤ-refl' : ∀ 𝑓 x y → (x , y) ∈ₛ 𝑓 → ⊑ᵤ-proof 𝑓 x y
+⊑ᵤ-refl' ((x′ , y′) ∷ 𝑓′) x y (there xy∈𝑓)
+  = lift⊑ᵤ-proof 𝑓′ ((x′ , y′) ∷ 𝑓′) x y
     (λ z∈𝑓 → there z∈𝑓) (⊑ᵤ-refl' 𝑓′ x y xy∈𝑓)
 ⊑ᵤ-refl' (_ ∷ 𝑓′) ⊥ᵤ ⊥ᵤ here
   = record { sub = ∅
@@ -24,19 +24,19 @@ private
            ; sub⊆𝑓′ = ∅-isSubsetₛ
            }
 ⊑ᵤ-refl' (_ ∷ 𝑓′) ⊥ᵤ (λᵤ 𝑓) here
-  = record { sub = < ⊥ᵤ , λᵤ 𝑓 >ₛ ∷ ∅
+  = record { sub = (⊥ᵤ , λᵤ 𝑓) ∷ ∅
            ; y⊑ᵤpost = ⊑ᵤ-intro₂ 𝑓 𝑓 (⊑ᵤ-refl' 𝑓)
            ; pre⊑ᵤx = ⊑ᵤ-intro₁
            ; sub⊆𝑓′ = ⊆ₛ-lemma₄ here ∅-isSubsetₛ
            }
 ⊑ᵤ-refl' (_ ∷ 𝑓′) (λᵤ 𝑓) ⊥ᵤ here
-  = record { sub = < λᵤ 𝑓 , ⊥ᵤ >ₛ ∷ ∅
+  = record { sub = (λᵤ 𝑓 , ⊥ᵤ) ∷ ∅
            ; y⊑ᵤpost = ⊑ᵤ-intro₁
            ; pre⊑ᵤx = ⊑ᵤ-intro₂ 𝑓 𝑓 (⊑ᵤ-refl' 𝑓)
            ; sub⊆𝑓′ = ⊆ₛ-lemma₄ here ∅-isSubsetₛ
            }
 ⊑ᵤ-refl' (_ ∷ 𝑓′) (λᵤ 𝑓) (λᵤ 𝑓″) here
-  = record { sub = < λᵤ 𝑓 , λᵤ 𝑓″ >ₛ ∷ ∅
+  = record { sub = (λᵤ 𝑓 , λᵤ 𝑓″) ∷ ∅
            ; y⊑ᵤpost = ⊑ᵤ-intro₂ 𝑓″ 𝑓″ (⊑ᵤ-refl' 𝑓″)
            ; pre⊑ᵤx = ⊑ᵤ-intro₂ 𝑓 𝑓 (⊑ᵤ-refl' 𝑓)
            ; sub⊆𝑓′ = ⊆ₛ-lemma₄ here ∅-isSubsetₛ
@@ -47,7 +47,7 @@ private
 ⊑ᵤ-refl {λᵤ 𝑓} = ⊑ᵤ-intro₂ 𝑓 𝑓 (⊑ᵤ-refl' 𝑓)
 
 ⊑ᵤ-⊔ᵤ' : ∀ {𝑓 𝑓′ 𝑓″} → λᵤ 𝑓′ ⊑ᵤ λᵤ 𝑓 → λᵤ 𝑓″ ⊑ᵤ λᵤ 𝑓 →
-         ∀ x y → < x , y >ₛ ∈ₛ (𝑓′ ∪ₛ 𝑓″) →
+         ∀ x y → (x , y) ∈ₛ (𝑓′ ∪ₛ 𝑓″) →
          ⊑ᵤ-proof 𝑓 x y
 ⊑ᵤ-⊔ᵤ' {𝑓′ = 𝑓′} _ _ x y xy∈∪
   with (∪ₛ-lemma₂ {𝑓 = 𝑓′} xy∈∪)
@@ -94,7 +94,7 @@ private
 ⊑ᵤ-⊔ᵤ-fst {λᵤ 𝑓} {⊥ᵤ} _ = ⊑ᵤ-refl
 ⊑ᵤ-⊔ᵤ-fst {λᵤ 𝑓} {λᵤ 𝑓′} _
   = ⊑ᵤ-intro₂ 𝑓 (𝑓 ∪ₛ 𝑓′) λ x y xy∈𝑓 →
-    record { sub = < x , y >ₛ ∷ ∅
+    record { sub = (x , y) ∷ ∅
            ; y⊑ᵤpost = ⊑ᵤ-⊔ᵤ-helper₁
            ; pre⊑ᵤx = ⊑ᵤ-⊔ᵤ-helper₂
            ; sub⊆𝑓′ = ⊆ₛ-lemma₄ (∪ₛ-lemma₃ xy∈𝑓)
@@ -106,7 +106,7 @@ private
 ⊑ᵤ-⊔ᵤ-snd {⊥ᵤ} {λᵤ 𝑓} _ = ⊑ᵤ-refl
 ⊑ᵤ-⊔ᵤ-snd {λᵤ 𝑓} {λᵤ 𝑓′} _
   = ⊑ᵤ-intro₂ 𝑓′ (𝑓 ∪ₛ 𝑓′) λ x y xy∈𝑓′ →
-    record { sub = < x , y >ₛ ∷ ∅
+    record { sub = (x , y) ∷ ∅
            ; y⊑ᵤpost = ⊑ᵤ-⊔ᵤ-helper₁
            ; pre⊑ᵤx = ⊑ᵤ-⊔ᵤ-helper₂
            ; sub⊆𝑓′ = ⊆ₛ-lemma₄ (∪ₛ-lemma₄ xy∈𝑓′)

@@ -33,9 +33,9 @@ ap↦-bottom = ap↦-intro₁
 
 ap↦-↓closed' : ∀ {𝑓′ x y 𝑓} →
                [ UT ] (λᵤ 𝑓) ⊑ y →
-               [ UT ] λᵤ (< x , y >ₛ ∷ ∅) ⊑ λᵤ 𝑓′ →
+               [ UT ] λᵤ ((x , y) ∷ ∅) ⊑ λᵤ 𝑓′ →
                ∀ x′ y′ →
-               < x′ , y′ >ₛ ∈ₛ (< x , λᵤ 𝑓 >ₛ ∷ ∅) →
+               (x′ , y′) ∈ₛ ((x , λᵤ 𝑓) ∷ ∅) →
                ⊑ᵤ-proof 𝑓′ x′ y′
 ap↦-↓closed' {x = x} {y} 𝑓⊑y (⊑ᵤ-intro₂ _ _ p) _ _ here
   = record { sub = sub
@@ -56,13 +56,13 @@ ap↦-↓closed {𝑦 = ⟪ λᵤ 𝑓 ,, ⟪⟫ ⟫} (⊑ᵥ-cons _ 𝑓⊑y �
   (ap↦-intro₂ {x = x′} {𝑓 = 𝑓′} 𝑡𝑥↦𝑓′ 𝑢𝑥↦x′ x′y′⊑𝑓′)
   = ap↦-intro₂ 𝑡𝑥↦𝑓′ 𝑢𝑥↦x′ x′𝑓⊑𝑓′
   where x′𝑓⊑𝑓′' = ap↦-↓closed' 𝑓⊑y x′y′⊑𝑓′
-        x′𝑓⊑𝑓′ = ⊑ᵤ-intro₂ (< x′ , λᵤ 𝑓 >ₛ ∷ ∅) 𝑓′ x′𝑓⊑𝑓′'
+        x′𝑓⊑𝑓′ = ⊑ᵤ-intro₂ ((x′ , λᵤ 𝑓) ∷ ∅) 𝑓′ x′𝑓⊑𝑓′'
 
 ap↦-↑directed' : ∀ {𝑓 𝑓′ x x′ y y′} →
-                 λᵤ (< x , y >ₛ ∷ ∅) ⊑ᵤ (λᵤ 𝑓) →
-                 λᵤ (< x′ , y′ >ₛ ∷ ∅) ⊑ᵤ (λᵤ 𝑓′) → ∀ x″ y″ →
-                 < x″ , y″ >ₛ ∈ₛ
-                 (< x ⊔ᵤ x′ [ con-all ] , y ⊔ᵤ y′ [ con-all ] >ₛ ∷ ∅) →
+                 λᵤ ((x , y) ∷ ∅) ⊑ᵤ (λᵤ 𝑓) →
+                 λᵤ ((x′ , y′) ∷ ∅) ⊑ᵤ (λᵤ 𝑓′) → ∀ x″ y″ →
+                 (x″ , y″) ∈ₛ
+                 (((x ⊔ᵤ x′ [ con-all ]) , (y ⊔ᵤ y′ [ con-all ])) ∷ ∅) →
                  ⊑ᵤ-proof (𝑓 ∪ₛ 𝑓′) x″ y″
 ap↦-↑directed' {x = x} {x′} {y} {y′} (⊑ᵤ-intro₂ _ _ p₁)
   (⊑ᵤ-intro₂ _ _ p₂) x″ y″ here
@@ -101,5 +101,5 @@ ap↦-↑directed {𝑦 = ⟪ λᵤ 𝑓 ,, ⟪⟫ ⟫} {⟪ λᵤ 𝑓′ ,, �
           𝑢𝑥↦x⊔x′ = Appmap.↦-↑directed 𝑢 𝑢𝑥↦x 𝑢𝑥↦x′
                     (con-tup con-all con-nil)
           𝑓∪𝑓′ = λᵤ (𝑓 ∪ₛ 𝑓′)
-          big⊑ = ⊑ᵤ-intro₂ (< [ UT ] x ⊔ x′ [ con-all ] , 𝑓∪𝑓′ >ₛ ∷ ∅)
+          big⊑ = ⊑ᵤ-intro₂ (([ UT ] x ⊔ x′ [ con-all ] , 𝑓∪𝑓′) ∷ ∅)
                  (𝑔 ∪ₛ 𝑔′) (ap↦-↑directed' x𝑓⊑𝑔 x′𝑓′⊑𝑔′)

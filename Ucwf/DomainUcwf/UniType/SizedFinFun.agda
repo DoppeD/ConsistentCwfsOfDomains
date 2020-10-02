@@ -2,7 +2,7 @@
 
 module Ucwf.DomainUcwf.UniType.SizedFinFun where
 
-open import Base.Core
+open import Base.Core hiding (_,_)
 open import Ucwf.DomainUcwf.UniType.Definition
 
 open import Agda.Builtin.Size
@@ -75,5 +75,5 @@ _⊆ₛ_ {i} 𝑓 𝑓′ = ∀ {x} → _∈ₛ_ {i} x 𝑓 → _∈ₛ_ {i} x �
 
 -- From a proof that a pair of neighborhoods is
 -- in the empty set, anything.
-xy∈∅-abs : {p : Set} → ∀ {x y} → < x , y >ₛ ∈ₛ ∅ → p
+xy∈∅-abs : {p : Set} → ∀ {x y} → (x , y) ∈ₛ ∅ → p
 xy∈∅-abs ()

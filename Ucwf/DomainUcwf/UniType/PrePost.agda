@@ -6,8 +6,8 @@ open import Ucwf.DomainUcwf.UniType.Definition
 
 pre : ∀ {i} → FinFunₛ {i} → UniNbh {i}
 pre ∅ = ⊥ᵤ
-pre (< x , y >ₛ ∷ 𝑓) = x ⊔ᵤ pre 𝑓 [ con-all ]
+pre ((x , y) ∷ 𝑓) = x ⊔ᵤ pre 𝑓 [ con-all ]
 
 post : ∀ {i} → FinFunₛ {i} → UniNbh {i}
 post ∅ = ⊥ᵤ
-post (< x , y >ₛ ∷ 𝑓) = y ⊔ᵤ post 𝑓 [ con-all ]
+post ((x , y) ∷ 𝑓) = y ⊔ᵤ post 𝑓 [ con-all ]

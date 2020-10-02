@@ -2,7 +2,7 @@
 
 module Ucwf.DomainUcwf.UniType.Relation where
 
-open import Base.Core
+open import Base.Core hiding (_,_)
 open import Ucwf.DomainUcwf.UniType.Definition
 open import Ucwf.DomainUcwf.UniType.PrePost
 open import Ucwf.DomainUcwf.UniType.SizedFinFun
@@ -30,6 +30,6 @@ data _⊑ᵤ_ where
               (⊥ᵤ {i}) ⊑ᵤ x
   ⊑ᵤ-intro₂ : ∀ {i j} → (𝑓 : FinFunₛ {i}) →
               (𝑓′ : FinFunₛ {j}) →
-              ((x y : UniNbh {i}) → < x , y >ₛ ∈ₛ 𝑓 →
+              ((x y : UniNbh {i}) → (x , y) ∈ₛ 𝑓 →
               ⊑ᵤ-proof {i} {j} 𝑓′ x y) →
               _⊑ᵤ_ {↑ i} {↑ j} (λᵤ 𝑓) (λᵤ 𝑓′)

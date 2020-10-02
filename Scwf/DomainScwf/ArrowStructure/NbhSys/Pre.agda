@@ -63,8 +63,10 @@ preLemma₃'' {𝑓} {𝑓′} preable𝑓 preable𝑓′ preable∪
 preLemma₃' : ∀ x → (preable𝑓 : Preable 𝑓) → (preable𝑓′ : Preable 𝑓′) →
              (con₁ : NbhSys.Con 𝐴 x (pre 𝑓 preable𝑓)) →
              (con₂ : NbhSys.Con 𝐴 (pre 𝑓 preable𝑓) (pre 𝑓′ preable𝑓′)) →
-             NbhSys.Con 𝐴 ([ 𝐴 ] x ⊔ pre 𝑓 preable𝑓 [ con₁ ]) (pre 𝑓′ preable𝑓′) →
-             NbhSys.Con 𝐴 x ([ 𝐴 ] (pre 𝑓 preable𝑓) ⊔ (pre 𝑓′ preable𝑓′) [ con₂ ])
+             NbhSys.Con 𝐴 ([ 𝐴 ] x ⊔ pre 𝑓 preable𝑓 [ con₁ ])
+               (pre 𝑓′ preable𝑓′) →
+             NbhSys.Con 𝐴 x ([ 𝐴 ] (pre 𝑓 preable𝑓) ⊔
+               (pre 𝑓′ preable𝑓′) [ con₂ ])
 preLemma₃' {𝑓} {𝑓′} x preable𝑓 preable𝑓′ con₁ con₂ con₃
   = NbhSys.Con-⊔ 𝐴 (NbhSys.⊑-trans 𝐴 (NbhSys.⊑-⊔-fst 𝐴 con₁)
     (NbhSys.⊑-⊔-fst 𝐴 con₃))
@@ -96,9 +98,12 @@ preUnionLemma' {∅} {𝑓′} preable𝑓 preable𝑓′ preable∪ pre𝑓⊑m
 preUnionLemma' {(x , y) ∷ 𝑓} (pre-cons preable𝑓 conxpre𝑓) preable𝑓′
   (pre-cons preable∪ conxpre∪) prexy𝑓⊑max pre𝑓′⊑max
   = NbhSys.⊑-⊔ 𝐴 x⊑max rec conxpre∪
-  where pre𝑓⊑max = NbhSys.⊑-trans 𝐴 (NbhSys.⊑-⊔-snd 𝐴 conxpre𝑓) prexy𝑓⊑max
-        rec = preUnionLemma' preable𝑓 preable𝑓′ preable∪ pre𝑓⊑max pre𝑓′⊑max
-        x⊑max = NbhSys.⊑-trans 𝐴 (NbhSys.⊑-⊔-fst 𝐴 conxpre𝑓) prexy𝑓⊑max
+  where pre𝑓⊑max = NbhSys.⊑-trans 𝐴 (NbhSys.⊑-⊔-snd 𝐴 conxpre𝑓)
+                   prexy𝑓⊑max
+        rec = preUnionLemma' preable𝑓 preable𝑓′ preable∪ pre𝑓⊑max
+              pre𝑓′⊑max
+        x⊑max = NbhSys.⊑-trans 𝐴 (NbhSys.⊑-⊔-fst 𝐴 conxpre𝑓)
+                prexy𝑓⊑max
 
 preUnionLemma : ∀ {max} → (preable𝑓 : Preable 𝑓) →
                 (preable𝑓′ : Preable 𝑓′) →
@@ -108,10 +113,12 @@ preUnionLemma {∅} _ preable𝑓′ _ _ = preable𝑓′
 preUnionLemma {(x , y) ∷ 𝑓} (pre-cons preable𝑓 conxpre𝑓)
   preable𝑓′ pre𝑓⊑x pre𝑓′⊑x
   = pre-cons rec (NbhSys.Con-⊔ 𝐴 x⊑max pre∪⊑max)
-  where pre𝑓⊑max = NbhSys.⊑-trans 𝐴 (NbhSys.⊑-⊔-snd 𝐴 conxpre𝑓) pre𝑓⊑x
+  where pre𝑓⊑max = NbhSys.⊑-trans 𝐴 (NbhSys.⊑-⊔-snd 𝐴 conxpre𝑓)
+                   pre𝑓⊑x
         rec = preUnionLemma preable𝑓 preable𝑓′ pre𝑓⊑max pre𝑓′⊑x
         x⊑max = NbhSys.⊑-trans 𝐴 (NbhSys.⊑-⊔-fst 𝐴 conxpre𝑓) pre𝑓⊑x
-        pre∪⊑max = preUnionLemma' preable𝑓 preable𝑓′ rec pre𝑓⊑max pre𝑓′⊑x
+        pre∪⊑max = preUnionLemma' preable𝑓 preable𝑓′ rec pre𝑓⊑max
+                   pre𝑓′⊑x
 
 singletonIsPreable : ∀ {x y} → Preable ((x , y) ∷ ∅)
 singletonIsPreable = pre-cons pre-nil (con⊥₂ 𝐴)

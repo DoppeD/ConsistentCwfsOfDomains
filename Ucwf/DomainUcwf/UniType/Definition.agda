@@ -13,7 +13,7 @@ data FinFunₛ : {i : Size} → Set
 data UniNbh : {i : Size} → Set
 
 data ×ₛ where
-  <_,_>ₛ : ∀ {i} → (x y : UniNbh {i}) → ×ₛ {i}
+  _,_ : ∀ {i} → (x y : UniNbh {i}) → ×ₛ {i}
 
 data FinFunₛ where
   ∅ : ∀ {i} → FinFunₛ {i}

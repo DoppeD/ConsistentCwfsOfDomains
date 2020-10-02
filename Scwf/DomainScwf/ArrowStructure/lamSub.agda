@@ -58,7 +58,7 @@ lamSubLemma₁ {𝑦 = ⟪ 𝐹 𝑓 con𝑓 ,, ⟪⟫ ⟫} (∘↦-intro γ𝑥
 -- From a proof that 𝑡 ∘ ⟨ (γ ∘ p Δ 𝐴) , q Δ 𝐴 ⟩ maps
 -- 𝑥 to ⟪ 𝐹 𝑓 ⟫, we can find a valuation 𝑦 such that
 -- γ maps 𝑥 to 𝑦, and 𝑡 maps ⟪ x , 𝑦 ⟫ to ⟪ y ⟫ for any
--- < x , y > ∈ 𝑓.
+-- (x , y) ∈ 𝑓.
 record P-Struct (γ : tAppmap Δ Γ) (𝑡 : tAppmap (𝐴 :: Γ) [ 𝐵 ])
                 (𝑥 : Valuation Δ) (𝑓 : NbhFinFun 𝐴 𝐵) :
                 Set where

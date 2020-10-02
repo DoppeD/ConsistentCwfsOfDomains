@@ -87,8 +87,10 @@ Con-⊔ₑ'' {sub = (x , y) ∷ sub} {con𝑓″ = cff p} 𝑓⊑𝑓″ 𝑓′
         recpreablesub = ⊑ₑ-proof₃.preablesub rec
         recybound = ⊑ₑ-proof₃.ybound rec
         recpre⊑pre𝑓′ = ⊑ₑ-proof₃.pre⊑pre𝑓′ rec
-        sub″⊑prexysub = NbhSys.⊑-trans 𝐴 pre″⊑x (NbhSys.⊑-⊔-fst 𝐴 conxpresub)
-        recsub⊑prexysub = NbhSys.⊑-trans 𝐴 recpre⊑pre𝑓′ (NbhSys.⊑-⊔-snd 𝐴 _)
+        sub″⊑prexysub = NbhSys.⊑-trans 𝐴 pre″⊑x
+                        (NbhSys.⊑-⊔-fst 𝐴 conxpresub)
+        recsub⊑prexysub = NbhSys.⊑-trans 𝐴 recpre⊑pre𝑓′
+                          (NbhSys.⊑-⊔-snd 𝐴 _)
         preable∪ = preUnionLemma preablesub″ recpreablesub sub″⊑prexysub
                    recsub⊑prexysub
         ∪⊆𝑓″ = ∪-lemma₁ sub″⊆𝑓″ recsub⊆𝑓″
@@ -128,8 +130,10 @@ Con-⊔ₑ'' {sub = (x , y) ∷ sub} {con𝑓″ = cff p} 𝑓⊑𝑓″ 𝑓′
         recpreablesub = ⊑ₑ-proof₃.preablesub rec
         recybound = ⊑ₑ-proof₃.ybound rec
         recpre⊑pre𝑓′ = ⊑ₑ-proof₃.pre⊑pre𝑓′ rec
-        sub″⊑prexysub = NbhSys.⊑-trans 𝐴 pre″⊑x (NbhSys.⊑-⊔-fst 𝐴 conxpresub)
-        recsub⊑prexysub = NbhSys.⊑-trans 𝐴 recpre⊑pre𝑓′ (NbhSys.⊑-⊔-snd 𝐴 _)
+        sub″⊑prexysub = NbhSys.⊑-trans 𝐴 pre″⊑x
+                        (NbhSys.⊑-⊔-fst 𝐴 conxpresub)
+        recsub⊑prexysub = NbhSys.⊑-trans 𝐴 recpre⊑pre𝑓′
+                          (NbhSys.⊑-⊔-snd 𝐴 _)
         preable∪ = preUnionLemma preablesub″ recpreablesub sub″⊑prexysub
                    recsub⊑prexysub
         ∪⊆𝑓″ = ∪-lemma₁ sub″⊆𝑓″ recsub⊆𝑓″
