@@ -57,7 +57,8 @@ pred↦-↑directed {0ₙ} _ (pred↦-intro₁ _ ⊑ₙ-intro₂)
   = pred↦-intro₁ ⊑ₙ-intro₂ ⊑ₙ-intro₂
 pred↦-↑directed {0ₙ} _ (pred↦-intro₁ _ ⊑ₙ-intro₂) conₙ-0ₙ
   = pred↦-intro₁ ⊑ₙ-intro₂ ⊑ₙ-intro₂
-pred↦-↑directed {sₙ x} (pred↦-intro₂ _ (⊑ₙ-intro₃ y⊑x)) (pred↦-intro₂ _ (⊑ₙ-intro₃ z⊑x)) conyz
+pred↦-↑directed {sₙ x} (pred↦-intro₂ _ (⊑ₙ-intro₃ y⊑x))
+  (pred↦-intro₂ _ (⊑ₙ-intro₃ z⊑x)) conyz
   = pred↦-intro₂ (⊑ₙ-intro₃ ⊑ₙ-intro₁) (⊑ₙ-intro₃ y⊔z⊑x)
   where y⊔z⊑x = ⊑ₙ-⊔ y⊑x z⊑x conyz
 
