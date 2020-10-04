@@ -4,6 +4,5 @@ open import Nat.NbhSys.Definition
 open import Nat.NbhSys.Relation
 
 data _pred↦_ : NatNbh → NatNbh → Set where
-  pred↦-intro₁ : ∀ {x} → x pred↦ ⊥ₙ
-  pred↦-intro₂ : 0ₙ pred↦ 0ₙ
-  pred↦-intro₃ : ∀ {x y} → (sₙ y) ⊑ₙ x → x pred↦ y
+  pred↦-intro₁ : ∀ {x y} → x ⊑ₙ 0ₙ → y ⊑ₙ x → x pred↦ y
+  pred↦-intro₂ : ∀ {x y} → (sₙ ⊥ₙ) ⊑ₙ x → (sₙ y) ⊑ₙ x → x pred↦ y

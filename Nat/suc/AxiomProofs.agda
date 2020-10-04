@@ -14,10 +14,13 @@ suc↦-mono ⊑ₙ-intro₂ (suc↦-intro₁ z⊑sx)
 suc↦-mono (⊑ₙ-intro₃ x⊑y) (suc↦-intro₁ z⊑sx)
   = suc↦-intro₁ (⊑ₙ-trans z⊑sx (⊑ₙ-intro₃ (⊑ₙ-intro₃ x⊑y)))
 
+suc↦-bottom : ∀ {x} → x suc↦ ⊥ₙ
+suc↦-bottom = suc↦-intro₁ ⊑ₙ-intro₁
+
 suc↦-↓closed : ∀ {x y z} → y ⊑ₙ z → x suc↦ z →
                x suc↦ y
 suc↦-↓closed ⊑ₙ-intro₁ (suc↦-intro₁ z⊑sx)
-  = suc↦-intro₁ ⊑ₙ-intro₁
+  = suc↦-bottom
 suc↦-↓closed (⊑ₙ-intro₃ y⊑z) (suc↦-intro₁ (⊑ₙ-intro₃ z⊑ssx))
   = suc↦-intro₁ (⊑ₙ-intro₃ (⊑ₙ-trans y⊑z z⊑ssx))
 
