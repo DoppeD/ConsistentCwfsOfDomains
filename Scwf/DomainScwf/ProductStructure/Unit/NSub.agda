@@ -3,10 +3,10 @@
 module Scwf.DomainScwf.ProductStructure.Unit.NSub where
 
 open import Appmap.Equivalence
+open import Appmap.Composition.Instance
+open import Appmap.Composition.Relation
 open import Base.Core
 open import Base.Variables
-open import Scwf.DomainScwf.Appmap.Composition.Instance
-open import Scwf.DomainScwf.Appmap.Composition.Relation
 open import Scwf.DomainScwf.Appmap.Definition
 open import Scwf.DomainScwf.Appmap.Valuation.Definition
 open import Scwf.DomainScwf.ProductStructure.Unit.Mapping.Instance
@@ -15,7 +15,7 @@ open import Scwf.DomainScwf.ProductStructure.Unit.NbhSys.Instance
 
 private
   variable
-    γ : tAppmap Δ Γ
+    γ : Sub Δ Γ
 
 ℕ₁-subLemma₁ : ∀ {𝑥 𝑦} → [ 0₁ ∘ γ ] 𝑥 ↦ 𝑦 →
                [ 0₁ ] 𝑥 ↦ 𝑦

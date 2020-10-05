@@ -9,12 +9,12 @@ open import Scwf.DomainScwf.Appmap.Valuation.Definition
 
 open import Agda.Builtin.Nat
 
-data ⟨⟩↦ (γ : tAppmap Δ Γ) (𝑡 : tAppmap Δ [ 𝐴 ]) :
+data ⟨⟩↦ (γ : Sub Δ Γ) (𝑡 : Term Δ 𝐴) :
          Valuation Δ → Valuation (𝐴 :: Γ) → Set where
   ⟨⟩↦-intro : ∀ {𝑥 𝑦} → [ γ ] 𝑥 ↦ (ctTail 𝑦) →
-              [ 𝑡 ] 𝑥 ↦ ⟪ ctHead 𝑦 ⟫ → ⟨⟩↦ γ 𝑡 𝑥 𝑦
+              [ 𝑡 ] 𝑥 ↦ (ctHead 𝑦) → ⟨⟩↦ γ 𝑡 𝑥 𝑦
 
 -- Some simplifying notation.
-[⟨_,_⟩]_↦_ : (γ : tAppmap Δ Γ) → (𝑡 : tAppmap Δ [ 𝐴 ]) →
+[⟨_,_⟩]_↦_ : (γ : Sub Δ Γ) → (𝑡 : Term Δ 𝐴) →
              Valuation Δ → Valuation (𝐴 :: Γ) → Set
 [⟨ γ , 𝑡 ⟩] 𝑥 ↦ 𝑦 = ⟨⟩↦ γ 𝑡 𝑥 𝑦

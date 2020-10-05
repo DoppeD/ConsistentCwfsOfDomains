@@ -17,7 +17,7 @@ open import Agda.Builtin.Nat
 
 private
   variable
-    𝑡 : uAppmap (suc n) 1
+    𝑡 : uTerm (suc n)
 
 pre-biggest : ∀ 𝑓 x y → (x , y) ∈ₛ 𝑓 →
               [ UniType ] x ⊑ pre 𝑓
@@ -27,13 +27,13 @@ pre-biggest ((x′ , y′) ∷ 𝑓′) x y (there xy∈𝑓′)
   = ⊑-⊔-lemma₅ UniType (pre-biggest 𝑓′ x y xy∈𝑓′) con-all
 
 shrinklam : ∀ {𝑥 𝑓 𝑓′} → 𝑓 ⊆ₛ 𝑓′ →
-            [ 𝑡 ] 𝑥 lam↦ ⟪ λᵤ 𝑓′ ⟫ → [ 𝑡 ] 𝑥 lam↦ ⟪ λᵤ 𝑓 ⟫
+            [ 𝑡 ] 𝑥 lam↦ (λᵤ 𝑓′) → [ 𝑡 ] 𝑥 lam↦ (λᵤ 𝑓)
 shrinklam {𝑓 = 𝑓} 𝑓⊆𝑓′ (lam↦-intro₂ p)
   = lam↦-intro₂ (λ xy∈𝑓 → p (𝑓⊆𝑓′ xy∈𝑓))
 
-↓closed-lemma' : ∀ 𝑥 𝑓 → [ 𝑡 ] 𝑥 lam↦ ⟪ λᵤ 𝑓 ⟫ →
+↓closed-lemma' : ∀ 𝑥 𝑓 → [ 𝑡 ] 𝑥 lam↦ (λᵤ 𝑓) →
                  ∀ x y → (x , y) ∈ₛ 𝑓 →
-                 [ 𝑡 ] ⟪ pre 𝑓 ,, 𝑥 ⟫ ↦ ⟪ y ⟫
+                 [ 𝑡 ] ⟪ pre 𝑓 ,, 𝑥 ⟫ ↦ y
 ↓closed-lemma' {n} {𝑡 = 𝑡} 𝑥 (x ∷ 𝑓′) (lam↦-intro₂ p)
   x′ y′ x′y′∈𝑓
   = Appmap.↦-mono 𝑡 a𝑥⊑p𝑓𝑥 (p x′y′∈𝑓)
@@ -42,11 +42,11 @@ shrinklam {𝑓 = 𝑓} 𝑓⊆𝑓′ (lam↦-intro₂ p)
                  (NbhSys.⊑-refl (ValNbhSys _))
 
 ↓closed-lemma : ∀ 𝑥 𝑓 →
-                [ 𝑡 ] 𝑥 lam↦ ⟪ λᵤ 𝑓 ⟫ →
-                [ 𝑡 ] ⟪ pre 𝑓 ,, 𝑥 ⟫ ↦ ⟪ post 𝑓 ⟫
+                [ 𝑡 ] 𝑥 lam↦ (λᵤ 𝑓) →
+                [ 𝑡 ] ⟪ pre 𝑓 ,, 𝑥 ⟫ ↦ (post 𝑓)
 ↓closed-lemma {𝑡 = 𝑡} 𝑥 ∅ _ = Appmap.↦-bottom 𝑡
 ↓closed-lemma {n} {𝑡 = 𝑡} 𝑥 ((x , y) ∷ 𝑓′) lam𝑡𝑥↦𝑓
-  = Appmap.↦-↑directed 𝑡 𝑡pre𝑓'↦y 𝑡𝑓𝑥↦p𝑓′ (con-tup con-all con-nil)
+  = Appmap.↦-↑directed 𝑡 𝑡pre𝑓'↦y 𝑡𝑓𝑥↦p𝑓′ con-all
   where 𝑓' = (x , y) ∷ 𝑓′
         𝑡pre𝑓'↦y = ↓closed-lemma' 𝑥 𝑓' lam𝑡𝑥↦𝑓  x y here
         p𝑓′⊑p𝑓 = NbhSys.⊑-⊔-snd UniType con-all

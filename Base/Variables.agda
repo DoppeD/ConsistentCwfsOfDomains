@@ -12,5 +12,5 @@ variable
   Δ : Ctx n
   Θ : Ctx o
   Λ : Ctx r
-  𝐴 𝐵 : Ty
+  𝐴 𝐵 𝐶 : Ty
   A B : Set

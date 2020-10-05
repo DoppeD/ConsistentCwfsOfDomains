@@ -13,10 +13,10 @@ private
   variable
     n : Nat
 
-data [_]_lam↦_ (𝑡 : uAppmap (suc n) 1) :
-               uValuation n → uValuation 1 → Set where
-  lam↦-intro₁ : ∀ {𝑥} → [ 𝑡 ] 𝑥 lam↦ ⟪ ⊥ᵤ ⟫
+data [_]_lam↦_ (𝑡 : uTerm (suc n)) :
+               uValuation n → UniNbh → Set where
+  lam↦-intro₁ : ∀ {𝑥} → [ 𝑡 ] 𝑥 lam↦ ⊥ᵤ
   lam↦-intro₂ : ∀ {𝑥 𝑓} →
                 (∀ {x y} → (x , y) ∈ₛ 𝑓 →
-                [ 𝑡 ] ⟪ x ,, 𝑥 ⟫ ↦ ⟪ y ⟫) →
-                [ 𝑡 ] 𝑥 lam↦ ⟪ λᵤ 𝑓 ⟫
+                [ 𝑡 ] ⟪ x ,, 𝑥 ⟫ ↦ y) →
+                [ 𝑡 ] 𝑥 lam↦ (λᵤ 𝑓)

@@ -3,10 +3,10 @@
 module Scwf.DomainScwf.PlainInstance where
 
 open import Appmap.Equivalence
+open import Appmap.Composition.Instance
 open import Base.Core
 open import Scwf.Plain
 open import Scwf.DomainScwf.Appmap.Definition
-open import Scwf.DomainScwf.Appmap.Composition.Instance
 open import Scwf.DomainScwf.Appmap.Empty.Instance
 open import Scwf.DomainScwf.Appmap.Identity.Instance
 open import Scwf.DomainScwf.Comprehension.Morphism.Instance
@@ -17,8 +17,8 @@ open import Scwf.DomainScwf.PlainAxiomProofs
 domScwf : Scwf
 Scwf.Ty domScwf       = Ty
 Scwf.Ctx domScwf      = Ctx
-Scwf.Tm domScwf Γ 𝐴   = tAppmap Γ [ 𝐴 ]
-Scwf.Sub domScwf      = tAppmap
+Scwf.Tm domScwf       = Term
+Scwf.Sub domScwf      = Sub
 Scwf._≈_ domScwf      = _≈_
 Scwf._≊_ domScwf      = _≈_
 Scwf.isEquivT domScwf = ≈IsEquiv

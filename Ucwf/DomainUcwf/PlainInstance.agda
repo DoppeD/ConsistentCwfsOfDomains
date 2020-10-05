@@ -3,9 +3,9 @@
 module Ucwf.DomainUcwf.PlainInstance where
 
 open import Appmap.Equivalence
+open import Appmap.Composition.Instance
 open import Base.Core
 open import Base.FinFun
-open import Scwf.DomainScwf.Appmap.Composition.Instance
 open import Scwf.DomainScwf.Appmap.Empty.Instance
 open import Scwf.DomainScwf.Appmap.Identity.Instance
 open import Scwf.DomainScwf.PlainAxiomProofs
@@ -17,8 +17,8 @@ open import Ucwf.DomainUcwf.UniType.Instance
 open import Ucwf.Plain
 
 domUcwf : Ucwf
-Ucwf.Tm domUcwf n     = uAppmap n 1
-Ucwf.Sub domUcwf m n  = uAppmap m n
+Ucwf.Tm domUcwf n     = uTerm n
+Ucwf.Sub domUcwf m n  = uSub m n
 Ucwf.id domUcwf {n}   = idMap (nToCtx n)
 Ucwf._≈_ domUcwf      = _≈_
 Ucwf._≊_ domUcwf      = _≈_

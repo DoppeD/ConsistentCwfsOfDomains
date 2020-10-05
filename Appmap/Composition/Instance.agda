@@ -1,13 +1,13 @@
 {-# OPTIONS --safe #-}
 
-module Scwf.DomainScwf.Appmap.Composition.Instance where
+module Appmap.Composition.Instance where
 
+open import Appmap.Definition
+open import Appmap.Composition.AxiomProofs
+open import Appmap.Composition.Relation
 open import Base.Variables
-open import Scwf.DomainScwf.Appmap.Definition
-open import Scwf.DomainScwf.Appmap.Composition.AxiomProofs
-open import Scwf.DomainScwf.Appmap.Composition.Relation
 
-_∘_ : tAppmap Δ Θ → tAppmap Γ Δ → tAppmap Γ Θ
+_∘_ : Appmap 𝐵 𝐶 → Appmap 𝐴 𝐵 → Appmap 𝐴 𝐶
 Appmap._↦_ (δ ∘ γ)         = _∘↦_ δ γ
 Appmap.↦-mono (δ ∘ γ)      = ∘↦-mono δ γ
 Appmap.↦-bottom (δ ∘ γ)    = ∘↦-bottom δ γ

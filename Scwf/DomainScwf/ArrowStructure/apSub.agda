@@ -5,13 +5,13 @@ open import Base.Core
 module Scwf.DomainScwf.ArrowStructure.apSub (𝐴 𝐵 : Ty) where
 
 open import Appmap.Equivalence
+open import Appmap.Composition.Instance
+open import Appmap.Composition.Relation
 open import Base.FinFun
 open import Base.Variables hiding (𝐴 ; 𝐵)
 open import NbhSys.Definition
 open import NbhSys.Lemmata
 open import Scwf.DomainScwf.Appmap.Definition
-open import Scwf.DomainScwf.Appmap.Composition.Instance
-open import Scwf.DomainScwf.Appmap.Composition.Relation
 open import Scwf.DomainScwf.Appmap.Identity.Relation
 open import Scwf.DomainScwf.Appmap.Valuation.Definition
 open import Scwf.DomainScwf.Appmap.Valuation.Instance
@@ -26,16 +26,15 @@ open import Scwf.DomainScwf.Comprehension.Morphism.Relation
 
 private
   variable
-    γ : tAppmap Δ Γ
-    𝑡 : tAppmap Γ [ ArrNbhSys 𝐴 𝐵 ]
-    𝑢 : tAppmap Γ [ 𝐴 ]
+    γ : Sub Δ Γ
+    𝑡 : Term Γ (𝐴 ⇒ 𝐵)
+    𝑢 : Term Γ 𝐴
 
 apSubLemma₁ : ∀ {𝑥 𝑦} → [ ap (𝑡 ∘ γ) (𝑢 ∘ γ) ] 𝑥 ↦ 𝑦 →
               [ ap 𝑡 𝑢 ∘ γ ] 𝑥 ↦ 𝑦
 apSubLemma₁ {𝑡 = 𝑡} {γ = γ} {𝑢}  (ap↦-intro₁ p)
-  = Appmap.↦-↓closed (ap 𝑡 𝑢 ∘ γ) tupy⊑⊥ ap𝑡𝑢∘γ↦⊥
-  where tupy⊑⊥ = ⊑ᵥ-cons [ 𝐵 ] p ⊑ᵥ-nil
-        ap𝑡𝑢∘γ↦⊥ = Appmap.↦-bottom (ap 𝑡 𝑢 ∘ γ)
+  = Appmap.↦-↓closed (ap 𝑡 𝑢 ∘ γ) p ap𝑡𝑢∘γ↦⊥
+  where ap𝑡𝑢∘γ↦⊥ = Appmap.↦-bottom (ap 𝑡 𝑢 ∘ γ)
 apSubLemma₁ {𝑡 = 𝑡} {γ = γ} {𝑢}
   (ap↦-intro₂ _ _ (∘↦-intro γ𝑥↦𝑦 𝑡𝑦↦𝑓)
   (∘↦-intro γ𝑥↦𝑧 𝑢𝑧↦x) xy⊑𝑓)
@@ -49,16 +48,15 @@ apSubLemma₁ {𝑡 = 𝑡} {γ = γ} {𝑢}
 apSubLemma₂ : ∀ {𝑥 𝑦} → [ ap 𝑡 𝑢 ∘ γ ] 𝑥 ↦ 𝑦 →
               [ ap (𝑡 ∘ γ) (𝑢 ∘ γ) ] 𝑥 ↦ 𝑦
 apSubLemma₂ {𝑡 = 𝑡} {𝑢} {γ = γ} (∘↦-intro γ𝑥↦𝑧 (ap↦-intro₁ p))
-  = Appmap.↦-↓closed (ap (𝑡 ∘ γ) (𝑢 ∘ γ)) tupy⊑⊥ ap𝑡∘γ𝑢∘γ↦⊥
-  where tupy⊑⊥ = ⊑ᵥ-cons [ 𝐵 ] p ⊑ᵥ-nil
-        ap𝑡∘γ𝑢∘γ↦⊥ = Appmap.↦-bottom (ap (𝑡 ∘ γ) (𝑢 ∘ γ))
+  = Appmap.↦-↓closed (ap (𝑡 ∘ γ) (𝑢 ∘ γ)) p ap𝑡∘γ𝑢∘γ↦⊥
+  where ap𝑡∘γ𝑢∘γ↦⊥ = Appmap.↦-bottom (ap (𝑡 ∘ γ) (𝑢 ∘ γ))
 apSubLemma₂ (∘↦-intro γ𝑥↦𝑧
   (ap↦-intro₂ _ _ 𝑡𝑧↦𝑓 𝑢𝑧↦x xy⊑𝑓))
   = ap↦-intro₂ _ _ 𝑡∘γ𝑥↦𝑓 𝑢∘γ𝑥↦x xy⊑𝑓
   where 𝑡∘γ𝑥↦𝑓 = ∘↦-intro γ𝑥↦𝑧 𝑡𝑧↦𝑓
         𝑢∘γ𝑥↦x = ∘↦-intro γ𝑥↦𝑧 𝑢𝑧↦x
 
-apSub : {Γ : Ctx n} → (γ : tAppmap Δ Γ) → ∀ 𝑡 𝑢 →
+apSub : {Γ : Ctx n} → (γ : Sub Δ Γ) → ∀ 𝑡 𝑢 →
         (ap (𝑡 ∘ γ) (𝑢 ∘ γ)) ≈ ((ap 𝑡 𝑢) ∘ γ)
 apSub γ 𝑡 𝑢 = ≈-intro (≼-intro apSubLemma₁)
               (≼-intro apSubLemma₂)

@@ -9,7 +9,7 @@ open import Scwf.DomainScwf.ProductStructure.fst.AxiomProofs
 open import Scwf.DomainScwf.ProductStructure.fst.Relation
 open import Scwf.DomainScwf.ProductStructure.NbhSys.Instance
 
-fst : tAppmap Γ [ 𝐴 × 𝐵 ] → tAppmap Γ [ 𝐴 ]
+fst : Term Γ (𝐴 × 𝐵) → Term Γ 𝐴
 Appmap._↦_ (fst 𝑡)         = fst↦ 𝑡
 Appmap.↦-mono (fst 𝑡)      = fst↦-mono 𝑡
 Appmap.↦-bottom (fst 𝑡)    = fst↦-bottom 𝑡

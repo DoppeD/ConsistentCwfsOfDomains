@@ -3,11 +3,11 @@
 module Ucwf.DomainUcwf.LambdaBeta.lamSub where
 
 open import Appmap.Equivalence
+open import Appmap.Composition.Instance
+open import Appmap.Composition.Relation
 open import Base.Variables
 open import NbhSys.Definition
 open import NbhSys.Lemmata
-open import Scwf.DomainScwf.Appmap.Composition.Instance
-open import Scwf.DomainScwf.Appmap.Composition.Relation
 open import Scwf.DomainScwf.Comprehension.Morphism.Instance
 open import Scwf.DomainScwf.Comprehension.Morphism.Relation
 open import Scwf.DomainScwf.Comprehension.p.Instance renaming (p to p')
@@ -24,67 +24,64 @@ open import Ucwf.DomainUcwf.UniType.SizedFinFun
 
 open import Agda.Builtin.Nat
 
-p : uAppmap (suc m) m
+p : uSub (suc m) m
 p {m} = p' (nToCtx m) UniType
 
-q : uAppmap (suc m) 1
+q : uTerm (suc m)
 q {m} = q' (nToCtx m) UniType
 
 private
   variable
-    γ : uAppmap n m
-    𝑡 : uAppmap (suc m) 1
+    γ : uSub n m
+    𝑡 : uTerm (suc m)
 
-  UT : NbhSys
-  UT = UniType
-
-lamSubLemma₁' : ∀ {𝑥 𝑓} → [ lam 𝑡 ∘ γ ] 𝑥 ↦ ⟪ λᵤ 𝑓 ⟫ →
+lamSubLemma₁' : ∀ {𝑥 𝑓} → [ lam 𝑡 ∘ γ ] 𝑥 ↦ (λᵤ 𝑓) →
                 ∀ {x y} → (x , y) ∈ₛ 𝑓 →
-                [ 𝑡 ∘ ⟨ γ ∘ p , q ⟩ ] ⟪ x ,, 𝑥 ⟫ ↦ ⟪ y ⟫
+                [ 𝑡 ∘ ⟨ γ ∘ p , q ⟩ ] ⟪ x ,, 𝑥 ⟫ ↦ y
 lamSubLemma₁' (∘↦-intro γ𝑥↦𝑦 (lam↦-intro₂ p)) xy∈𝑓
   = ∘↦-intro γ∘pq↦ (p xy∈𝑓)
-  where q↦ = q↦-intro (NbhSys.⊑-refl UT)
+  where q↦ = q↦-intro (NbhSys.⊑-refl UniType)
         p↦𝑥 = p↦-intro (NbhSys.⊑-refl (ValNbhSys _))
         γ∘p↦ = ∘↦-intro p↦𝑥 γ𝑥↦𝑦
         γ∘pq↦ = ⟨⟩↦-intro γ∘p↦ q↦
 
-lamSubLemma₁ : ∀ {𝑥 𝑦} → [ lam 𝑡 ∘ γ ] 𝑥 ↦ 𝑦 →
-               [ lam (𝑡 ∘ ⟨ γ ∘ p , q ⟩) ] 𝑥 ↦ 𝑦
-lamSubLemma₁ {𝑦 = ⟪ ⊥ᵤ ,, ⟪⟫ ⟫} _ = lam↦-intro₁
-lamSubLemma₁ {𝑦 = ⟪ λᵤ 𝑓 ,, ⟪⟫ ⟫} (∘↦-intro γ𝑥↦𝑦 lam𝑡𝑦↦𝑓)
+lamSubLemma₁ : ∀ {𝑥 y} → [ lam 𝑡 ∘ γ ] 𝑥 ↦ y →
+               [ lam (𝑡 ∘ ⟨ γ ∘ p , q ⟩) ] 𝑥 ↦ y
+lamSubLemma₁ {y = ⊥ᵤ} _ = lam↦-intro₁
+lamSubLemma₁ {y = λᵤ 𝑓} (∘↦-intro γ𝑥↦𝑦 lam𝑡𝑦↦𝑓)
   = lam↦-intro₂ (lamSubLemma₁' lam𝑥↦𝑓)
   where lam𝑥↦𝑓 = ∘↦-intro γ𝑥↦𝑦 lam𝑡𝑦↦𝑓
 
-record P-Struct (γ : uAppmap n m)
-                (𝑡 : uAppmap (suc m) 1)
+record P-Struct (γ : uSub n m)
+                (𝑡 : uTerm (suc m))
                 (𝑥 : uValuation n) (𝑓 : FinFunₛ) :
                 Set where
   field
     𝑦 : uValuation m
     γ𝑥↦𝑦 : [ γ ] 𝑥 ↦ 𝑦
-    λ𝑡𝑦 : ∀ {x y} → (x , y) ∈ₛ 𝑓 → [ 𝑡 ] ⟪ x ,, 𝑦 ⟫ ↦ ⟪ y ⟫
+    λ𝑡𝑦 : ∀ {x y} → (x , y) ∈ₛ 𝑓 → [ 𝑡 ] ⟪ x ,, 𝑦 ⟫ ↦ y
 
 getP-Struct' : ∀ 𝑥 x y 𝑦 𝑧 𝑓 →
-               [ 𝑡 ∘ ⟨ γ ∘ p , q ⟩ ] 𝑥 lam↦ ⟪ λᵤ ((x , y) ∷ 𝑓) ⟫ →
-               [ 𝑡 ] ⟪ x ,, 𝑦 ⟫ ↦ ⟪ y ⟫ →
+               [ 𝑡 ∘ ⟨ γ ∘ p , q ⟩ ] 𝑥 lam↦ (λᵤ ((x , y) ∷ 𝑓)) →
+               [ 𝑡 ] ⟪ x ,, 𝑦 ⟫ ↦ y →
                (∀ {x′ y′} → (x′ , y′) ∈ₛ 𝑓 →
-               [ 𝑡 ] ⟪ x′ ,, 𝑧 ⟫ ↦ ⟪ y′ ⟫) →
+               [ 𝑡 ] ⟪ x′ ,, 𝑧 ⟫ ↦ y′) →
                ∀ {x′ y′} → (x′ , y′) ∈ₛ ((x , y) ∷ 𝑓) →
-               [ 𝑡 ] ⟪ x′ ,, 𝑦 ⊔ᵥ 𝑧 [ valConAll ] ⟫ ↦ ⟪ y′ ⟫
+               [ 𝑡 ] ⟪ x′ ,, 𝑦 ⊔ᵥ 𝑧 [ valConAll ] ⟫ ↦ y′
 getP-Struct' {m} {𝑡 = 𝑡} 𝑥 x y 𝑦 𝑧 𝑓 _ 𝑡x𝑦↦y _ here
   = Appmap.↦-mono 𝑡 x𝑦⊑x⊔ 𝑡x𝑦↦y
   where 𝑦⊑⊔ = NbhSys.⊑-⊔-fst (ValNbhSys _) valConAll
         x𝑦⊑x⊔ = ⊑ᵥ-cons (nToCtx (suc m))
-                (NbhSys.⊑-refl UT) 𝑦⊑⊔
+                (NbhSys.⊑-refl UniType) 𝑦⊑⊔
 getP-Struct' {m} {𝑡 = 𝑡} 𝑥 x y 𝑦 𝑧 𝑓 _ _ p
   (there x′y′∈𝑓)
   = Appmap.↦-mono 𝑡 x′r⊑x′⊔ (p x′y′∈𝑓)
   where r⊑⊔ = NbhSys.⊑-⊔-snd (ValNbhSys _) valConAll
         x′r⊑x′⊔ = ⊑ᵥ-cons (nToCtx (suc m))
-                  (NbhSys.⊑-refl UT) r⊑⊔
+                  (NbhSys.⊑-refl UniType) r⊑⊔
 
 getP-Struct : ∀ 𝑥 → (𝑓 : FinFunₛ) →
-              [ 𝑡 ∘ ⟨ γ ∘ p , q ⟩ ] 𝑥 lam↦ ⟪ λᵤ 𝑓 ⟫ →
+              [ 𝑡 ∘ ⟨ γ ∘ p , q ⟩ ] 𝑥 lam↦ (λᵤ 𝑓) →
               P-Struct γ 𝑡 𝑥 𝑓
 getP-Struct {m} {γ = γ} 𝑥 ∅ _
   = record { 𝑦 = ⊥ᵥ
@@ -95,7 +92,7 @@ getP-Struct 𝑥 ((x , y) ∷ 𝑓) (lam↦-intro₂ p)
   with (p here)
 getP-Struct {m} {𝑡 = 𝑡} {γ = γ} 𝑥 ((x , y) ∷ 𝑓)
   (lam↦-intro₂ p)
-  | ∘↦-intro {𝑦 = ⟪ z ,, 𝑧 ⟫}
+  | ∘↦-intro {y = ⟪ z ,, 𝑧 ⟫}
     (⟨⟩↦-intro (∘↦-intro (p↦-intro 𝑦⊑𝑥) γ𝑦↦𝑧)
     (q↦-intro z⊑x)) 𝑡z𝑧↦y
   = record { 𝑦 = 𝑧 ⊔ᵥ rec-𝑦 [ valConAll ]
@@ -116,20 +113,20 @@ getP-Struct {m} {𝑡 = 𝑡} {γ = γ} 𝑥 ((x , y) ∷ 𝑓)
 
 lamSubLemma₂ :  ∀ {𝑥 𝑦} → [ lam (𝑡 ∘ ⟨ γ ∘ p , q ⟩) ] 𝑥 ↦ 𝑦 →
                 [ lam 𝑡 ∘ γ ] 𝑥 ↦ 𝑦
-lamSubLemma₂ {m} {γ = γ} {𝑦 = ⟪ ⊥ᵤ ,, ⟪⟫ ⟫} _
+lamSubLemma₂ {m} {γ = γ} {𝑦 = ⊥ᵤ} _
   = ∘↦-intro γ𝑥↦⊥ lam⊥→⊥
   where γ𝑥↦⊥ = Appmap.↦-bottom γ
         lam⊥→⊥ = lam↦-intro₁
-lamSubLemma₂ {𝑦 = ⟪ λᵤ 𝑓 ,, ⟪⟫ ⟫} (lam↦-intro₂ p)
+lamSubLemma₂ {𝑦 = λᵤ 𝑓} (lam↦-intro₂ p)
   with (getP-Struct _ _ (lam↦-intro₂ p))
-lamSubLemma₂ {𝑡 = 𝑡} {γ = γ} {𝑦 = ⟪ λᵤ 𝑓 ,, ⟪⟫ ⟫} _
+lamSubLemma₂ {𝑡 = 𝑡} {γ = γ} {𝑦 = λᵤ 𝑓} _
   | record { 𝑦 = 𝑦
            ; γ𝑥↦𝑦 = γ𝑥↦𝑦
            ; λ𝑡𝑦 = λ𝑡𝑦
            }
   = ∘↦-intro γ𝑥↦𝑦 (lam↦-intro₂ λ𝑡𝑦)
 
-lamSub : (γ : uAppmap n m) → (𝑡 : uAppmap (suc m) 1) →
+lamSub : (γ : uSub n m) → (𝑡 : uTerm (suc m)) →
          (lam 𝑡 ∘ γ) ≈ lam (𝑡 ∘ ⟨ (γ ∘ p) , q ⟩)
 lamSub γ 𝑡 = ≈-intro (≼-intro lamSubLemma₁)
              (≼-intro lamSubLemma₂)

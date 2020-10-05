@@ -8,7 +8,7 @@ open import Scwf.DomainScwf.Appmap.Definition
 open import Scwf.DomainScwf.Appmap.Identity.AxiomProofs
 open import Scwf.DomainScwf.Appmap.Identity.Relation
 
-idMap : (Γ : Ctx n) → tAppmap Γ Γ
+idMap : (Γ : Ctx n) → Sub Γ Γ
 Appmap._↦_ (idMap Γ)         = _id↦_
 Appmap.↦-mono (idMap Γ)      = id↦-mono
 Appmap.↦-bottom (idMap Γ)    = id↦-bottom

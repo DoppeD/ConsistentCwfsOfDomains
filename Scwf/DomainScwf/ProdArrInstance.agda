@@ -18,7 +18,7 @@ domProductArrowScwf : ProductArrow-scwf
 ProductArrow-scwf.prod-scwf domProductArrowScwf
   = domProdScwf
 ProductArrow-scwf._⇒_ domProductArrowScwf
-  = ArrNbhSys
+  = _⇒_
 ProductArrow-scwf.lam domProductArrowScwf
   = lam
 ProductArrow-scwf.ap domProductArrowScwf

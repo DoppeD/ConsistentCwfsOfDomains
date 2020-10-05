@@ -17,8 +17,8 @@ open import Scwf.DomainScwf.ArrowStructure.Variables 𝐴 𝐵
 
 private
   variable
-    𝑡 𝑡′ : tAppmap Γ [ ArrNbhSys 𝐴 𝐵 ]
-    𝑢 𝑢′ : tAppmap Γ [ 𝐴 ]
+    𝑡 𝑡′ : Term Γ (𝐴 ⇒ 𝐵)
+    𝑢 𝑢′ : Term Γ 𝐴
 
 apCongLemma : 𝑡 ≼ 𝑡′ → 𝑢 ≼ 𝑢′ → ∀ {𝑥 𝑦} →
               [ ap 𝑡 𝑢 ] 𝑥 ↦ 𝑦 → [ ap 𝑡′ 𝑢′ ] 𝑥 ↦ 𝑦

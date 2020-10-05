@@ -13,12 +13,12 @@ open import Scwf.DomainScwf.ArrowStructure.NbhSys.Definition 𝐴 𝐵
 open import Scwf.DomainScwf.ArrowStructure.NbhSys.ConFinFun 𝐴 𝐵
 open import Scwf.DomainScwf.ArrowStructure.NbhSys.Instance
 
-data [_]_lam↦_ (𝑡 : tAppmap (𝐴 :: Γ) [ 𝐵 ]) :
-               Valuation Γ → Valuation [ ArrNbhSys 𝐴 𝐵 ] →
+data [_]_lam↦_ (𝑡 : Term (𝐴 :: Γ) 𝐵) :
+               Valuation Γ → NbhSys.Nbh (𝐴 ⇒ 𝐵) →
                Set where
-  lam↦-intro₁ : ∀ {𝑥} → [ 𝑡 ] 𝑥 lam↦ ⟪ ⊥ₑ ⟫
+  lam↦-intro₁ : ∀ {𝑥} → [ 𝑡 ] 𝑥 lam↦ ⊥ₑ
   lam↦-intro₂ : ∀ {𝑥} → {𝑓 : NbhFinFun 𝐴 𝐵} →
                 (con𝑓 : ConFinFun 𝑓) →
                 (∀ {x y} → (x , y) ∈ 𝑓 →
-                [ 𝑡 ] ⟪ x ,, 𝑥 ⟫ ↦ ⟪ y ⟫) →
-                [ 𝑡 ] 𝑥 lam↦ ⟪ 𝐹 𝑓 con𝑓 ⟫
+                [ 𝑡 ] ⟪ x ,, 𝑥 ⟫ ↦ y) →
+                [ 𝑡 ] 𝑥 lam↦ (𝐹 𝑓 con𝑓)

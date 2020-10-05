@@ -8,7 +8,8 @@ open import Base.Variables
 open import Scwf.DomainScwf.Appmap.Valuation.Definition
 open import Scwf.DomainScwf.Appmap.Valuation.Instance
 
--- Some simplifying notation for approximable mappings in
--- our scwf.
-tAppmap : (Γ : Ctx m) → (Δ : Ctx n) → Set₁
-tAppmap Γ Δ = Appmap (ValNbhSys Γ) (ValNbhSys Δ)
+Sub : (Γ : Ctx m) → (Δ : Ctx n) → Set₁
+Sub Γ Δ = Appmap (ValNbhSys Γ) (ValNbhSys Δ)
+
+Term : (Γ : Ctx m) → (𝐴 : Ty) → Set₁
+Term Γ 𝐴 = Appmap (ValNbhSys Γ) 𝐴

@@ -8,7 +8,7 @@ open import Scwf.DomainScwf.Appmap.Empty.AxiomProofs
 open import Scwf.DomainScwf.Appmap.Empty.Relation
 open import Scwf.DomainScwf.Appmap.Definition
 
-emptyMap : tAppmap Γ []
+emptyMap : Sub Γ []
 Appmap._↦_ (emptyMap)         = _empty↦_
 Appmap.↦-mono (emptyMap)      = empty↦-mono
 Appmap.↦-bottom (emptyMap)    = empty↦-intro

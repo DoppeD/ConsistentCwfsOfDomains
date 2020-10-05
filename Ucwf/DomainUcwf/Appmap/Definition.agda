@@ -7,7 +7,8 @@ open import Ucwf.DomainUcwf.UniType.Instance
 
 open import Agda.Builtin.Nat
 
--- Notation for approximable mappings between
--- neighborhoods of the universal type.
-uAppmap : Nat → Nat → Set₁
-uAppmap m n = tAppmap (nToCtx m) (nToCtx n)
+uSub : Nat → Nat → Set₁
+uSub m n = Sub (nToCtx m) (nToCtx n)
+
+uTerm : Nat → Set₁
+uTerm n = Term (nToCtx n) UniType

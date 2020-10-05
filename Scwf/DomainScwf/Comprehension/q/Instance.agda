@@ -8,7 +8,7 @@ open import Scwf.DomainScwf.Appmap.Definition
 open import Scwf.DomainScwf.Comprehension.q.AxiomProofs
 open import Scwf.DomainScwf.Comprehension.q.Relation
 
-q : (Γ : Ctx n) → (𝐴 : Ty) → tAppmap (𝐴 :: Γ) [ 𝐴 ]
+q : (Γ : Ctx n) → (𝐴 : Ty) → Term (𝐴 :: Γ) 𝐴
 Appmap._↦_ (q Γ 𝐴)         = _q↦_
 Appmap.↦-mono (q Γ 𝐴)      = q↦-mono
 Appmap.↦-bottom (q Γ 𝐴)    = q↦-bottom

@@ -8,8 +8,8 @@ open import Scwf.DomainScwf.Appmap.Definition
 module Scwf.DomainScwf.ArrowStructure.ap.Consistency
   {Γ : Ctx n}
   {𝐴 𝐵 : Ty}
-  (𝑡 : tAppmap Γ [ ArrNbhSys 𝐴 𝐵 ])
-  (𝑢 : tAppmap Γ [ 𝐴 ])
+  (𝑡 : Term Γ (𝐴 ⇒ 𝐵))
+  (𝑢 : Term Γ 𝐴)
   where
 
 open import Base.FinFun
@@ -25,27 +25,25 @@ open import Scwf.DomainScwf.ArrowStructure.NbhSys.Post 𝐴 𝐵
 open import Scwf.DomainScwf.ArrowStructure.NbhSys.Pre 𝐴 𝐵
 open import Scwf.DomainScwf.ArrowStructure.NbhSys.Relation 𝐴 𝐵
 
-ap↦-con : ∀ {𝑥 𝑦 𝑥′ 𝑦′} → [ 𝑡 , 𝑢 ] 𝑥 ap↦ 𝑦 →
-          [ 𝑡 , 𝑢 ] 𝑥′ ap↦ 𝑦′ → ValCon _ 𝑥 𝑥′ →
-          ValCon _ 𝑦 𝑦′
-ap↦-con {𝑦′ = ⟪ y' ,, ⟪⟫ ⟫} (ap↦-intro₁ y⊑⊥) ap𝑥′↦𝑦′ _
-  = NbhSys.Con-⊔ (ValNbhSys [ 𝐵 ]) 𝑦⊑𝑦′ 𝑦′⊑𝑦′
-  where 𝑦′⊑𝑦′ = NbhSys.⊑-refl (ValNbhSys _)
+ap↦-con : ∀ {𝑥 y 𝑥′ y′} → [ 𝑡 , 𝑢 ] 𝑥 ap↦ y →
+          [ 𝑡 , 𝑢 ] 𝑥′ ap↦ y′ → ValCon _ 𝑥 𝑥′ →
+          NbhSys.Con 𝐵 y y′
+ap↦-con (ap↦-intro₁ y⊑⊥) ap𝑥′↦𝑦′ _
+  = NbhSys.Con-⊔ 𝐵 y⊑y′ y′⊑y′
+  where y′⊑y′ = NbhSys.⊑-refl 𝐵
         y⊑y′ = NbhSys.⊑-trans 𝐵 y⊑⊥ (NbhSys.⊑-⊥ 𝐵)
-        𝑦⊑𝑦′ = ⊑ᵥ-cons _ y⊑y′ ⊑ᵥ-nil
 ap↦-con (ap↦-intro₂ _ _ _ _ _) (ap↦-intro₁ y′⊑⊥) _
-  = NbhSys.Con-⊔ (ValNbhSys [ 𝐵 ]) 𝑦⊑𝑦 𝑦′⊑𝑦
-  where 𝑦⊑𝑦 = NbhSys.⊑-refl (ValNbhSys _)
+  = NbhSys.Con-⊔ 𝐵 y⊑y y′⊑y
+  where y⊑y = NbhSys.⊑-refl 𝐵
         y′⊑y = NbhSys.⊑-trans 𝐵 y′⊑⊥ (NbhSys.⊑-⊥ 𝐵)
-        𝑦′⊑𝑦 = ⊑ᵥ-cons _ y′⊑y ⊑ᵥ-nil
 ap↦-con
   (ap↦-intro₂ {x} {y} con𝑓 conxy 𝑡𝑥↦𝑓 𝑢𝑥↦x
   (⊑ₑ-intro₂ _ _ p₁))
   (ap↦-intro₂ {x′} {y′} con𝑓′ conx′y′ 𝑡𝑥′↦𝑓′ 𝑢𝑥′↦x′
   (⊑ₑ-intro₂ _ _ p₂))
   con𝑥𝑥′
-  with (fromValCon (Appmap.↦-con 𝑡 𝑡𝑥↦𝑓 𝑡𝑥′↦𝑓′ con𝑥𝑥′))
-... | con-∪ _ _ (cff p) = toValCon conyy′
+  with (Appmap.↦-con 𝑡 𝑡𝑥↦𝑓 𝑡𝑥′↦𝑓′ con𝑥𝑥′)
+... | con-∪ _ _ (cff p) = conyy′
   where p₁proof = p₁ here
         p₂proof = p₂ here
         p₁sub = ⊑ₑ-proof.sub p₁proof
@@ -60,7 +58,7 @@ ap↦-con
         p₂postable = ⊑ₑ-proof.postablesub p₂proof
         p₁preable = ⊑ₑ-proof.preablesub p₁proof
         p₂preable = ⊑ₑ-proof.preablesub p₂proof
-        conxx′ = fromValCon (Appmap.↦-con 𝑢 𝑢𝑥↦x 𝑢𝑥′↦x′ con𝑥𝑥′)
+        conxx′ = Appmap.↦-con 𝑢 𝑢𝑥↦x 𝑢𝑥′↦x′ con𝑥𝑥′
         p₁pre⊑x⊔x′ = ⊑-⊔-lemma₄ 𝐴 p₁pre⊑x conxx′
         p₂pre⊑x⊔x′ = ⊑-⊔-lemma₅ 𝐴 p₂pre⊑x conxx′
         preable∪ = preUnionLemma p₁preable p₂preable

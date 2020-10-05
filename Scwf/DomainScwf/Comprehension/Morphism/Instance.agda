@@ -8,7 +8,7 @@ open import Scwf.DomainScwf.Appmap.Definition
 open import Scwf.DomainScwf.Comprehension.Morphism.AxiomProofs
 open import Scwf.DomainScwf.Comprehension.Morphism.Relation
 
-⟨_,_⟩ : tAppmap Δ Γ → tAppmap Δ [ 𝐴 ] → tAppmap Δ (𝐴 :: Γ)
+⟨_,_⟩ : Sub Δ Γ → Term Δ 𝐴 → Sub Δ (𝐴 :: Γ)
 Appmap._↦_ ⟨ γ , 𝑡 ⟩         = ⟨⟩↦ γ 𝑡
 Appmap.↦-mono ⟨ γ , 𝑡 ⟩      = ⟨⟩↦-mono γ 𝑡
 Appmap.↦-bottom ⟨ γ , 𝑡 ⟩    = ⟨⟩↦-bottom γ 𝑡

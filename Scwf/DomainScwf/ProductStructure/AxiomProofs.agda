@@ -5,12 +5,12 @@ open import Base.Core
 module Scwf.DomainScwf.ProductStructure.AxiomProofs (𝐴 𝐵 : Ty) where
 
 open import Appmap.Equivalence
+open import Appmap.Composition.Instance
+open import Appmap.Composition.Relation
 open import Base.Variables hiding (𝐴 ; 𝐵)
 open import NbhSys.Definition
 open import NbhSys.Lemmata
 open import Scwf.DomainScwf.Appmap.Definition
-open import Scwf.DomainScwf.Appmap.Composition.Instance
-open import Scwf.DomainScwf.Appmap.Composition.Relation
 open import Scwf.DomainScwf.Appmap.Valuation.Definition
 open import Scwf.DomainScwf.Appmap.Valuation.Instance
 open import Scwf.DomainScwf.Appmap.Valuation.Lemmata
@@ -29,21 +29,20 @@ open import Scwf.DomainScwf.ProductStructure.Unit.NbhSys.Instance
 
 private
   variable
-    𝑡 𝑡′ : tAppmap Γ [ 𝐴 ]
-    𝑢 𝑢′ : tAppmap Γ [ 𝐵 ]
-    𝑣 𝑣′ : tAppmap Γ [ 𝐴 × 𝐵 ]
+    𝑡 𝑡′ : Term Γ 𝐴
+    𝑢 𝑢′ : Term Γ 𝐵
+    𝑣 𝑣′ : Term Γ (𝐴 × 𝐵)
 
 fstAxiomLemma₁ : ∀ {𝑥 𝑦} → [ fst < 𝑡 , 𝑢 > ] 𝑥 ↦ 𝑦 →
                  [ 𝑡 ] 𝑥 ↦ 𝑦
 fstAxiomLemma₁ {𝑡 = 𝑡} (fst-intro₁ y⊑⊥)
-  = Appmap.↦-↓closed 𝑡 tup-y⊑⊥ (Appmap.↦-bottom 𝑡)
-  where tup-y⊑⊥ = ⊑ᵥ-cons [ 𝐴 ] y⊑⊥ ⊑ᵥ-nil
+  = Appmap.↦-↓closed 𝑡 y⊑⊥ (Appmap.↦-bottom 𝑡)
 fstAxiomLemma₁ (fst-intro₂ (<>↦-intro₂ 𝑡𝑥↦y₁ _))
   = 𝑡𝑥↦y₁
 
 fstAxiomLemma₂ : ∀ {𝑥 𝑦} → [ 𝑡 ] 𝑥 ↦ 𝑦 →
                  [ fst < 𝑡 , 𝑢 > ] 𝑥 ↦ 𝑦
-fstAxiomLemma₂ {𝑢 = 𝑢} {𝑦 = ⟪ y₁ ,, ⟪⟫ ⟫} 𝑡𝑥↦y₁
+fstAxiomLemma₂ {𝑢 = 𝑢} 𝑡𝑥↦y₁
   = fst-intro₂ ⟨⟩𝑥↦y₁⊥
   where 𝑢𝑥↦⊥ = Appmap.↦-bottom 𝑢
         ⟨⟩𝑥↦y₁⊥ = <>↦-intro₂ 𝑡𝑥↦y₁ 𝑢𝑥↦⊥
@@ -55,14 +54,13 @@ fstAxiom = ≈-intro (≼-intro fstAxiomLemma₁)
 sndAxiomLemma₁ : ∀ {𝑥 𝑦} → [ snd < 𝑡 , 𝑢 > ] 𝑥 ↦ 𝑦 →
                  [ 𝑢 ] 𝑥 ↦ 𝑦
 sndAxiomLemma₁ {𝑢 = 𝑢} (snd-intro₁ y⊑⊥)
-  = Appmap.↦-↓closed 𝑢 tup-y⊑⊥ (Appmap.↦-bottom 𝑢)
-  where tup-y⊑⊥ = ⊑ᵥ-cons [ 𝐵 ] y⊑⊥ ⊑ᵥ-nil
+  = Appmap.↦-↓closed 𝑢 y⊑⊥ (Appmap.↦-bottom 𝑢)
 sndAxiomLemma₁ (snd-intro₂ (<>↦-intro₂ _ 𝑢𝑥↦y₂))
   = 𝑢𝑥↦y₂
 
 sndAxiomLemma₂ : ∀ {𝑥 𝑦} → [ 𝑢 ] 𝑥 ↦ 𝑦 →
                  [ snd < 𝑡 , 𝑢 > ] 𝑥 ↦ 𝑦
-sndAxiomLemma₂ {𝑡 = 𝑡} {𝑦 = ⟪ y₁ ,, ⟪⟫ ⟫} 𝑡𝑥↦y₁
+sndAxiomLemma₂ {𝑡 = 𝑡} 𝑡𝑥↦y₁
   = snd-intro₂ ⟨⟩𝑥↦⊥y₁
   where 𝑡𝑥↦⊥ = Appmap.↦-bottom 𝑡
         ⟨⟩𝑥↦⊥y₁ = <>↦-intro₂ 𝑡𝑥↦⊥ 𝑡𝑥↦y₁
@@ -71,7 +69,7 @@ sndAxiom : snd < 𝑡 , 𝑢 > ≈ 𝑢
 sndAxiom = ≈-intro (≼-intro sndAxiomLemma₁)
             (≼-intro sndAxiomLemma₂)
 
-pairSubLemma₁ : {γ : tAppmap Δ Γ} → ∀ {𝑥 𝑦} →
+pairSubLemma₁ : {γ : Sub Δ Γ} → ∀ {𝑥 𝑦} →
                 [ < 𝑡 , 𝑢 > ∘ γ ] 𝑥 ↦ 𝑦 →
                 [ < 𝑡 ∘ γ , 𝑢 ∘ γ > ] 𝑥 ↦ 𝑦
 pairSubLemma₁ (∘↦-intro _ <>↦-intro₁)
@@ -79,7 +77,7 @@ pairSubLemma₁ (∘↦-intro _ <>↦-intro₁)
 pairSubLemma₁ (∘↦-intro 𝑡𝑥↦𝑧 (<>↦-intro₂ 𝑡𝑧↦y₁ 𝑢𝑧↦y₂))
   = <>↦-intro₂ (∘↦-intro 𝑡𝑥↦𝑧 𝑡𝑧↦y₁) (∘↦-intro 𝑡𝑥↦𝑧 𝑢𝑧↦y₂)
 
-pairSubLemma₂ : {γ : tAppmap Δ Γ} → ∀ {𝑥 𝑦} →
+pairSubLemma₂ : {γ : Sub Δ Γ} → ∀ {𝑥 𝑦} →
                 [ < 𝑡 ∘ γ , 𝑢 ∘ γ > ] 𝑥 ↦ 𝑦 →
                 [ < 𝑡 , 𝑢 > ∘ γ ] 𝑥 ↦ 𝑦
 pairSubLemma₂ {γ = γ} <>↦-intro₁
@@ -95,7 +93,7 @@ pairSubLemma₂ {𝑡 = 𝑡} {𝑢 = 𝑢} {γ}
         𝑢𝑧⊔𝑤↦y₂ = Appmap.↦-mono 𝑢 w⊑z⊔w 𝑢𝑤↦y₂
         𝑧𝑤↦y₁y₂ = <>↦-intro₂ 𝑡𝑧⊔𝑤↦y₁ 𝑢𝑧⊔𝑤↦y₂
 
-pairSub : {γ : tAppmap Δ Γ} →
+pairSub : {γ : Sub Δ Γ} →
           (< 𝑡 , 𝑢 > ∘ γ) ≈ < (𝑡 ∘ γ) , (𝑢 ∘ γ) >
 pairSub = ≈-intro (≼-intro pairSubLemma₁)
               (≼-intro pairSubLemma₂)

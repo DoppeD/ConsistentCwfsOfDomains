@@ -4,12 +4,12 @@ module Scwf.DomainScwf.PlainAxiomProofs where
 
 open import Appmap.Equivalence
 open import Appmap.Lemmata
+open import Appmap.Composition.Instance
+open import Appmap.Composition.Relation
 open import Base.Core
 open import Base.Variables
 open import NbhSys.Definition
 open import Scwf.DomainScwf.Appmap.Definition
-open import Scwf.DomainScwf.Appmap.Composition.Instance
-open import Scwf.DomainScwf.Appmap.Composition.Relation
 open import Scwf.DomainScwf.Appmap.Empty.Instance
 open import Scwf.DomainScwf.Appmap.Empty.Relation
 open import Scwf.DomainScwf.Appmap.Identity.Instance
@@ -27,10 +27,10 @@ open import Scwf.DomainScwf.Comprehension.q.Relation
 
 private
   variable
-    γ γ′ : tAppmap Γ Δ
-    δ δ′ : tAppmap Δ Θ
-    θ : tAppmap Θ Λ
-    𝑡 𝑡′ : tAppmap Δ [ 𝐴 ]
+    γ γ′ : Sub Γ Δ
+    δ δ′ : Sub Δ Θ
+    θ : Sub Θ Λ
+    𝑡 𝑡′ : Term Δ 𝐴
 
 subAssocLemma₁ : ∀ {𝑥 𝑦} → [ (θ ∘ δ) ∘ γ ] 𝑥 ↦ 𝑦 →
                  [ θ ∘ (δ ∘ γ) ] 𝑥 ↦ 𝑦
@@ -42,8 +42,8 @@ subAssocLemma₂ : ∀ {𝑥 𝑦} → [ θ ∘ (δ ∘ γ) ] 𝑥 ↦ 𝑦 →
 subAssocLemma₂ (∘↦-intro (∘↦-intro γ𝑥↦𝑤 δ𝑤↦𝑧) θ𝑧↦𝑦)
   = ∘↦-intro γ𝑥↦𝑤 (∘↦-intro δ𝑤↦𝑧 θ𝑧↦𝑦)
 
-subAssoc : (γ : tAppmap Γ Δ) → (δ : tAppmap Δ Θ) →
-           (θ : tAppmap Θ Λ) →
+subAssoc : (γ : Sub Γ Δ) → (δ : Sub Δ Θ) →
+           (θ : Sub Θ Λ) →
            ((θ ∘ δ) ∘ γ) ≈ (θ ∘ (δ ∘ γ))
 subAssoc γ δ θ = ≈-intro (≼-intro subAssocLemma₁)
               (≼-intro subAssocLemma₂)
@@ -61,27 +61,26 @@ pConsLemma₂ {γ = γ} {𝐴 = 𝐴} {𝑡} γ𝑥↦𝑦
         γ𝑡𝑥↦⊥𝑦 = ⟨⟩↦-intro {𝑦 = ⟪ NbhSys.⊥ 𝐴 ,, _ ⟫} γ𝑥↦𝑦 𝑡𝑥↦⊥
         p⊥𝑦↦𝑦 = p↦-intro (NbhSys.⊑-refl (ValNbhSys _))
 
-pCons : (γ : tAppmap Δ Γ) → (𝑡 : tAppmap Δ [ 𝐴 ]) →
+pCons : (γ : Sub Δ Γ) → (𝑡 : Term Δ 𝐴) →
         (p Γ 𝐴 ∘ ⟨ γ , 𝑡 ⟩) ≈ γ
 pCons γ 𝑡 = ≈-intro (≼-intro pConsLemma₁)
             (≼-intro pConsLemma₂)
 
-qConsLemma₁ : ∀ {𝑥 𝑦} → [ q Γ 𝐴 ∘ ⟨ γ , 𝑡 ⟩ ] 𝑥 ↦ 𝑦 →
-              [ 𝑡 ] 𝑥 ↦ 𝑦
-qConsLemma₁ {𝐴 = 𝐴} {𝑡 = 𝑡} {𝑦 = ⟪ y ,, ⟪⟫ ⟫}
+qConsLemma₁ : ∀ {𝑥 y} → [ q Γ 𝐴 ∘ ⟨ γ , 𝑡 ⟩ ] 𝑥 ↦ y →
+              [ 𝑡 ] 𝑥 ↦ y
+qConsLemma₁ {𝐴 = 𝐴} {𝑡 = 𝑡} {y = y}
   (∘↦-intro (⟨⟩↦-intro _ 𝑡𝑥↦z) (q↦-intro y⊑z))
-  = Appmap.↦-↓closed 𝑡 tup-y⊑z 𝑡𝑥↦z
-  where tup-y⊑z = ⊑ᵥ-cons [ 𝐴 ] y⊑z ⊑ᵥ-nil
+  = Appmap.↦-↓closed 𝑡 y⊑z 𝑡𝑥↦z
 
-qConsLemma₂ : ∀ {𝑥 𝑦} → [ 𝑡 ] 𝑥 ↦ 𝑦 →
-              [ q Γ 𝐴 ∘ ⟨ γ , 𝑡 ⟩ ] 𝑥 ↦ 𝑦
-qConsLemma₂ {𝐴 = 𝐴} {γ = γ} {𝑦 = ⟪ y ,, ⟪⟫ ⟫} 𝑡𝑥↦y =
+qConsLemma₂ : ∀ {𝑥 y} → [ 𝑡 ] 𝑥 ↦ y →
+              [ q Γ 𝐴 ∘ ⟨ γ , 𝑡 ⟩ ] 𝑥 ↦ y
+qConsLemma₂ {𝐴 = 𝐴} {γ = γ} {y = y} 𝑡𝑥↦y =
   ∘↦-intro γ𝑡𝑥↦y⊥ qy⊥↦y
   where γ𝑥↦⊥ = Appmap.↦-bottom γ
         qy⊥↦y = q↦-intro (NbhSys.⊑-refl 𝐴)
         γ𝑡𝑥↦y⊥ = ⟨⟩↦-intro {𝑦 = ⟪ y ,, ⊥ᵥ ⟫} γ𝑥↦⊥ 𝑡𝑥↦y
 
-qCons : (γ : tAppmap Δ Γ) → (𝑡 : tAppmap Δ [ 𝐴 ]) →
+qCons : (γ : Sub Δ Γ) → (𝑡 : Term Δ 𝐴) →
         ((q Γ 𝐴) ∘ ⟨ γ , 𝑡 ⟩) ≈ 𝑡
 qCons γ 𝑡 = ≈-intro (≼-intro qConsLemma₁)
             (≼-intro qConsLemma₂)
@@ -113,7 +112,7 @@ idLLemma₂ : ∀ {𝑥 𝑦} → [ γ ] 𝑥 ↦ 𝑦 →
 idLLemma₂ 𝑥↦𝑦 = ∘↦-intro 𝑥↦𝑦 (id↦-intro 𝑦⊑𝑦)
    where 𝑦⊑𝑦 = NbhSys.⊑-refl (ValNbhSys _)
 
-idL : (γ : tAppmap Δ Γ) → (idMap Γ ∘ γ) ≈ γ
+idL : (γ : Sub Δ Γ) → (idMap Γ ∘ γ) ≈ γ
 idL γ = ≈-intro (≼-intro idLLemma₁) (≼-intro idLLemma₂)
 
 idRLemma₁ : ∀ {𝑥 𝑦} → [ γ ∘ idMap Δ ] 𝑥 ↦ 𝑦 →
@@ -127,7 +126,7 @@ idRLemma₂ 𝑥↦𝑦
   = ∘↦-intro (id↦-intro 𝑥⊑𝑥) 𝑥↦𝑦
   where 𝑥⊑𝑥 = NbhSys.⊑-refl (ValNbhSys _)
 
-idR : (γ : tAppmap Δ Γ) → (γ ∘ idMap Δ) ≈ γ
+idR : (γ : Sub Δ Γ) → (γ ∘ idMap Δ) ≈ γ
 idR γ = ≈-intro (≼-intro idRLemma₁) (≼-intro idRLemma₂)
 
 id₀Lemma₁ : ∀ {𝑥 𝑦} → 𝑥 id↦ 𝑦 → 𝑥 empty↦ 𝑦
@@ -149,7 +148,7 @@ id₀ = ≈-intro (≼-intro id₀Lemma₁) (≼-intro id₀Lemma₂)
   = ∘↦-intro γ𝑥↦⊥ empty↦-intro
     where γ𝑥↦⊥ = Appmap.↦-bottom γ
 
-<>-zero : (γ : tAppmap Γ Δ) → (emptyMap ∘ γ) ≈ emptyMap
+<>-zero : (γ : Sub Γ Δ) → (emptyMap ∘ γ) ≈ emptyMap
 <>-zero γ = ≈-intro (≼-intro <>-zeroLemma₁)
             (≼-intro <>-zeroLemma₂)
 
@@ -164,7 +163,7 @@ idSubLemma₂ {𝑡 = 𝑡} 𝑡𝑥↦𝑦
   = ∘↦-intro (id↦-intro 𝑥⊑𝑥) 𝑡𝑥↦𝑦
   where 𝑥⊑𝑥 = NbhSys.⊑-refl (ValNbhSys _)
 
-idSub : (𝑡 : tAppmap Γ [ 𝐴 ]) →
+idSub : (𝑡 : Term Γ 𝐴) →
         (𝑡 ∘ idMap Γ) ≈ 𝑡
 idSub t = ≈-intro (≼-intro idSubLemma₁)
           (≼-intro idSubLemma₂)
@@ -179,8 +178,8 @@ compSubLemma₂ : ∀ {𝑥 𝑦} → [ (𝑡 ∘ γ) ∘ δ ] 𝑥 ↦ 𝑦 →
 compSubLemma₂ (∘↦-intro δ𝑥↦𝑧 (∘↦-intro γ𝑧↦𝑤 𝑡𝑤↦𝑦))
   = ∘↦-intro (∘↦-intro δ𝑥↦𝑧 γ𝑧↦𝑤) 𝑡𝑤↦𝑦
 
-compSub : (𝑡 : tAppmap Δ [ 𝐴 ]) → (γ : tAppmap Γ Δ) →
-          (δ : tAppmap Θ Γ) →
+compSub : (𝑡 : Term Δ 𝐴) → (γ : Sub Γ Δ) →
+          (δ : Sub Θ Γ) →
           (𝑡 ∘ (γ ∘ δ)) ≈ ((𝑡 ∘ γ) ∘ δ)
 compSub 𝑡 γ δ = ≈-intro (≼-intro compSubLemma₁)
                 (≼-intro compSubLemma₂)
@@ -201,8 +200,8 @@ compExtLemma₂ {γ = γ} {δ = δ} {𝑡 = 𝑡}
             𝑡𝑧⊔𝑤↦y = appmapLemma₂ {γ = 𝑡} con𝑧𝑤 𝑡𝑤↦y
             ⟨γ,𝑡⟩↦ = ⟨⟩↦-intro γ𝑧⊔𝑤↦𝑦 𝑡𝑧⊔𝑤↦y
 
-compExt : (𝑡 : tAppmap Δ [ 𝐴 ]) → (γ : tAppmap Δ Γ) →
-          (δ : tAppmap Γ Δ) →
+compExt : (𝑡 : Term Δ 𝐴) → (γ : Sub Δ Γ) →
+          (δ : Sub Γ Δ) →
           (⟨ γ , 𝑡 ⟩ ∘ δ) ≈ ⟨ γ ∘ δ , 𝑡 ∘ δ ⟩
 compExt 𝑡 γ δ = ≈-intro (≼-intro compExtLemma₁)
                 (≼-intro compExtLemma₂)
@@ -220,16 +219,18 @@ compExt 𝑡 γ δ = ≈-intro (≼-intro compExtLemma₁)
         γ′≈γ = ≈Symmetric γ≈γ′
         γ′𝑡′≼γ𝑡 = ≼-intro (<,>-congLemma 𝑡′≈𝑡 γ′≈γ)
 
-∘-congLemma : γ ≈ δ → γ′ ≈ δ′ → ∀ {𝑥 𝑦} → [ γ ∘ γ′ ] 𝑥 ↦ 𝑦 →
-              [ δ ∘ δ′ ] 𝑥 ↦ 𝑦
-∘-congLemma (≈-intro (≼-intro 𝑡′𝑧↦𝑦) _)
-  (≈-intro (≼-intro γ′𝑥↦𝑧) _) (∘↦-intro γ𝑥↦𝑧 𝑡𝑧↦𝑦)
-  = ∘↦-intro (γ′𝑥↦𝑧 γ𝑥↦𝑧) (𝑡′𝑧↦𝑦 𝑡𝑧↦𝑦)
+∘-congLemma : {π η : Appmap 𝐵 𝐶} → {π′ η′ : Appmap 𝐴 𝐵} →
+              π ≈ η → π′ ≈ η′ → ∀ {x y} → [ π ∘ π′ ] x ↦ y →
+              [ η ∘ η′ ] x ↦ y
+∘-congLemma (≈-intro (≼-intro ηx↦y) _)
+  (≈-intro (≼-intro η′x↦y) _) (∘↦-intro η′x↦z ηz↦y)
+  = ∘↦-intro (η′x↦y η′x↦z) (ηx↦y ηz↦y)
 
-∘-cong : γ ≈ δ → γ′ ≈ δ′ → (γ ∘ γ′) ≈ (δ ∘ δ′)
-∘-cong γ≈δ γ′≈δ′
-  = ≈-intro γ∘γ′≼δ∘δ′ δ∘δ′≼γ∘γ′
-  where γ∘γ′≼δ∘δ′ = ≼-intro (∘-congLemma γ≈δ γ′≈δ′)
-        δ≈γ = ≈Symmetric γ≈δ
-        δ′≈γ′ = ≈Symmetric γ′≈δ′
-        δ∘δ′≼γ∘γ′ = ≼-intro (∘-congLemma δ≈γ δ′≈γ′)
+∘-cong : {π η : Appmap 𝐵 𝐶} → {π′ η′ : Appmap 𝐴 𝐵} →
+         π ≈ η → π′ ≈ η′ → (π ∘ π′) ≈ (η ∘ η′)
+∘-cong π≈η π′≈η′
+  = ≈-intro π∘π′≼η∘η′ η∘η′≼π∘π′
+  where π∘π′≼η∘η′ = ≼-intro (∘-congLemma π≈η π′≈η′)
+        η≈π = ≈Symmetric π≈η
+        η′≈π′ = ≈Symmetric π′≈η′
+        η∘η′≼π∘π′ = ≼-intro (∘-congLemma η≈π η′≈π′)

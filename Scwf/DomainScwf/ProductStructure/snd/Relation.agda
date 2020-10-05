@@ -10,8 +10,8 @@ open import Scwf.DomainScwf.Appmap.Valuation.Definition
 open import Scwf.DomainScwf.ProductStructure.NbhSys.Definition
 open import Scwf.DomainScwf.ProductStructure.NbhSys.Instance
 
-data snd↦ (𝑡 : tAppmap Γ [ 𝐴 × 𝐵 ]) :
-          Valuation Γ → Valuation [ 𝐵 ] → Set where
-  snd-intro₁ : ∀ {𝑥 y} → [ 𝐵 ] y ⊑ NbhSys.⊥ 𝐵 → snd↦ 𝑡 𝑥 ⟪ y ⟫
-  snd-intro₂ : ∀ {𝑥 y₁ y₂} → [ 𝑡 ] 𝑥 ↦ ⟪ < y₁ , y₂ > ⟫ →
-               snd↦ 𝑡 𝑥 ⟪ y₂ ⟫
+data snd↦ (𝑡 : Term Γ (𝐴 × 𝐵)) :
+          Valuation Γ → NbhSys.Nbh 𝐵 → Set where
+  snd-intro₁ : ∀ {𝑥 y} → [ 𝐵 ] y ⊑ NbhSys.⊥ 𝐵 → snd↦ 𝑡 𝑥 y
+  snd-intro₂ : ∀ {𝑥 y₁ y₂} → [ 𝑡 ] 𝑥 ↦ < y₁ , y₂ > →
+               snd↦ 𝑡 𝑥 y₂

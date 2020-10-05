@@ -10,7 +10,7 @@ open import Scwf.DomainScwf.ArrowStructure.lam.Consistency
 open import Scwf.DomainScwf.ArrowStructure.lam.Relation
 open import Scwf.DomainScwf.ArrowStructure.NbhSys.Instance
 
-lam : tAppmap (𝐴 :: Γ) [ 𝐵 ] → tAppmap Γ [ ArrNbhSys 𝐴 𝐵 ]
+lam : Term (𝐴 :: Γ) 𝐵 → Term Γ (𝐴 ⇒ 𝐵)
 Appmap._↦_ (lam {𝐴} {𝐵 = 𝐵} 𝑡) = [_]_lam↦_ 𝐴 𝐵 𝑡
 Appmap.↦-mono (lam  𝑡)         = lam↦-mono 𝑡
 Appmap.↦-bottom (lam 𝑡)        = lam↦-bottom 𝑡
