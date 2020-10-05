@@ -4,4 +4,4 @@ open import Nat.NbhSys.Definition
 open import Nat.NbhSys.Relation
 
 data _suc↦_ : NatNbh → NatNbh → Set where
-  suc↦-intro₁ : ∀ {x y} → y ⊑ₙ (sₙ x) → x suc↦ y
+  suc↦-intro : ∀ {x y} → y ⊑ₙ (sₙ x) → x suc↦ y
