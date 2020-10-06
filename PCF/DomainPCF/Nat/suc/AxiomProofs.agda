@@ -59,12 +59,37 @@ suc↦-↓closed ⊑ₑ-intro₁ _ = suc↦-intro₁
 suc↦-↓closed (⊑ₑ-intro₂ con𝑓 _ p₁) (suc↦-intro₂ p₂)
   = suc↦-intro₂ (suc↦-↓closed' p₁ p₂)
 
+suc↦-↑directed' : ∀ {𝑓 𝑓′} →
+                  (∀ {x y} → (x , y) ∈ 𝑓 → [ Nat ] y ⊑ sₙ x) →
+                  (∀ {x y} → (x , y) ∈ 𝑓′ → [ Nat ] y ⊑ sₙ x) →
+                  (∀ {x y} → (x , y) ∈ (𝑓 ∪ 𝑓′) →
+                  [ Nat ] y ⊑ sₙ x)
+suc↦-↑directed' p₁ p₂ xy∈∪ with (∪-lemma₂ xy∈∪)
+... | inl xy∈𝑓 = p₁ xy∈𝑓
+... | inr xy∈𝑓′ = p₂ xy∈𝑓′
+
 suc↦-↑directed : {𝑥 : Valuation Γ} → ∀ {y z} →
                   𝑥 suc↦ y → 𝑥 suc↦ z →
                   ∀ conyz → 𝑥 suc↦ (y ⊔ₑ z [ conyz ])
-suc↦-↑directed = {!!}
+suc↦-↑directed suc↦-intro₁ suc↦-intro₁ conₑ-⊥₁ = suc↦-intro₁
+suc↦-↑directed suc↦-intro₁ suc↦-intro₁ conₑ-⊥₂ = suc↦-intro₁
+suc↦-↑directed suc↦-intro₁ (suc↦-intro₂ p) conₑ-⊥₂ = suc↦-intro₂ p
+suc↦-↑directed (suc↦-intro₂ p) suc↦-intro₁ conₑ-⊥₁ = suc↦-intro₂ p
+suc↦-↑directed (suc↦-intro₂ p₁) (suc↦-intro₂ p₂) (con-∪ _ _ _)
+  = suc↦-intro₂ (suc↦-↑directed' p₁ p₂)
+
+suc↦-con' : ∀ {𝑓 𝑓′ 𝑔} →
+            (∀ {x y} → (x , y) ∈ 𝑓 → [ Nat ] y ⊑ sₙ x) →
+            (∀ {x y} → (x , y) ∈ 𝑓′ → [ Nat ] y ⊑ sₙ x) →
+            𝑔 ⊆ (𝑓 ∪ 𝑓) → ∀ {x y} → (x , y) ∈ 𝑔 →
+            [ Nat ] y ⊑ sₙ x
+suc↦-con' x x₁ x₂ x₃ = {!!}
 
 suc↦-con : {𝑥 : Valuation Γ} → ∀ {y 𝑥′ y′} →
             𝑥 suc↦ y → 𝑥′ suc↦ y′ →
             ValCon _ 𝑥 𝑥′ → ArrCon y y′
-suc↦-con = {!!}
+suc↦-con suc↦-intro₁ suc↦-intro₁ _ = conₑ-⊥₁
+suc↦-con suc↦-intro₁ (suc↦-intro₂ _) _ = conₑ-⊥₂
+suc↦-con (suc↦-intro₂ _) suc↦-intro₁ _ = conₑ-⊥₁
+suc↦-con (suc↦-intro₂ p₁) (suc↦-intro₂ p₂) _
+  = con-∪ _ _ (cff {!!})
