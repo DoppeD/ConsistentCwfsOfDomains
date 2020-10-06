@@ -1,15 +1,11 @@
 module PCF.DomainPCF.Bool.false.Instance where
 
+open import Appmap.PrincipalIdeal.Instance
 open import Base.Variables
+open import PCF.DomainPCF.Bool.NbhSys.Definition
 open import PCF.DomainPCF.Bool.NbhSys.Instance
-open import PCF.DomainPCF.Bool.false.AxiomProofs
-open import PCF.DomainPCF.Bool.false.Relation
 open import Scwf.DomainScwf.Appmap.Definition
+open import Scwf.DomainScwf.Appmap.Valuation.Instance
 
 false : Term Γ Bool
-Appmap._↦_ false         = _false↦_
-Appmap.↦-mono false      = false↦-mono
-Appmap.↦-bottom false    = false↦-bottom
-Appmap.↦-↓closed false   = false↦-↓closed
-Appmap.↦-↑directed false = false↦-↑directed
-Appmap.↦-con false       = false↦-con
+false = principalIdeal (ValNbhSys _) Bool f

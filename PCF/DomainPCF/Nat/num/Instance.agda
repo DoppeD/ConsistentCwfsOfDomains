@@ -1,17 +1,18 @@
 module PCF.DomainPCF.Nat.num.Instance where
 
+open import Appmap.PrincipalIdeal.Instance
 open import Base.Variables
+open import PCF.DomainPCF.Nat.NbhSys.Definition
 open import PCF.DomainPCF.Nat.NbhSys.Instance
-open import PCF.DomainPCF.Nat.num.AxiomProofs
-open import PCF.DomainPCF.Nat.num.Relation
 open import Scwf.DomainScwf.Appmap.Definition
+open import Scwf.DomainScwf.Appmap.Valuation.Instance
 
 open import Agda.Builtin.Nat renaming (Nat to AgdaNat)
 
+-- Translates a natural number to the corresponding neighborhood.
+natToNbh : AgdaNat → NatNbh
+natToNbh 0 = 0ₙ
+natToNbh (suc n) = sₙ (natToNbh n)
+
 num : AgdaNat → Term Γ Nat
-Appmap._↦_ (num n)         = _num↦_ n
-Appmap.↦-mono (num n)      = num↦-mono n
-Appmap.↦-bottom (num n)    = num↦-bottom n
-Appmap.↦-↓closed (num n)   = num↦-↓closed n
-Appmap.↦-↑directed (num n) = num↦-↑directed n
-Appmap.↦-con (num n)       = num↦-con n
+num n = principalIdeal (ValNbhSys _) Nat (natToNbh n)
