@@ -1,3 +1,5 @@
+{-# OPTIONS --safe #-}
+
 open import Base.Core
 open import NbhSys.Definition
 

@@ -1,3 +1,5 @@
+{-# OPTIONS --safe #-}
+
 module PCF.DomainPCF.Nat.NbhSys.Definition where
 
 data NatNbh : Set where

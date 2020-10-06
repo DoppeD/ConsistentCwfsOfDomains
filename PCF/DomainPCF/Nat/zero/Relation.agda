@@ -1,3 +1,5 @@
+{-# OPTIONS --safe #-}
+
 module PCF.DomainPCF.Nat.zero.Relation where
 
 open import Base.Core

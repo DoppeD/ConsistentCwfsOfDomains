@@ -1,3 +1,5 @@
+{-# OPTIONS --safe #-}
+
 module PCF.DomainPCF.Bool.NbhSys.Instance where
 
 open import PCF.DomainPCF.Bool.NbhSys.AxiomProofs

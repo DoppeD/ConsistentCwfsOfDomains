@@ -1,3 +1,5 @@
+{-# OPTIONS --safe #-}
+
 module PCF.DomainPCF.Bool.NbhSys.Relation where
 
 open import PCF.DomainPCF.Bool.NbhSys.Definition

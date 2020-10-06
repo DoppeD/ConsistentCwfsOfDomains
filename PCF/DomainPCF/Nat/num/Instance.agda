@@ -1,3 +1,5 @@
+{-# OPTIONS --safe #-}
+
 module PCF.DomainPCF.Nat.num.Instance where
 
 open import Appmap.PrincipalIdeal.Instance

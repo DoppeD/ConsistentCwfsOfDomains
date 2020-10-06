@@ -1,3 +1,5 @@
+{-# OPTIONS --safe #-}
+
 module PCF.PCF where
 
 open import Base.Variables
@@ -29,14 +31,14 @@ record PCF : Set₂ where
     fix : ∀ {m Γ 𝐴} → Tm {m} Γ ((𝐴 ⇒ 𝐴) ⇒ 𝐴)
 
     -- Equations
-    suceq : ∀ {m Γ} → ∀ n →
+    suceq : ∀ {m Γ n} →
             ap {m} {Γ} suc (num n) ≈ num (AgdaSuc n)
-    predeq : ∀ {m Γ} → ∀ n →
+    predeq : ∀ {m Γ n} →
              ap {m} {Γ} pred (num (AgdaSuc n)) ≈ num n
-    zeroeq : ∀ {m Γ} → ∀ n →
+    zeroeq : ∀ {m Γ n} →
              ap {m} {Γ} zero (num n) ≈ num 0
     iszeroeq₁ : ∀ {m Γ} → ap {m} {Γ} iszero (num 0) ≈ true
-    iszeroeq₂ : ∀ {m Γ} → ∀ n →
+    iszeroeq₂ : ∀ {m Γ n} →
                 ap {m} {Γ} iszero (num (AgdaSuc n)) ≈ false
     fixeq : ∀ {m Γ 𝐴} → (f : Tm {m} Γ (𝐴 ⇒ 𝐴)) →
             ap {m} {Γ} fix f ≈ ap f (ap fix f)

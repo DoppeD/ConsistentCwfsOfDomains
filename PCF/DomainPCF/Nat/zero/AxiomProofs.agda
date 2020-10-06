@@ -1,3 +1,5 @@
+{-# OPTIONS --safe #-}
+
 module PCF.DomainPCF.Nat.zero.AxiomProofs where
 
 open import Base.Core
