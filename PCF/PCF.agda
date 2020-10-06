@@ -26,7 +26,7 @@ record PCF : Set₂ where
     pred : ∀ {m Γ} → Tm {m} Γ (Nat ⇒ Nat)
     zero : ∀ {m Γ} → Tm {m} Γ (Nat ⇒ Nat)
     iszero : ∀ {m Γ} → Tm {m} Γ (Nat ⇒ Bool)
-    fix : ∀ {m Γ} → Tm {m} Γ ((Nat ⇒ Nat) ⇒ Nat)
+    fix : ∀ {m Γ 𝐴} → Tm {m} Γ ((𝐴 ⇒ 𝐴) ⇒ 𝐴)
 
     -- Equations
     suceq : ∀ {m Γ} → ∀ n →
@@ -38,5 +38,5 @@ record PCF : Set₂ where
     iszeroeq₁ : ∀ {m Γ} → ap {m} {Γ} iszero (num 0) ≈ true
     iszeroeq₂ : ∀ {m Γ} → ∀ n →
                 ap {m} {Γ} iszero (num (AgdaSuc n)) ≈ false
-    fixeq : ∀ {m Γ} → ∀ f →
+    fixeq : ∀ {m Γ 𝐴} → (f : Tm {m} Γ (𝐴 ⇒ 𝐴)) →
             ap {m} {Γ} fix f ≈ ap f (ap fix f)
