@@ -50,8 +50,8 @@ suc↦-↓closed' p₁ p₂ xy∈𝑓 with (p₁ xy∈𝑓)
              ; pre⊑x = pre⊑x
              }
   = NbhSys.⊑-trans Nat y⊑post post⊑sx
-  where rec = suc↦-↓closed'' λ xy∈sub → p₂ (sub⊆𝑓 xy∈sub)
-        post⊑sx = NbhSys.⊑-trans Nat rec (⊑ₙ-intro₃ pre⊑x)
+  where proof = suc↦-↓closed'' λ xy∈sub → p₂ (sub⊆𝑓 xy∈sub)
+        post⊑sx = NbhSys.⊑-trans Nat proof (⊑ₙ-intro₃ pre⊑x)
   
 suc↦-↓closed : {𝑥 : Valuation Γ} → ∀ {y z} → y ⊑ₑ z →
                 𝑥 suc↦ z → 𝑥 suc↦ y
