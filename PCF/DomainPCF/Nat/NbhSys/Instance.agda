@@ -5,16 +5,16 @@ open import PCF.DomainPCF.Nat.NbhSys.Definition
 open import PCF.DomainPCF.Nat.NbhSys.Relation
 open import NbhSys.Definition
 
-NatNbhSys : NbhSys
-NbhSys.Nbh NatNbhSys     = NatNbh
-NbhSys._⊑_ NatNbhSys     = _⊑ₙ_
-NbhSys.Con NatNbhSys     = Conₙ
-NbhSys._⊔_[_] NatNbhSys  = _⊔ₙ_[_]
-NbhSys.⊥ NatNbhSys       = ⊥ₙ
-NbhSys.Con-⊔ NatNbhSys   = Conₙ-⊔
-NbhSys.⊑-refl NatNbhSys  = ⊑ₙ-refl
-NbhSys.⊑-trans NatNbhSys = ⊑ₙ-trans
-NbhSys.⊑-⊥ NatNbhSys     = ⊑ₙ-intro₁
-NbhSys.⊑-⊔ NatNbhSys     = ⊑ₙ-⊔
-NbhSys.⊑-⊔-fst NatNbhSys = ⊑ₙ-⊔-fst
-NbhSys.⊑-⊔-snd NatNbhSys = ⊑ₙ-⊔-snd
+Nat : NbhSys
+NbhSys.Nbh Nat     = NatNbh
+NbhSys._⊑_ Nat     = _⊑ₙ_
+NbhSys.Con Nat     = Conₙ
+NbhSys._⊔_[_] Nat  = _⊔ₙ_[_]
+NbhSys.⊥ Nat       = ⊥ₙ
+NbhSys.Con-⊔ Nat   = Conₙ-⊔
+NbhSys.⊑-refl Nat  = ⊑ₙ-refl
+NbhSys.⊑-trans Nat = ⊑ₙ-trans
+NbhSys.⊑-⊥ Nat     = ⊑ₙ-intro₁
+NbhSys.⊑-⊔ Nat     = ⊑ₙ-⊔
+NbhSys.⊑-⊔-fst Nat = ⊑ₙ-⊔-fst
+NbhSys.⊑-⊔-snd Nat = ⊑ₙ-⊔-snd
