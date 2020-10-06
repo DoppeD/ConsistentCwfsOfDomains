@@ -3,7 +3,7 @@ module PCF.DomainPCF.Bool.NbhSys.Definition where
 data BoolNbh : Set where
   ⊥b : BoolNbh
   t : BoolNbh
-  f : BoolNbh → BoolNbh
+  f : BoolNbh
 
 data Conb : BoolNbh → BoolNbh → Set where
   conb-bot₁ : ∀ {x} → Conb ⊥b x
