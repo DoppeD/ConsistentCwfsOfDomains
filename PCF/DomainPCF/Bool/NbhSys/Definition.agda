@@ -13,4 +13,4 @@ data Conb : BoolNbh → BoolNbh → Set where
 _⊔b_[_] : ∀ x y → Conb x y → BoolNbh
 _ ⊔b y [ conb-bot₁ ] = y
 x ⊔b _ [ conb-bot₂ ] = x
-x ⊔b y [ conb-refl ] = x
+x ⊔b x [ conb-refl ] = x

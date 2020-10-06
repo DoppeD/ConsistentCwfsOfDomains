@@ -5,6 +5,7 @@ open import PCF.DomainPCF.Bool.NbhSys.Instance
 open import PCF.DomainPCF.Bool.true.Instance
 open import PCF.DomainPCF.Nat.NbhSys.Instance
 open import PCF.DomainPCF.Nat.num.Instance
+open import PCF.DomainPCF.Nat.zero.Instance
 open import PCF.PCF
 open import Scwf.DomainScwf.ProdArrInstance
 
@@ -17,7 +18,7 @@ PCF.true domPCF = true
 PCF.false domPCF = false
 PCF.suc domPCF = {!!}
 PCF.pred domPCF = {!!}
-PCF.zero domPCF = {!!}
+PCF.zero domPCF = zero
 PCF.iszero domPCF = {!!}
 PCF.fix domPCF = {!!}
 PCF.suceq domPCF = {!!}
