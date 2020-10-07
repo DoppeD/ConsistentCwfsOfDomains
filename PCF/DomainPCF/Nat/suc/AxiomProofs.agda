@@ -52,7 +52,7 @@ suc↦-↓closed' p₁ p₂ xy∈𝑓 with (p₁ xy∈𝑓)
   = NbhSys.⊑-trans Nat y⊑post post⊑sx
   where proof = suc↦-↓closed'' λ xy∈sub → p₂ (sub⊆𝑓 xy∈sub)
         post⊑sx = NbhSys.⊑-trans Nat proof (⊑ₙ-intro₃ pre⊑x)
-  
+
 suc↦-↓closed : {𝑥 : Valuation Γ} → ∀ {y z} → y ⊑ₑ z →
                 𝑥 suc↦ z → 𝑥 suc↦ y
 suc↦-↓closed ⊑ₑ-intro₁ _ = suc↦-intro₁
@@ -78,12 +78,28 @@ suc↦-↑directed (suc↦-intro₂ p) suc↦-intro₁ conₑ-⊥₁ = suc↦-in
 suc↦-↑directed (suc↦-intro₂ p₁) (suc↦-intro₂ p₂) (con-∪ _ _ _)
   = suc↦-intro₂ (suc↦-↑directed' p₁ p₂)
 
-suc↦-con' : ∀ {𝑓 𝑓′ 𝑔} →
+suc↦-con'' : ∀ {𝑔} →
+             (∀ {x y} → (x , y) ∈ 𝑔 → [ Nat ] y ⊑ sₙ x) →
+             ∀ preable𝑔 → ∀ {x y} → (x , y) ∈ 𝑔 →
+             [ Nat ] y ⊑ sₙ (pre 𝑔 preable𝑔)
+suc↦-con'' p (pre-cons preable𝑔 conxpre𝑔) {x} here
+  = NbhSys.⊑-trans Nat (p here) sx⊑spre
+  where sx⊑sx⊔spre = NbhSys.⊑-⊔-fst Nat (conₙ-sₙ conxpre𝑔)
+        proof = natLemma₂ {conxy = conxpre𝑔}
+        sx⊑spre = NbhSys.⊑-trans Nat sx⊑sx⊔spre proof
+suc↦-con'' p (pre-cons preable𝑔 conxpre𝑔) (there xy∈𝑔)
+  with (suc↦-con'' (λ xy∈𝑔 → p (there xy∈𝑔)) preable𝑔 xy∈𝑔)
+... | ⊑ₙ-intro₁ = ⊑ₙ-intro₁
+... | ⊑ₙ-intro₃ x⊑pre𝑔
+  = ⊑ₙ-intro₃ (⊑-⊔-lemma₅ Nat x⊑pre𝑔 conxpre𝑔)
+
+suc↦-con' : ∀ {𝑓 𝑓′ 𝑔} → 𝑔 ⊆ (𝑓 ∪ 𝑓′) →
             (∀ {x y} → (x , y) ∈ 𝑓 → [ Nat ] y ⊑ sₙ x) →
             (∀ {x y} → (x , y) ∈ 𝑓′ → [ Nat ] y ⊑ sₙ x) →
-            𝑔 ⊆ (𝑓 ∪ 𝑓) → ∀ {x y} → (x , y) ∈ 𝑔 →
-            [ Nat ] y ⊑ sₙ x
-suc↦-con' x x₁ x₂ x₃ = {!!}
+            ∀ {x y} → (x , y) ∈ 𝑔 → [ Nat ] y ⊑ sₙ x
+suc↦-con' {𝑓} 𝑔⊆∪ p₁ p₂ xy∈𝑔 with (∪-lemma₂ {𝑓 = 𝑓} (𝑔⊆∪ xy∈𝑔))
+... | inl xy∈𝑓 = p₁ xy∈𝑓
+... | inr xy∈𝑓′ = p₂ xy∈𝑓′
 
 suc↦-con : {𝑥 : Valuation Γ} → ∀ {y 𝑥′ y′} →
             𝑥 suc↦ y → 𝑥′ suc↦ y′ →
@@ -92,4 +108,5 @@ suc↦-con suc↦-intro₁ suc↦-intro₁ _ = conₑ-⊥₁
 suc↦-con suc↦-intro₁ (suc↦-intro₂ _) _ = conₑ-⊥₂
 suc↦-con (suc↦-intro₂ _) suc↦-intro₁ _ = conₑ-⊥₁
 suc↦-con (suc↦-intro₂ p₁) (suc↦-intro₂ p₂) _
-  = con-∪ _ _ (cff {!!})
+  = con-∪ _ _ (cff λ 𝑔⊆∪ preable𝑔 →
+    boundedPostable (suc↦-con'' (suc↦-con' 𝑔⊆∪ p₁ p₂) preable𝑔))
