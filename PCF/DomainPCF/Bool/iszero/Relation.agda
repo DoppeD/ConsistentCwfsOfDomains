@@ -14,11 +14,10 @@ open import Scwf.DomainScwf.Appmap.Valuation.Definition
 open import Scwf.DomainScwf.ArrowStructure.NbhSys.Definition
 
 data iszeroprop (x : NatNbh) (y : BoolNbh) : Set where
-  izprop₁ : [ Nat ] x ⊑ ⊥ₙ → [ Bool ] y ⊑ ⊥b →
+  izprop₁ : [ Bool ] y ⊑ ⊥b → iszeroprop x y
+  izprop₂ : [ Nat ] 0ₙ ⊑ x → [ Bool ] t ⊑ y →
             iszeroprop x y
-  izprop₂ : [ Nat ] 0ₙ ⊑ x → [ Bool ] y ⊑ t →
-            iszeroprop x y
-  izprop₃ : [ Nat ] sₙ ⊥ₙ ⊑ x → [ Bool ] y ⊑ f →
+  izprop₃ : [ Nat ] sₙ ⊥ₙ ⊑ x → [ Bool ] f ⊑ y →
             iszeroprop x y
 
 data _iszero↦_ : Valuation Γ → ArrNbh Nat Bool → Set where

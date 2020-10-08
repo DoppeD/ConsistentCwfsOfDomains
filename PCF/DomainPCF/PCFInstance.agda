@@ -3,6 +3,7 @@
 module PCF.DomainPCF.PCFInstance where
 
 open import PCF.DomainPCF.Bool.false.Instance
+open import PCF.DomainPCF.Bool.iszero.Instance
 open import PCF.DomainPCF.Bool.NbhSys.Instance
 open import PCF.DomainPCF.Bool.true.Instance
 open import PCF.DomainPCF.Nat.NbhSys.Instance
@@ -24,7 +25,7 @@ PCF.false domPCF = false
 PCF.suc domPCF = suc
 PCF.pred domPCF = {!!}
 PCF.zero domPCF = zero
-PCF.iszero domPCF = {!!}
+PCF.iszero domPCF = iszero
 PCF.fix domPCF = {!!}
 PCF.suceq domPCF = suceq
 PCF.predeq domPCF = {!!}
