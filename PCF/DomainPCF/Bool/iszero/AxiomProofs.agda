@@ -101,8 +101,8 @@ iszero↦-↓closed (⊑ₑ-intro₂ con𝑓 _ p₁) (iszero↦-intro₂ p₂)
   = iszero↦-intro₂ (iszero↦-↓closed' p₁ p₂)
 
 iszero↦-↑directed' : ∀ {𝑓 𝑓′} →
-                     (∀ {x y} → (x , y) ∈ 𝑓 → iszeroprop x y) → 
-                     (∀ {x y} → (x , y) ∈ 𝑓′ → iszeroprop x y) → 
+                     (∀ {x y} → (x , y) ∈ 𝑓 → iszeroprop x y) →
+                     (∀ {x y} → (x , y) ∈ 𝑓′ → iszeroprop x y) →
                      ∀ {x y} → (x , y) ∈ (𝑓 ∪ 𝑓′) →
                      iszeroprop x y
 iszero↦-↑directed' {𝑓} p₁ p₂ xy∈∪ with (∪-lemma₂ {𝑓 = 𝑓} xy∈∪)

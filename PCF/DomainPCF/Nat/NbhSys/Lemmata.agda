@@ -20,3 +20,6 @@ natLemma₂ {conxy = conₙ-bot₂} = NbhSys.⊑-refl Nat
 natLemma₂ {conxy = conₙ-0ₙ} = NbhSys.⊑-refl Nat
 natLemma₂ {conxy = conₙ-sₙ conxy}
   = natLemma₁ (natLemma₂ {conxy = conxy})
+
+natLemma₃ : ∀ {x} → [ Nat ] 0ₙ ⊑ x → [ Nat ] x ⊑ 0ₙ
+natLemma₃ ⊑ₙ-intro₂ = ⊑ₙ-intro₂
