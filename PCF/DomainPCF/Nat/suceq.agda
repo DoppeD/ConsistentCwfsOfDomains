@@ -49,8 +49,7 @@ suceqLemma₁ (ap↦-intro₂ con𝑓 _ (suc↦-intro₂ p₁)
         post⊑sn = NbhSys.⊑-trans Nat post⊑spre spre⊑sn
         y⊑sn = NbhSys.⊑-trans Nat y⊑post post⊑sn
 
-suceqLemma₂' : ∀ {x} →
-               ∀ {x′ y′} →
+suceqLemma₂' : ∀ {x x′ y′} →
                (x′ , y′) ∈ ((x , sₙ x) ∷ ∅) →
                [ Nat ] y′ ⊑ sₙ x′
 suceqLemma₂' here = ⊑ₙ-intro₃ (NbhSys.⊑-refl Nat)

@@ -23,3 +23,6 @@ natLemma₂ {conxy = conₙ-sₙ conxy}
 
 natLemma₃ : ∀ {x} → [ Nat ] 0ₙ ⊑ x → [ Nat ] x ⊑ 0ₙ
 natLemma₃ ⊑ₙ-intro₂ = ⊑ₙ-intro₂
+
+natLemma₄ : ∀ {x y} → [ Nat ] sₙ x ⊑ sₙ y → [ Nat ] x ⊑ y
+natLemma₄ (⊑ₙ-intro₃ x⊑y) = x⊑y
