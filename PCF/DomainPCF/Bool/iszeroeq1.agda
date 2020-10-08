@@ -28,8 +28,6 @@ open import Scwf.DomainScwf.ArrowStructure.NbhSys.Definition Nat Bool
 open import Scwf.DomainScwf.ArrowStructure.NbhSys.Instance
 open import Scwf.DomainScwf.ArrowStructure.NbhSys.Relation Nat Bool
 
-open import Agda.Builtin.Nat renaming (Nat to AgdaNat) hiding (zero)
-
 iszeroeq₁Lemma₁'' : ∀ {x y x′ y′} → [ Nat ] x ⊑ 0ₙ →
                     [ Nat ] x′ ⊑ x → [ Bool ] y ⊑ y′ →
                     iszeroprop x′ y′ →
@@ -68,10 +66,9 @@ iszeroeq₁Lemma₁' p₁ x⊑0 _ _
 iszeroeq₁Lemma₁ : {𝑥 : Valuation Γ} → ∀ {y} →
                   [ ap iszero (num 0) ] 𝑥 ↦ y →
                   [ true ] 𝑥 ↦ y
-iszeroeq₁Lemma₁ (ap↦-intro₁ ⊑b-intro₁)
-  = ideal↦-intro ⊑b-intro₁
-iszeroeq₁Lemma₁ (ap↦-intro₁ ⊑b-intro₂)
-  = ideal↦-intro ⊑b-intro₁
+iszeroeq₁Lemma₁ (ap↦-intro₁ y⊑⊥)
+  = ideal↦-intro y⊑t
+  where y⊑t = NbhSys.⊑-trans Bool y⊑⊥ (NbhSys.⊑-⊥ Bool)
 iszeroeq₁Lemma₁
   (ap↦-intro₂ _ _ (iszero↦-intro₂ p) (ideal↦-intro x⊑0) xy⊑𝑓)
   = ideal↦-intro (iszeroeq₁Lemma₁' p x⊑0 xy⊑𝑓)
@@ -87,8 +84,8 @@ iszeroeq₁Lemma₂ : {𝑥 : Valuation Γ} → ∀ {y} →
 iszeroeq₁Lemma₂ (ideal↦-intro ⊑b-intro₁)
   = ap↦-intro₁ (NbhSys.⊑-⊥ Bool)
 iszeroeq₁Lemma₂ (ideal↦-intro ⊑b-intro₂)
-  = ap↦-intro₂ singletonIsCon singletonIsCon iz𝑥↦xy num0𝑥↦0 0t⊑0t
-  where iz𝑥↦xy = iszero↦-intro₂ iszeroeq₁Lemma₂'
+  = ap↦-intro₂ singletonIsCon singletonIsCon iz𝑥↦0t num0𝑥↦0 0t⊑0t
+  where iz𝑥↦0t = iszero↦-intro₂ iszeroeq₁Lemma₂'
         num0𝑥↦0 = ideal↦-intro (NbhSys.⊑-refl Nat)
         0t⊑0t = NbhSys.⊑-refl (Nat ⇒ Bool)
 
