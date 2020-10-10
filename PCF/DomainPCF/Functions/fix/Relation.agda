@@ -23,7 +23,6 @@ data derFrom⊥ (z : NbhSys.Nbh (𝐴 ⇒ 𝐴)) :
   df⊥-intro₂ : ∀ {x y} → derFrom⊥ z x →
                [ 𝐴 ⇒ 𝐴 ] 𝐹 ((x , y) ∷ ∅) singletonIsCon ⊑ z →
                derFrom⊥ z y
-               
 
 data _fix↦_ : Valuation Γ → ArrNbh (𝐴 ⇒ 𝐴) 𝐴 → Set where
   fix↦-intro₁ : {𝑥 : Valuation Γ} → 𝑥 fix↦ ⊥ₑ
