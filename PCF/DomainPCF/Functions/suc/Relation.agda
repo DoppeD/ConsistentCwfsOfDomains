@@ -1,6 +1,6 @@
 {-# OPTIONS --safe #-}
 
-module PCF.DomainPCF.Nat.suc.Relation where
+module PCF.DomainPCF.Functions.suc.Relation where
 
 open import Base.Core
 open import Base.FinFun

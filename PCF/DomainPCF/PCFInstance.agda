@@ -3,19 +3,19 @@
 module PCF.DomainPCF.PCFInstance where
 
 open import PCF.DomainPCF.Bool.false.Instance
-open import PCF.DomainPCF.Bool.iszero.Instance
-open import PCF.DomainPCF.Bool.iszeroeq1
-open import PCF.DomainPCF.Bool.iszeroeq2
+open import PCF.DomainPCF.Functions.iszero.Instance
+open import PCF.DomainPCF.Functions.iszeroeq1
+open import PCF.DomainPCF.Functions.iszeroeq2
 open import PCF.DomainPCF.Bool.NbhSys.Instance
 open import PCF.DomainPCF.Bool.true.Instance
 open import PCF.DomainPCF.Nat.NbhSys.Instance
 open import PCF.DomainPCF.Nat.num.Instance
-open import PCF.DomainPCF.Nat.pred.Instance
-open import PCF.DomainPCF.Nat.predeq
-open import PCF.DomainPCF.Nat.suc.Instance
-open import PCF.DomainPCF.Nat.suceq
-open import PCF.DomainPCF.Nat.zero.Instance
-open import PCF.DomainPCF.Nat.zeroeq
+open import PCF.DomainPCF.Functions.pred.Instance
+open import PCF.DomainPCF.Functions.predeq
+open import PCF.DomainPCF.Functions.suc.Instance
+open import PCF.DomainPCF.Functions.suceq
+open import PCF.DomainPCF.Functions.zero.Instance
+open import PCF.DomainPCF.Functions.zeroeq
 open import PCF.PCF
 open import Scwf.DomainScwf.ProdArrInstance
 

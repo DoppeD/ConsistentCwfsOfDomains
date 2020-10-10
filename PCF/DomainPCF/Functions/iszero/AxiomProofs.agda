@@ -1,16 +1,16 @@
 {-# OPTIONS --safe #-}
 
-module PCF.DomainPCF.Bool.iszero.AxiomProofs where
+module PCF.DomainPCF.Functions.iszero.AxiomProofs where
 
 open import Base.Core
 open import Base.FinFun
 open import Base.Variables
 open import NbhSys.Definition
 open import NbhSys.Lemmata
+open import PCF.DomainPCF.Functions.iszero.Relation
 open import PCF.DomainPCF.Nat.NbhSys.Definition
 open import PCF.DomainPCF.Nat.NbhSys.Instance
 open import PCF.DomainPCF.Nat.NbhSys.Relation
-open import PCF.DomainPCF.Bool.iszero.Relation
 open import PCF.DomainPCF.Bool.NbhSys.Definition
 open import PCF.DomainPCF.Bool.NbhSys.Instance
 open import PCF.DomainPCF.Bool.NbhSys.Relation

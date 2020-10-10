@@ -1,6 +1,6 @@
 {-# OPTIONS --safe #-}
 
-module PCF.DomainPCF.Bool.iszero.Relation where
+module PCF.DomainPCF.Functions.iszero.Relation where
 
 open import Base.Core
 open import Base.FinFun

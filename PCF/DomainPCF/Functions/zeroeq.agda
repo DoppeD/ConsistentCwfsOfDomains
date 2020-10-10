@@ -1,6 +1,6 @@
 {-# OPTIONS --safe #-}
 
-module PCF.DomainPCF.Nat.zeroeq where
+module PCF.DomainPCF.Functions.zeroeq where
 
 open import Appmap.Definition
 open import Appmap.Equivalence
@@ -9,12 +9,12 @@ open import Base.Core
 open import Base.FinFun
 open import Base.Variables
 open import NbhSys.Definition
+open import PCF.DomainPCF.Functions.zero.Instance
+open import PCF.DomainPCF.Functions.zero.Relation
 open import PCF.DomainPCF.Nat.NbhSys.Definition
 open import PCF.DomainPCF.Nat.NbhSys.Instance
 open import PCF.DomainPCF.Nat.NbhSys.Relation
 open import PCF.DomainPCF.Nat.num.Instance
-open import PCF.DomainPCF.Nat.zero.Instance
-open import PCF.DomainPCF.Nat.zero.Relation
 open import Scwf.DomainScwf.Appmap.Valuation.Definition
 open import Scwf.DomainScwf.ArrowStructure.ap.Instance
 open import Scwf.DomainScwf.ArrowStructure.ap.Relation

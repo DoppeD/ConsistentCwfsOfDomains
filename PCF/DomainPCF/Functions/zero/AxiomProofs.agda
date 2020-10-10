@@ -1,14 +1,14 @@
 {-# OPTIONS --safe #-}
 
-module PCF.DomainPCF.Nat.zero.AxiomProofs where
+module PCF.DomainPCF.Functions.zero.AxiomProofs where
 
 open import Base.Core
 open import Base.FinFun
 open import Base.Variables
 open import NbhSys.Definition
+open import PCF.DomainPCF.Functions.zero.Relation
 open import PCF.DomainPCF.Nat.NbhSys.Definition
 open import PCF.DomainPCF.Nat.NbhSys.Instance
-open import PCF.DomainPCF.Nat.zero.Relation
 open import Scwf.DomainScwf.Appmap.Valuation.Definition
 open import Scwf.DomainScwf.Appmap.Valuation.Instance
 open import Scwf.DomainScwf.ArrowStructure.NbhSys.ConFinFun Nat Nat

@@ -1,12 +1,12 @@
 {-# OPTIONS --safe #-}
 
-module PCF.DomainPCF.Nat.pred.Instance where
+module PCF.DomainPCF.Functions.pred.Instance where
 
 open import Appmap.Definition
 open import Base.Variables
+open import PCF.DomainPCF.Functions.pred.AxiomProofs
+open import PCF.DomainPCF.Functions.pred.Relation
 open import PCF.DomainPCF.Nat.NbhSys.Instance
-open import PCF.DomainPCF.Nat.pred.AxiomProofs
-open import PCF.DomainPCF.Nat.pred.Relation
 open import Scwf.DomainScwf.Appmap.Definition
 open import Scwf.DomainScwf.ArrowStructure.NbhSys.Instance
 

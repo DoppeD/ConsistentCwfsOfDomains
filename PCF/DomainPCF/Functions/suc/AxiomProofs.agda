@@ -1,17 +1,17 @@
 {-# OPTIONS --safe #-}
 
-module PCF.DomainPCF.Nat.suc.AxiomProofs where
+module PCF.DomainPCF.Functions.suc.AxiomProofs where
 
 open import Base.Core
 open import Base.FinFun
 open import Base.Variables
 open import NbhSys.Definition
 open import NbhSys.Lemmata
+open import PCF.DomainPCF.Functions.suc.Relation
 open import PCF.DomainPCF.Nat.NbhSys.Definition
 open import PCF.DomainPCF.Nat.NbhSys.Instance
 open import PCF.DomainPCF.Nat.NbhSys.Lemmata
 open import PCF.DomainPCF.Nat.NbhSys.Relation
-open import PCF.DomainPCF.Nat.suc.Relation
 open import Scwf.DomainScwf.Appmap.Valuation.Definition
 open import Scwf.DomainScwf.Appmap.Valuation.Instance
 open import Scwf.DomainScwf.ArrowStructure.NbhSys.ConFinFun Nat Nat

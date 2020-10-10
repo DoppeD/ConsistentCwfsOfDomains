@@ -2,7 +2,7 @@
 
 open import Base.Core
 
-module PCF.DomainPCF.fix.Relation (𝐴 : Ty) where
+module PCF.DomainPCF.Functions.fix.Relation (𝐴 : Ty) where
 
 open import Base.FinFun
 open import Base.Variables hiding (𝐴)

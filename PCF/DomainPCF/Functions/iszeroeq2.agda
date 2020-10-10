@@ -1,6 +1,6 @@
 {-# OPTIONS --safe #-}
 
-module PCF.DomainPCF.Bool.iszeroeq2 where
+module PCF.DomainPCF.Functions.iszeroeq2 where
 
 open import Appmap.Definition
 open import Appmap.Equivalence
@@ -9,13 +9,13 @@ open import Base.Core
 open import Base.FinFun
 open import Base.Variables
 open import NbhSys.Definition
-open import PCF.DomainPCF.Bool.iszero.AxiomProofs
-open import PCF.DomainPCF.Bool.iszero.Instance
-open import PCF.DomainPCF.Bool.iszero.Relation
 open import PCF.DomainPCF.Bool.NbhSys.Definition
 open import PCF.DomainPCF.Bool.NbhSys.Instance
 open import PCF.DomainPCF.Bool.NbhSys.Relation
 open import PCF.DomainPCF.Bool.false.Instance
+open import PCF.DomainPCF.Functions.iszero.AxiomProofs
+open import PCF.DomainPCF.Functions.iszero.Instance
+open import PCF.DomainPCF.Functions.iszero.Relation
 open import PCF.DomainPCF.Nat.NbhSys.Definition
 open import PCF.DomainPCF.Nat.NbhSys.Instance
 open import PCF.DomainPCF.Nat.NbhSys.Relation
