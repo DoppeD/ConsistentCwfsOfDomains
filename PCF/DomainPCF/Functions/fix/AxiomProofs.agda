@@ -7,10 +7,12 @@ open import Base.Core
 open import Base.FinFun
 open import Base.Variables hiding (𝐴)
 open import NbhSys.Definition
+open import NbhSys.Lemmata
 open import PCF.DomainPCF.Functions.fix.Lemmata
 open import PCF.DomainPCF.Functions.fix.Relation 𝐴
 open import Scwf.DomainScwf.Appmap.Valuation.Definition
 open import Scwf.DomainScwf.Appmap.Valuation.Instance
+open import Scwf.DomainScwf.ArrowStructure.NbhSys.ConFinFun 𝐴 𝐴
 open import Scwf.DomainScwf.ArrowStructure.NbhSys.Definition
 open import Scwf.DomainScwf.ArrowStructure.NbhSys.Instance
 open import Scwf.DomainScwf.ArrowStructure.NbhSys.Relation
@@ -49,11 +51,32 @@ fix↦-↓closed''' : ∀ {𝑔 fp 𝑔′ fp′ con𝑔𝑔′ confpfp′} →
                     [ 𝐴 ] fp ⊔ fp′ [ confpfp′ ]
 fix↦-↓closed''' (df⊥-intro₁ fp⊑⊥) (df⊥-intro₁ fp′⊑⊥)
   = df⊥-intro₁ (NbhSys.⊑-⊔ 𝐴 fp⊑⊥ fp′⊑⊥ _)
-fix↦-↓closed''' (df⊥-intro₁ ad) (df⊥-intro₂ {x = x} b x₁) = df⊥-intro₂ {x = x} {!!} {!!}
-fix↦-↓closed''' (df⊥-intro₂ {x = x} a ad) (df⊥-intro₁ x₁) = df⊥-intro₂ {x = x} {!!} {!!}
-fix↦-↓closed''' {con𝑔𝑔′ = con𝑔𝑔′} (df⊥-intro₂ {x = y} a x) (df⊥-intro₂ {x = z} b x₁)
-  = df⊥-intro₂ {x = [ 𝐴 ] y ⊔ z [ ↓closedLemma₂ con𝑔𝑔′ a b ]} (fix↦-↓closed''' a b) {!!}
-
+fix↦-↓closed''' (df⊥-intro₁ fp⊑⊥) (df⊥-intro₂ df⊥𝑔′x xfp′⊑𝑔′)
+  = df⊥-intro₂ df⊥𝑔⊔𝑔′⊥⊔x ⊥⊔x⊑𝑔⊔𝑔′
+  where con⊥x = NbhSys.Con-⊔ 𝐴 (NbhSys.⊑-⊥ 𝐴) (NbhSys.⊑-refl 𝐴)
+        df⊥𝑔⊔𝑔′⊥⊔x = ↓closedLemma₄ con⊥x df⊥𝑔′x
+        x⊑⊥⊔x = NbhSys.⊑-⊔-snd 𝐴 con⊥x
+        fp⊑fp′ = NbhSys.⊑-trans 𝐴 fp⊑⊥ (NbhSys.⊑-⊥ 𝐴)
+        fp⊔fp′⊑fp′ = NbhSys.⊑-⊔ 𝐴 fp⊑fp′ (NbhSys.⊑-refl 𝐴) _
+        𝑔′⊑𝑔⊔𝑔′ = NbhSys.⊑-⊔-snd (𝐴 ⇒ 𝐴) _
+        ⊥⊔x⊑𝑔⊔𝑔′ = ↓closedLemma₁ x⊑⊥⊔x fp⊔fp′⊑fp′ 𝑔′⊑𝑔⊔𝑔′ xfp′⊑𝑔′
+fix↦-↓closed''' (df⊥-intro₂ df⊥𝑔x xfp⊑𝑔) (df⊥-intro₁ fp′⊑⊥)
+  = df⊥-intro₂ (↓closedLemma₃ conx⊥ df⊥𝑔x) x⊔⊥⊑𝑔⊔𝑔′
+  where conx⊥ = NbhSys.Con-⊔ 𝐴 (NbhSys.⊑-refl 𝐴) (NbhSys.⊑-⊥ 𝐴)
+        𝑔⊑𝑔⊔𝑔′ = NbhSys.⊑-⊔-fst (𝐴 ⇒ 𝐴) _
+        fp′⊑fp = NbhSys.⊑-trans 𝐴 fp′⊑⊥ (NbhSys.⊑-⊥ 𝐴)
+        fp⊔fp′⊑fp = NbhSys.⊑-⊔ 𝐴 (NbhSys.⊑-refl 𝐴) fp′⊑fp _
+        x⊑x⊔⊥ = NbhSys.⊑-⊔-fst 𝐴 conx⊥
+        x⊔⊥⊑𝑔⊔𝑔′ = ↓closedLemma₁ x⊑x⊔⊥ fp⊔fp′⊑fp 𝑔⊑𝑔⊔𝑔′ xfp⊑𝑔
+fix↦-↓closed''' {con𝑔𝑔′ = con𝑔𝑔′} {confpfp′}
+  (df⊥-intro₂ {x = x} df⊥𝑔x xfp⊑𝑔)
+  (df⊥-intro₂ {x = x′} df⊥𝑔′x′ x′fp′⊑𝑔′)
+  = df⊥-intro₂ {x = [ 𝐴 ] x ⊔ x′ [ conxx′ ]} (fix↦-↓closed''' df⊥𝑔x df⊥𝑔′x′)
+    (↓closedLemma₆ {conxfp = singletonIsCon} {singletonIsCon} {conxfpx′fp′} ⊔⊑𝑔⊔𝑔′)
+  where conxx′ = ↓closedLemma₂ con𝑔𝑔′ df⊥𝑔x df⊥𝑔′x′
+        conxfpx′fp′ = (con-∪ _ _ (cff (↓closedLemma₅ confpfp′)))
+        ⊔⊑𝑔⊔𝑔′ = ⊑-⊔-lemma₃ (𝐴 ⇒ 𝐴) conxfpx′fp′ con𝑔𝑔′ xfp⊑𝑔 x′fp′⊑𝑔′
+  
 fix↦-↓closed'' : ∀ {𝑓 preable𝑓 postable𝑓} →
                  (∀ {𝑔 fp} → (𝑔 , fp) ∈ 𝑓 → derFrom⊥ 𝑔 fp) →
                  derFrom⊥ (pre 𝑓 preable𝑓) (post 𝑓 postable𝑓)
@@ -90,7 +113,8 @@ fix↦-↓closed' p₁ p₂ {fp = fp} 𝑔fp∈𝑓
   | df⊥-intro₂ df⊥prex xpost⊑pre
   = df⊥-intro₂ df⊥𝑔x xfp⊑𝑔
   where df⊥𝑔x = liftDerFrom⊥ pre⊑x df⊥prex
-        xfp⊑𝑔 = ↓closedLemma₁ y⊑post pre⊑x xpost⊑pre
+        xfp⊑𝑔 = ↓closedLemma₁ (NbhSys.⊑-refl 𝐴) y⊑post
+                pre⊑x xpost⊑pre
 
 fix↦-↓closed : {𝑥 : Valuation Γ} → ∀ {y z} →
                [ (𝐴 ⇒ 𝐴) ⇒ 𝐴 ] y ⊑ z →
