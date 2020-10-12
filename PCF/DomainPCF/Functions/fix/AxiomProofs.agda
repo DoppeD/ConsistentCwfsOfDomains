@@ -1,3 +1,5 @@
+{-# OPTIONS --safe #-}
+
 open import Base.Core
 
 module PCF.DomainPCF.Functions.fix.AxiomProofs
@@ -18,6 +20,7 @@ open import Scwf.DomainScwf.ArrowStructure.NbhSys.Instance
 open import Scwf.DomainScwf.ArrowStructure.NbhSys.Relation
 open import Scwf.DomainScwf.ArrowStructure.NbhSys.Post (𝐴 ⇒ 𝐴) 𝐴
 open import Scwf.DomainScwf.ArrowStructure.NbhSys.Pre (𝐴 ⇒ 𝐴) 𝐴
+import Scwf.DomainScwf.ArrowStructure.NbhSys.ConFinFun (𝐴 ⇒ 𝐴) 𝐴 as CFF𝐴
 
 fix↦-mono : ∀ {𝑥 𝑦 z} → [ ValNbhSys Γ ] 𝑥 ⊑ 𝑦 →
             𝑥 fix↦ z → 𝑦 fix↦ z
@@ -122,3 +125,41 @@ fix↦-↓closed : {𝑥 : Valuation Γ} → ∀ {y z} →
 fix↦-↓closed ⊑ₑ-intro₁ _ = fix↦-intro₁
 fix↦-↓closed (⊑ₑ-intro₂ _ _ p₁) (fix↦-intro₂ p₂)
   = fix↦-intro₂ (fix↦-↓closed' p₁ p₂)
+
+fix↦-con'' : ∀ {sub} →
+             (∀ {𝑔 fp} → (𝑔 , fp) ∈ sub →
+             derFrom⊥ 𝑔 fp) →
+             Preable sub → Postable sub
+fix↦-con'' {∅} _ _ = post-nil
+fix↦-con'' {(𝑔 , fp) ∷ sub} df⊥𝑔fp
+  (pre-cons preablesub con𝑔sub)
+  = post-cons rec confppostsub
+  where rec = fix↦-con'' {sub} (λ 𝑔fp∈sub →
+              (df⊥𝑔fp (there 𝑔fp∈sub))) preablesub
+        df⊥prepost = fix↦-↓closed''
+                     (λ 𝑔fp∈sub → df⊥𝑔fp (there 𝑔fp∈sub))
+        confppostsub = ↓closedLemma₂ con𝑔sub (df⊥𝑔fp here)
+                        df⊥prepost
+
+fix↦-con' : ∀ {𝑓 𝑓′} →
+            (∀ {𝑔 fp} → (𝑔 , fp) ∈ 𝑓 →
+            derFrom⊥ 𝑔 fp) →
+            (∀ {𝑔 fp} → (𝑔 , fp) ∈ 𝑓′ →
+            derFrom⊥ 𝑔 fp) →
+            ∀ {𝑔 fp} → (𝑔 , fp) ∈ (𝑓 ∪ 𝑓′) →
+            derFrom⊥ 𝑔 fp
+fix↦-con' {𝑓} df⊥𝑔fp df⊥𝑔′fp′ 𝑔fp∈∪
+  with (∪-lemma₂ {𝑓 = 𝑓} 𝑔fp∈∪)
+... | inl 𝑔fp∈𝑓 = df⊥𝑔fp 𝑔fp∈𝑓
+... | inr 𝑔fp∈𝑓′ = df⊥𝑔′fp′ 𝑔fp∈𝑓′
+
+fix↦-con : {𝑥 : Valuation Γ} → ∀ {y 𝑥′ y′} →
+           𝑥 fix↦ y → 𝑥′ fix↦ y′ → ValCon _ 𝑥 𝑥′ →
+           NbhSys.Con ((𝐴 ⇒ 𝐴) ⇒ 𝐴) y y′
+fix↦-con fix↦-intro₁ fix↦-intro₁ _ = conₑ-⊥₁
+fix↦-con fix↦-intro₁ (fix↦-intro₂ _) _ = conₑ-⊥₂
+fix↦-con (fix↦-intro₂ _) fix↦-intro₁ _ = conₑ-⊥₁
+fix↦-con (fix↦-intro₂ df⊥𝑔fp) (fix↦-intro₂ df⊥𝑔′fp′) _
+  = con-∪ _ _ (CFF𝐴.cff λ sub⊆∪ preable →
+    fix↦-con'' (λ 𝑔fp∈sub → shrinkdf (sub⊆∪ 𝑔fp∈sub)) preable)
+  where shrinkdf = fix↦-con' df⊥𝑔fp df⊥𝑔′fp′

@@ -1,3 +1,5 @@
+{-# OPTIONS --safe #-}
+
 open import Base.Core
 
 module PCF.DomainPCF.Functions.fix.Lemmata

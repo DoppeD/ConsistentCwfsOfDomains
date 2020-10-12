@@ -10,6 +10,7 @@ open import PCF.DomainPCF.Bool.NbhSys.Instance
 open import PCF.DomainPCF.Bool.true.Instance
 open import PCF.DomainPCF.Nat.NbhSys.Instance
 open import PCF.DomainPCF.Nat.num.Instance
+open import PCF.DomainPCF.Functions.fix.Instance
 open import PCF.DomainPCF.Functions.pred.Instance
 open import PCF.DomainPCF.Functions.predeq
 open import PCF.DomainPCF.Functions.suc.Instance
@@ -30,7 +31,7 @@ PCF.suc domPCF = suc
 PCF.pred domPCF = pred
 PCF.zero domPCF = zero
 PCF.iszero domPCF = iszero
-PCF.fix domPCF = {!!}
+PCF.fix domPCF = fix
 PCF.suceq domPCF = suceq
 PCF.predeq domPCF = predeq
 PCF.zeroeq domPCF = zeroeq
