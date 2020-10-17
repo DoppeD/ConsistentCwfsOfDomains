@@ -7,6 +7,7 @@ open import Base.FinFun
 open import Base.Variables
 open import NbhSys.Definition
 open import NbhSys.Lemmata
+open import PCF.DomainPCF.Functions.pred.Lemmata
 open import PCF.DomainPCF.Functions.pred.Relation
 open import PCF.DomainPCF.Nat.NbhSys.Definition
 open import PCF.DomainPCF.Nat.NbhSys.Instance
@@ -31,36 +32,6 @@ pred↦-mono _ (pred↦-intro₂ p)
 pred↦-bottom : {𝑥 : Valuation Γ} → 𝑥 pred↦ ⊥ₑ
 pred↦-bottom = pred↦-intro₁
 
-pred↦-↓closed''' : ∀ {x y x′ y′} → predprop x y →
-                   predprop x′ y′ → ∀ conxx′ conyy′ →
-                   predprop (x ⊔ₙ x′ [ conxx′ ]) (y ⊔ₙ y′ [ conyy′ ])
-pred↦-↓closed''' (pprop₁ x⊑0 y⊑⊥) (pprop₁ x′⊑0 y′⊑⊥) conxx′ conyy′
-  = pprop₁ x⊔x′⊑0 y⊔y′⊑⊥
-  where x⊔x′⊑0 = NbhSys.⊑-⊔ Nat x⊑0 x′⊑0 conxx′
-        y⊔y′⊑⊥ = NbhSys.⊑-⊔ Nat y⊑⊥ y′⊑⊥ conyy′
-pred↦-↓closed''' (pprop₁ ⊑ₙ-intro₁ ⊑ₙ-intro₁)
-  (pprop₂ (⊑ₙ-intro₃ y′⊑y)) conₙ-bot₁ conyy′
-  = pprop₂ (⊑ₙ-intro₃ (⊥⊔y′⊑y))
-  where ⊥⊔y′⊑y = NbhSys.⊑-⊔ Nat (NbhSys.⊑-⊥ Nat) y′⊑y conyy′
-pred↦-↓closed''' (pprop₂ (⊑ₙ-intro₃ y⊑x))
-  (pprop₁ _ ⊑ₙ-intro₁) conₙ-bot₂ conyy′
-  = pprop₂ (⊑ₙ-intro₃ y⊔⊥⊑x)
-  where y⊔⊥⊑x = NbhSys.⊑-⊔ Nat y⊑x (NbhSys.⊑-⊥ Nat) conyy′
-pred↦-↓closed''' (pprop₂ (⊑ₙ-intro₃ y⊑x))
-  (pprop₂ (⊑ₙ-intro₃ y′⊑x′)) (conₙ-sₙ conxx′) conyy′
-  = pprop₂ (⊑ₙ-intro₃ y⊔y′⊑x⊔x′)
-  where y⊔y′⊑x⊔x′ = ⊑-⊔-lemma₃ Nat conyy′ conxx′ y⊑x y′⊑x′
-
-pred↦-↓closed'' : ∀ {sub preable postable} →
-                  (∀ {x y} → (x , y) ∈ sub → predprop x y) →
-                  predprop (pre sub preable) (post sub postable)
-pred↦-↓closed'' {∅} _ = pprop₁ ⊑ₙ-intro₁ ⊑ₙ-intro₁
-pred↦-↓closed'' {_ ∷ _} {pre-cons _ conxpresub}
-  {post-cons _ conypostsub} p
-  = pred↦-↓closed''' ppxy ppprepost conxpresub conypostsub
-  where ppxy = p here
-        ppprepost = pred↦-↓closed'' (λ xy∈sub → p (there xy∈sub))
-
 pred↦-↓closed' : ∀ {𝑓 𝑓′ con𝑓′} →
                  (∀ {x y} → (x , y) ∈ 𝑓 → ⊑ₑ-proof 𝑓′ con𝑓′ x y) →
                  (∀ {x y} → (x , y) ∈ 𝑓′ → predprop x y) →
@@ -71,7 +42,7 @@ pred↦-↓closed' p₁ p₂ xy∈𝑓 with (p₁ xy∈𝑓)
              ; preablesub = preable
              ; postablesub = postable
              }
-  with (pred↦-↓closed'' {sub} {preable} {postable}
+  with (predLemma {sub} {preable} {postable}
        (λ xy∈sub → p₂ (sub⊆𝑓 xy∈sub)))
 pred↦-↓closed' p₁ p₂ {⊥ₙ} xy∈𝑓
   | record { y⊑post = y⊑post ; pre⊑x = pre⊑x }
@@ -142,7 +113,7 @@ pred↦-con' : ∀ {𝑔} →
              Preable 𝑔 → Postable 𝑔
 pred↦-con' {∅} _ _ = post-nil
 pred↦-con' {_ ∷ _} p (pre-cons preable𝑔 conxpre𝑔)
-  with (p here) | pred↦-↓closed'' {preable = preable𝑔} {rec}
+  with (p here) | predLemma {preable = preable𝑔} {rec}
                   λ xy∈𝑔 → p (there xy∈𝑔)
   where rec = pred↦-con' (λ xy∈𝑔 → p (there xy∈𝑔)) preable𝑔
 ... | zp₁ | zp₂ = post-cons rec (pred↦-con'' zp₁ zp₂ conxpre𝑔)
