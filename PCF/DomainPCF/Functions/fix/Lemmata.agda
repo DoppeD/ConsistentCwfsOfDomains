@@ -17,8 +17,12 @@ open import Scwf.DomainScwf.ArrowStructure.NbhSys.ConFinFun 𝐴 𝐴
 open import Scwf.DomainScwf.ArrowStructure.NbhSys.Definition
 open import Scwf.DomainScwf.ArrowStructure.NbhSys.Instance
 open import Scwf.DomainScwf.ArrowStructure.NbhSys.Relation
-open import Scwf.DomainScwf.ArrowStructure.NbhSys.Post 𝐴 𝐴
-open import Scwf.DomainScwf.ArrowStructure.NbhSys.Pre 𝐴 𝐴
+open import Scwf.DomainScwf.ArrowStructure.NbhSys.Post (𝐴 ⇒ 𝐴) 𝐴
+open import Scwf.DomainScwf.ArrowStructure.NbhSys.Pre (𝐴 ⇒ 𝐴) 𝐴
+import Scwf.DomainScwf.ArrowStructure.NbhSys.Post 𝐴 𝐴
+  as Post𝐴
+import Scwf.DomainScwf.ArrowStructure.NbhSys.Pre 𝐴 𝐴
+  as Pre𝐴
 
 ↓closedLemma₁' : ∀ {x y x′ y′ conxy} →
                  [ 𝐴 ] x ⊑ x′ → [ 𝐴 ] y′ ⊑ y →
@@ -27,8 +31,8 @@ open import Scwf.DomainScwf.ArrowStructure.NbhSys.Pre 𝐴 𝐴
 ↓closedLemma₁' {x} {y} x⊑x′ y′⊑y here
   = record { sub = (x , y) ∷ ∅
            ; sub⊆𝑓 = ⊆-refl
-           ; preablesub = singletonIsPreable
-           ; postablesub = singletonIsPostable
+           ; preablesub = Pre𝐴.singletonIsPreable
+           ; postablesub = Post𝐴.singletonIsPostable
            ; y⊑post = ⊑-⊔-lemma₄ 𝐴 y′⊑y cony⊥
            ; pre⊑x = NbhSys.⊑-⊔ 𝐴 x⊑x′ (NbhSys.⊑-⊥ 𝐴) conx⊥
            }
@@ -74,14 +78,14 @@ open import Scwf.DomainScwf.ArrowStructure.NbhSys.Pre 𝐴 𝐴
         x′⊑x⊔x′ = NbhSys.⊑-⊔-snd 𝐴 conxx′
         pre₁⊑x⊔x′ = NbhSys.⊑-trans 𝐴 pre⊑x₁ x⊑x⊔x′
         pre₂⊑x⊔x′ = NbhSys.⊑-trans 𝐴 pre⊑x₂ x′⊑x⊔x′
-        preable∪ = preUnionLemma preable₁ preable₂
+        preable∪ = Pre𝐴.preUnionLemma preable₁ preable₂
                    pre₁⊑x⊔x′ pre₂⊑x⊔x′
         postable∪ = cff𝑔 (∪-lemma₁ sub⊆𝑓₁ sub⊆𝑓₂) preable∪
         y⊑post∪ = NbhSys.⊑-trans 𝐴 y⊑post₁
-                  (postLemma₁ {postable𝑓 = postable₁}
+                  (Post𝐴.postLemma₁ {postable𝑓 = postable₁}
                   {postable∪})
         y′⊑post∪ = NbhSys.⊑-trans 𝐴 y⊑post₂
-                   (postLemma₂ {postable𝑓′ = postable₂}
+                   (Post𝐴.postLemma₂ {postable𝑓′ = postable₂}
                    {postable∪})
         
 ↓closedLemma₂ : ∀ {y y′ 𝑔 𝑔′} → NbhSys.Con (𝐴 ⇒ 𝐴) 𝑔 𝑔′ →
@@ -113,6 +117,21 @@ liftDerFrom⊥ 𝑓⊑𝑓′ (df⊥-intro₂ df𝑓x′ xx′⊑𝑓)
   where df𝑓′x′ = liftDerFrom⊥ 𝑓⊑𝑓′ df𝑓x′
         xx′⊑𝑓′ = NbhSys.⊑-trans (𝐴 ⇒ 𝐴) xx′⊑𝑓 𝑓⊑𝑓′
 
+liftDerFrom⊥₂ : ∀ {𝑓 𝑓′ x x′} → [ 𝐴 ⇒ 𝐴 ] 𝑓 ⊑ 𝑓′ →
+                [ 𝐴 ] x′ ⊑ x →
+                derFrom⊥ 𝑓 x →
+                derFrom⊥ 𝑓′ x′
+liftDerFrom⊥₂ 𝑓⊑𝑓′ _ df⊥𝑓x
+  with (liftDerFrom⊥ 𝑓⊑𝑓′ df⊥𝑓x)
+liftDerFrom⊥₂ _ x′⊑x _ | df⊥-intro₁ x⊑⊥
+  = df⊥-intro₁ x′⊑⊥
+  where x′⊑⊥ = NbhSys.⊑-trans 𝐴 x′⊑x x⊑⊥
+liftDerFrom⊥₂ 𝑓⊑𝑓′ x′⊑x df⊥𝑓x
+  | df⊥-intro₂ df⊥𝑓′y yx⊑𝑓′
+  = df⊥-intro₂ df⊥𝑓′y xx′⊑𝑓′
+  where 𝑓′⊑𝑓′ = NbhSys.⊑-refl (𝐴 ⇒ 𝐴)
+        xx′⊑𝑓′ = ↓closedLemma₁ (NbhSys.⊑-refl 𝐴) x′⊑x 𝑓′⊑𝑓′ yx⊑𝑓′
+        
 ↓closedLemma₃ : ∀ {𝑔 𝑔′ con𝑔𝑔′ x} → ∀ conx⊥ →
                 derFrom⊥ 𝑔 x →
                 derFrom⊥ ([ 𝐴 ⇒ 𝐴 ] 𝑔 ⊔ 𝑔′ [ con𝑔𝑔′ ])
@@ -156,9 +175,9 @@ liftDerFrom⊥ 𝑓⊑𝑓′ (df⊥-intro₂ df𝑓x′ xx′⊑𝑓)
 
 ↓closedLemma₅ : ∀ {x fp x′ fp′} → NbhSys.Con 𝐴 fp fp′ →
                 ∀ {𝑓} → 𝑓 ⊆ ((x , fp) ∷ ((x′ , fp′) ∷ ∅)) →
-                Preable 𝑓 → Postable 𝑓
+                Pre𝐴.Preable 𝑓 → Post𝐴.Postable 𝑓
 ↓closedLemma₅ confpfp′ f⊆ _
-  = boundedPostable (↓closedLemma₅' confpfp′ f⊆)
+  = Post𝐴.boundedPostable (↓closedLemma₅' confpfp′ f⊆)
 
 ↓closedLemma₆' : ∀ {x fp x′ fp′ conxfp conx′fp′ conp conxx′ confpfp′ 𝑓 con𝑓} →
                 [ 𝐴 ⇒ 𝐴 ] ([ 𝐴 ⇒ 𝐴 ] 𝐹 ((x , fp) ∷ ∅) conxfp ⊔
@@ -189,17 +208,19 @@ liftDerFrom⊥ 𝑓⊑𝑓′ (df⊥-intro₂ df𝑓x′ xx′⊑𝑓)
       ; preablesub = preable∪
       ; postablesub = postable∪
       ; y⊑post = NbhSys.⊑-⊔ 𝐴 fp⊑post∪ fp′⊑post∪ confpfp′
-      ; pre⊑x = preUnionLemma' preable₁ preable₂ preable∪
+      ; pre⊑x = Pre𝐴.preUnionLemma' preable₁ preable₂ preable∪
                 presub₁⊑x⊔x′ presub₂⊑x⊔x′
       }
       where ∪⊆𝑓 = ∪-lemma₁ sub⊆𝑓₁ sub⊆𝑓₂
             presub₁⊑x⊔x′ = ⊑-⊔-lemma₄ 𝐴 pre⊑x₁ conxx′
             presub₂⊑x⊔x′ = ⊑-⊔-lemma₅ 𝐴 pre⊑x₂ conxx′
-            preable∪ = preUnionLemma preable₁ preable₂
+            preable∪ = Pre𝐴.preUnionLemma preable₁ preable₂
                        presub₁⊑x⊔x′ presub₂⊑x⊔x′
             postable∪ = cff𝑓 ∪⊆𝑓 preable∪
-            postsub₁⊑post∪ = postLemma₁ {postable𝑓 = postable₁} {postable∪}
-            postsub₂⊑post∪ = postLemma₂ {postable𝑓′ = postable₂} {postable∪}
+            postsub₁⊑post∪ = Post𝐴.postLemma₁ {postable𝑓 = postable₁}
+                             {postable∪}
+            postsub₂⊑post∪ = Post𝐴.postLemma₂ {postable𝑓′ = postable₂}
+                             {postable∪}
             fp⊑post∪ = NbhSys.⊑-trans 𝐴 y⊑post₁ postsub₁⊑post∪
             fp′⊑post∪ = NbhSys.⊑-trans 𝐴 y⊑post₂ postsub₂⊑post∪
 
@@ -213,3 +234,46 @@ liftDerFrom⊥ 𝑓⊑𝑓′ (df⊥-intro₂ df𝑓x′ xx′⊑𝑓)
   (⊑ₑ-intro₂ _ _ p)
   = ⊑ₑ-intro₂ _ _ (↓closedLemma₆' {conxfp = conxfp} {conx′fp′}
                    {con-∪ _ _ cffp} (⊑ₑ-intro₂ _ _ p))
+
+fixLemma' : ∀ {𝑔 fp 𝑔′ fp′ con𝑔𝑔′ confpfp′} →
+            derFrom⊥ 𝑔 fp →
+            derFrom⊥ 𝑔′ fp′ →
+            derFrom⊥ [ 𝐴 ⇒ 𝐴 ] 𝑔 ⊔ 𝑔′ [ con𝑔𝑔′ ]
+              [ 𝐴 ] fp ⊔ fp′ [ confpfp′ ]
+fixLemma' (df⊥-intro₁ fp⊑⊥) (df⊥-intro₁ fp′⊑⊥)
+  = df⊥-intro₁ (NbhSys.⊑-⊔ 𝐴 fp⊑⊥ fp′⊑⊥ _)
+fixLemma' (df⊥-intro₁ fp⊑⊥) (df⊥-intro₂ df⊥𝑔′x xfp′⊑𝑔′)
+  = df⊥-intro₂ df⊥𝑔⊔𝑔′⊥⊔x ⊥⊔x⊑𝑔⊔𝑔′
+  where con⊥x = NbhSys.Con-⊔ 𝐴 (NbhSys.⊑-⊥ 𝐴) (NbhSys.⊑-refl 𝐴)
+        df⊥𝑔⊔𝑔′⊥⊔x = ↓closedLemma₄ con⊥x df⊥𝑔′x
+        x⊑⊥⊔x = NbhSys.⊑-⊔-snd 𝐴 con⊥x
+        fp⊑fp′ = NbhSys.⊑-trans 𝐴 fp⊑⊥ (NbhSys.⊑-⊥ 𝐴)
+        fp⊔fp′⊑fp′ = NbhSys.⊑-⊔ 𝐴 fp⊑fp′ (NbhSys.⊑-refl 𝐴) _
+        𝑔′⊑𝑔⊔𝑔′ = NbhSys.⊑-⊔-snd (𝐴 ⇒ 𝐴) _
+        ⊥⊔x⊑𝑔⊔𝑔′ = ↓closedLemma₁ x⊑⊥⊔x fp⊔fp′⊑fp′ 𝑔′⊑𝑔⊔𝑔′ xfp′⊑𝑔′
+fixLemma' (df⊥-intro₂ df⊥𝑔x xfp⊑𝑔) (df⊥-intro₁ fp′⊑⊥)
+  = df⊥-intro₂ (↓closedLemma₃ conx⊥ df⊥𝑔x) x⊔⊥⊑𝑔⊔𝑔′
+  where conx⊥ = NbhSys.Con-⊔ 𝐴 (NbhSys.⊑-refl 𝐴) (NbhSys.⊑-⊥ 𝐴)
+        𝑔⊑𝑔⊔𝑔′ = NbhSys.⊑-⊔-fst (𝐴 ⇒ 𝐴) _
+        fp′⊑fp = NbhSys.⊑-trans 𝐴 fp′⊑⊥ (NbhSys.⊑-⊥ 𝐴)
+        fp⊔fp′⊑fp = NbhSys.⊑-⊔ 𝐴 (NbhSys.⊑-refl 𝐴) fp′⊑fp _
+        x⊑x⊔⊥ = NbhSys.⊑-⊔-fst 𝐴 conx⊥
+        x⊔⊥⊑𝑔⊔𝑔′ = ↓closedLemma₁ x⊑x⊔⊥ fp⊔fp′⊑fp 𝑔⊑𝑔⊔𝑔′ xfp⊑𝑔
+fixLemma' {con𝑔𝑔′ = con𝑔𝑔′} {confpfp′}
+  (df⊥-intro₂ {x = x} df⊥𝑔x xfp⊑𝑔)
+  (df⊥-intro₂ {x = x′} df⊥𝑔′x′ x′fp′⊑𝑔′)
+  = df⊥-intro₂ {x = [ 𝐴 ] x ⊔ x′ [ conxx′ ]} (fixLemma' df⊥𝑔x df⊥𝑔′x′)
+    (↓closedLemma₆ {conxfp = singletonIsCon} {singletonIsCon} {conxfpx′fp′} ⊔⊑𝑔⊔𝑔′)
+  where conxx′ = ↓closedLemma₂ con𝑔𝑔′ df⊥𝑔x df⊥𝑔′x′
+        conxfpx′fp′ = (con-∪ _ _ (cff (↓closedLemma₅ confpfp′)))
+        ⊔⊑𝑔⊔𝑔′ = ⊑-⊔-lemma₃ (𝐴 ⇒ 𝐴) conxfpx′fp′ con𝑔𝑔′ xfp⊑𝑔 x′fp′⊑𝑔′
+  
+fixLemma : ∀ {𝑓 preable𝑓 postable𝑓} →
+           (∀ {𝑔 fp} → (𝑔 , fp) ∈ 𝑓 → derFrom⊥ 𝑔 fp) →
+           derFrom⊥ (pre 𝑓 preable𝑓) (post 𝑓 postable𝑓)
+fixLemma {∅} _ = df⊥-intro₁ (NbhSys.⊑-refl 𝐴)
+fixLemma {(x , y) ∷ 𝑓} {pre-cons preable𝑓 conxpre𝑓}
+  {post-cons postable𝑓 conypost𝑓} p
+  with (fixLemma {𝑓} {preable𝑓} {postable𝑓}
+       (λ 𝑔fp∈𝑓 → p (there 𝑔fp∈𝑓)))
+... | df⊥pp = fixLemma' (p here) df⊥pp
