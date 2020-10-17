@@ -7,6 +7,7 @@ open import Base.FinFun
 open import Base.Variables
 open import NbhSys.Definition
 open import NbhSys.Lemmata
+open import PCF.DomainPCF.Functions.iszero.Lemmata
 open import PCF.DomainPCF.Functions.iszero.Relation
 open import PCF.DomainPCF.Nat.NbhSys.Definition
 open import PCF.DomainPCF.Nat.NbhSys.Instance
@@ -31,32 +32,6 @@ iszero↦-mono x (iszero↦-intro₂ p) = iszero↦-intro₂ p
 iszero↦-bottom : {𝑥 : Valuation Γ} → 𝑥 iszero↦ ⊥ₑ
 iszero↦-bottom = iszero↦-intro₁
 
-iszero↦-↓closed'' : ∀ {sub preable postable} →
-                    (∀ {x y} → (x , y) ∈ sub → iszeroprop x y) →
-                    iszeroprop (pre sub preable) (post sub postable)
-iszero↦-↓closed'' {∅} _ = izprop₁ ⊑b-intro₁
-iszero↦-↓closed'' {(x , y) ∷ sub} {pre-cons preable conxpresub}
-  {post-cons postable conypostsub} p
-  with (p here) | iszero↦-↓closed'' {preable = preable} {postable} (λ xy∈sub → p (there xy∈sub))
-... | _ | izprop₂ 0⊑pre t⊑post
-  = izprop₂ 0⊑x⊔pre t⊑y⊔post
-  where 0⊑x⊔pre = ⊑-⊔-lemma₅ Nat 0⊑pre conxpresub
-        t⊑y⊔post = ⊑-⊔-lemma₅ Bool t⊑post conypostsub
-... | _ | izprop₃ s⊥⊑pre f⊑post
-  = izprop₃ s⊥⊑x⊔pre f⊑y⊔post
-  where s⊥⊑x⊔pre = ⊑-⊔-lemma₅ Nat s⊥⊑pre conxpresub
-        f⊑y⊔post = ⊑-⊔-lemma₅ Bool f⊑post conypostsub
-... | izprop₁ y⊑⊥ | izprop₁ post⊑⊥
-  = izprop₁ (NbhSys.⊑-⊔ Bool y⊑⊥ post⊑⊥ conypostsub)
-... | izprop₂ 0⊑x t⊑y | izprop₁ _
-  = izprop₂ 0⊑x⊔pre t⊑y⊔post
-  where 0⊑x⊔pre = ⊑-⊔-lemma₄ Nat 0⊑x conxpresub
-        t⊑y⊔post = ⊑-⊔-lemma₄ Bool t⊑y conypostsub
-... | izprop₃ s⊥⊑x f⊑y | izprop₁ _
-  = izprop₃ s⊥⊑x⊔pre f⊑y⊔post
-  where s⊥⊑x⊔pre = ⊑-⊔-lemma₄ Nat s⊥⊑x conxpresub
-        f⊑y⊔post = ⊑-⊔-lemma₄ Bool f⊑y conypostsub
-
 iszero↦-↓closed' : ∀ {𝑓 𝑓′ con𝑓′} →
                    (∀ {x y} → (x , y) ∈ 𝑓 → ⊑ₑ-proof 𝑓′ con𝑓′ x y) →
                    (∀ {x y} → (x , y) ∈ 𝑓′ → iszeroprop x y) →
@@ -68,7 +43,7 @@ iszero↦-↓closed' p₁ p₂ xy∈𝑓
            ; preablesub = preable
            ; postablesub = postable
   }
-  with (iszero↦-↓closed'' {sub} {preable} {postable}
+  with (iszeroLemma {sub} {preable} {postable}
        (λ xy∈sub → p₂ (sub⊆𝑓 xy∈sub)))
 iszero↦-↓closed' p₁ p₂ xy∈𝑓
   | record { y⊑post = y⊑post }
@@ -150,7 +125,7 @@ iszero↦-con' : ∀ {𝑔} →
                Preable 𝑔 → Postable 𝑔
 iszero↦-con' {∅} _ _ = post-nil
 iszero↦-con' {(x , y) ∷ 𝑔} p (pre-cons preable𝑔 conxpre𝑔)
-  with (p here) | iszero↦-↓closed'' {preable = preable𝑔} {rec}
+  with (p here) | iszeroLemma {preable = preable𝑔} {rec}
                   λ xy∈𝑔 → p (there xy∈𝑔)
   where rec = iszero↦-con' (λ xy∈𝑔 → p (there xy∈𝑔)) preable𝑔
 ... | zp₁ | zp₂ = post-cons rec (iszero↦-con'' zp₁ zp₂ conxpre𝑔)

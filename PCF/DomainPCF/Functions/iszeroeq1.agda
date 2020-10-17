@@ -13,13 +13,13 @@ open import PCF.DomainPCF.Bool.NbhSys.Definition
 open import PCF.DomainPCF.Bool.NbhSys.Instance
 open import PCF.DomainPCF.Bool.NbhSys.Relation
 open import PCF.DomainPCF.Bool.true.Instance
-open import PCF.DomainPCF.Functions.iszero.AxiomProofs
 open import PCF.DomainPCF.Functions.iszero.Instance
+open import PCF.DomainPCF.Functions.iszero.Lemmata
 open import PCF.DomainPCF.Functions.iszero.Relation
 open import PCF.DomainPCF.Nat.NbhSys.Definition
 open import PCF.DomainPCF.Nat.NbhSys.Instance
 open import PCF.DomainPCF.Nat.NbhSys.Relation
-open import PCF.DomainPCF.Nat.num.Instance
+open import PCF.DomainPCF.Nat.zero.Instance
 open import Scwf.DomainScwf.Appmap.Valuation.Definition
 open import Scwf.DomainScwf.ArrowStructure.ap.Instance
 open import Scwf.DomainScwf.ArrowStructure.ap.Relation
@@ -60,11 +60,11 @@ iszeroeq₁Lemma₁' p₁ x⊑0 _ _
            ; pre⊑x = pre⊑x
            }
   = iszeroeq₁Lemma₁'' x⊑0 pre⊑x y⊑post izp
-  where izp = iszero↦-↓closed'' {sub} {preable} {postable}
+  where izp = iszeroLemma {sub} {preable} {postable}
               (λ xy∈sub → p₁ (sub⊆𝑓 xy∈sub))
 
 iszeroeq₁Lemma₁ : {𝑥 : Valuation Γ} → ∀ {y} →
-                  [ ap iszero (num 0) ] 𝑥 ↦ y →
+                  [ ap iszero zero ] 𝑥 ↦ y →
                   [ true ] 𝑥 ↦ y
 iszeroeq₁Lemma₁ (ap↦-intro₁ y⊑⊥)
   = ideal↦-intro y⊑t
@@ -80,7 +80,7 @@ iszeroeq₁Lemma₂' here
 
 iszeroeq₁Lemma₂ : {𝑥 : Valuation Γ} → ∀ {y} →
                   [ true ] 𝑥 ↦ y →
-                  [ ap iszero (num 0) ] 𝑥 ↦ y
+                  [ ap iszero zero ] 𝑥 ↦ y
 iszeroeq₁Lemma₂ (ideal↦-intro ⊑b-intro₁)
   = ap↦-intro₁ (NbhSys.⊑-⊥ Bool)
 iszeroeq₁Lemma₂ (ideal↦-intro ⊑b-intro₂)
@@ -89,6 +89,6 @@ iszeroeq₁Lemma₂ (ideal↦-intro ⊑b-intro₂)
         num0𝑥↦0 = ideal↦-intro (NbhSys.⊑-refl Nat)
         0t⊑0t = NbhSys.⊑-refl (Nat ⇒ Bool)
 
-iszeroeq₁ : ap {Γ = Γ} iszero (num 0) ≈ true
+iszeroeq₁ : ap {Γ = Γ} iszero zero ≈ true
 iszeroeq₁ = ≈-intro (≼-intro iszeroeq₁Lemma₁)
             (≼-intro iszeroeq₁Lemma₂)
