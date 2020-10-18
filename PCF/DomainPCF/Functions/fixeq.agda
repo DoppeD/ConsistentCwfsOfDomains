@@ -61,7 +61,7 @@ fixeqLemma (fix↦-intro₂ p) _
   = liftDerFrom⊥₂ pre⊑x y⊑post df⊥prepost
   where df⊥prepost = fixLemma {𝑓 = sub} {preable} {postable}
                      (λ xy∈sub → p (sub⊆𝑓 xy∈sub))
-  
+
 fixeqLemma₁ : {f : Term Γ (𝐴 ⇒ 𝐴)} →
               {𝑥 : Valuation Γ} → ∀ {y} →
               [ ap fix f ] 𝑥 ↦ y →
@@ -102,10 +102,9 @@ fixeqLemma₂ (ap↦-intro₂ con𝑔 conxy f𝑥↦𝑔 (ap↦-intro₁ x⊑⊥
   where 𝑔⊑𝑔 = NbhSys.⊑-refl (𝐴 ⇒ 𝐴)
         xy⊑𝑔₂ = NbhSys.⊑-trans (𝐴 ⇒ 𝐴) (⊑-proofIrr xy⊑𝑔) 𝑔⊑𝑔
         df⊥𝑔y = df⊥-intro₂ (df⊥-intro₁ x⊑⊥) xy⊑𝑔₂
-        
 fixeqLemma₂ {f = f} (ap↦-intro₂ _ _ f𝑥↦𝑔
   (ap↦-intro₂ _ _ fix𝑥↦𝑓 f𝑥↦𝑔′ 𝑔′x⊑𝑓) xy⊑𝑔)
-  = ap↦-intro₂ singletonIsCon singletonIsCon fix𝑥↦𝑔⊔𝑔′ f𝑥↦𝑔⊔𝑔′ 
+  = ap↦-intro₂ singletonIsCon singletonIsCon fix𝑥↦𝑔⊔𝑔′ f𝑥↦𝑔⊔𝑔′
     𝑔⊔𝑔′⊑𝑔⊔𝑔′
   where con𝑔𝑔′ = Appmap.↦-con f f𝑥↦𝑔 f𝑥↦𝑔′ valConRefl
         f𝑥↦𝑔⊔𝑔′ = Appmap.↦-↑directed f f𝑥↦𝑔 f𝑥↦𝑔′ con𝑔𝑔′
