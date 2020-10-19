@@ -68,24 +68,22 @@ record P-Struct (γ : Sub Δ Γ) (𝑡 : Term (𝐴 :: Γ) 𝐵)
     λ𝑡𝑦 : ∀ {x y} → (x , y) ∈ 𝑓 → [ 𝑡 ] ⟪ x ,, 𝑦 ⟫ ↦ y
 
 getP-Struct' : {γ : Sub Δ Γ} →
-               ∀ 𝑥 x y 𝑦 𝑧 → (𝑓 : NbhFinFun 𝐴 𝐵) →
-               ∀ {con𝑦𝑧 conxy𝑓} →
-               [ 𝑡 ∘ ⟨ γ ∘ p Δ 𝐴 , q Δ 𝐴 ⟩ ] 𝑥 lam↦
-               (𝐹 ((x , y) ∷ 𝑓) conxy𝑓) →
+               ∀ {x y 𝑦 𝑧} → {𝑓 : NbhFinFun 𝐴 𝐵} →
+               ∀ {con𝑦𝑧} →
                [ 𝑡 ] ⟪ x ,, 𝑦 ⟫ ↦ y →
                (∀ {x′ y′} → (x′ , y′) ∈ 𝑓 →
                [ 𝑡 ] ⟪ x′ ,, 𝑧 ⟫ ↦ y′) →
                ∀ {x′ y′} → (x′ , y′) ∈ ((x , y) ∷ 𝑓) →
                [ 𝑡 ] ⟪ x′ ,, 𝑦 ⊔ᵥ 𝑧 [ con𝑦𝑧 ] ⟫ ↦ y′
-getP-Struct' {Γ = Γ} {𝑡 = 𝑡} 𝑥 x y 𝑦 𝑧 𝑓 {con𝑦𝑧} _ 𝑡x𝑦↦y _ here
+getP-Struct' {Γ = Γ} {𝑡 = 𝑡} {con𝑦𝑧 = con𝑦𝑧} 𝑡x𝑦↦y _ here
   = Appmap.↦-mono 𝑡 x𝑦⊑x⊔ 𝑡x𝑦↦y
   where 𝑦⊑⊔ = NbhSys.⊑-⊔-fst (ValNbhSys _) con𝑦𝑧
-        x𝑦⊑x⊔ = ⊑ᵥ-cons (𝐴 :: Γ) (NbhSys.⊑-refl 𝐴) 𝑦⊑⊔
-getP-Struct' {Γ = Γ} {𝑡 = 𝑡} 𝑥 x y 𝑦 𝑧 𝑓 {con𝑦𝑧} _ _ p
+        x𝑦⊑x⊔ = ⊑ᵥ-cons (𝐴 :: _) (NbhSys.⊑-refl 𝐴) 𝑦⊑⊔
+getP-Struct' {Γ = Γ} {𝑡 = 𝑡} {con𝑦𝑧 = con𝑦𝑧} _ p
   (there x′y′∈𝑓)
   = Appmap.↦-mono 𝑡 x′r⊑x′⊔ (p x′y′∈𝑓)
   where r⊑⊔ = NbhSys.⊑-⊔-snd (ValNbhSys _) con𝑦𝑧
-        x′r⊑x′⊔ = ⊑ᵥ-cons (𝐴 :: Γ) (NbhSys.⊑-refl 𝐴) r⊑⊔
+        x′r⊑x′⊔ = ⊑ᵥ-cons (𝐴 :: _) (NbhSys.⊑-refl 𝐴) r⊑⊔
 
 getP-Struct : {γ : Sub Δ Γ} →
               ∀ 𝑥 → (𝑓 : NbhFinFun 𝐴 𝐵) → ∀ {con𝑓} →
@@ -105,17 +103,14 @@ getP-Struct {Γ = Γ} {𝑡 = 𝑡} {γ = γ} 𝑥 ((x , y) ∷ 𝑓)
     (q↦-intro z⊑x)) 𝑡z𝑧↦y
   = record { 𝑦 = big⊔
            ; γ𝑥↦𝑦 = Appmap.↦-↑directed γ γ𝑥↦𝑧 rec-γ𝑥↦𝑦 con𝑧rec𝑦
-           ; λ𝑡𝑦 = getP-Struct' 𝑥 x y 𝑧 rec-𝑦 𝑓 {conxy𝑓 = con𝑓}
-                   (lam↦-intro₂ _ p)
-                   𝑡x𝑧↦y rec-λ𝑡𝑦
+           ; λ𝑡𝑦 = getP-Struct' {Γ = Γ} {𝑡 = 𝑡} {γ = γ}
+                   𝑡x𝑧↦y (P-Struct.λ𝑡𝑦 rec)
            }
   where rec = getP-Struct {𝑡 = 𝑡} {γ = γ} 𝑥 𝑓
               {subsetIsCon con𝑓 ⊆-lemma₃}
               (lam↦-intro₂ _ λ x′y′∈𝑓 →
               p (there x′y′∈𝑓))
-        rec-𝑦 = P-Struct.𝑦 rec
         rec-γ𝑥↦𝑦 = P-Struct.γ𝑥↦𝑦 rec
-        rec-λ𝑡𝑦 = P-Struct.λ𝑡𝑦 rec
         γ𝑥↦𝑧 = Appmap.↦-mono γ 𝑦⊑𝑥 γ𝑦↦𝑧
         z𝑧⊑x𝑧 = ⊑ᵥ-cons (𝐴 :: Γ) z⊑x
                 (NbhSys.⊑-refl (ValNbhSys _))
@@ -123,7 +118,7 @@ getP-Struct {Γ = Γ} {𝑡 = 𝑡} {γ = γ} 𝑥 ((x , y) ∷ 𝑓)
         con𝑦𝑥 = NbhSys.Con-⊔ (ValNbhSys _) 𝑦⊑𝑥
                 (NbhSys.⊑-refl (ValNbhSys _))
         con𝑧rec𝑦 = Appmap.↦-con γ γ𝑦↦𝑧 rec-γ𝑥↦𝑦 con𝑦𝑥
-        big⊔ = 𝑧 ⊔ᵥ rec-𝑦 [ con𝑧rec𝑦 ]
+        big⊔ = 𝑧 ⊔ᵥ (P-Struct.𝑦 rec) [ con𝑧rec𝑦 ]
 
 lamSubLemma₂ : ∀ {𝑥 y} →
                [ 𝑡 ∘ ⟨ (γ ∘ p Δ 𝐴) , q Δ 𝐴 ⟩ ] 𝑥 lam↦ y →
@@ -133,8 +128,7 @@ lamSubLemma₂ {𝑡 = 𝑡} {γ = γ} lam↦-intro₁
 lamSubLemma₂ (lam↦-intro₂ con𝑓 p)
   with (getP-Struct _ _ {con𝑓 = con𝑓} (lam↦-intro₂ _ p))
 lamSubLemma₂ {𝑡 = 𝑡} {γ = γ} (lam↦-intro₂ _ p)
-  | record { 𝑦 = 𝑦
-           ; γ𝑥↦𝑦 = γ𝑥↦𝑦
+  | record { γ𝑥↦𝑦 = γ𝑥↦𝑦
            ; λ𝑡𝑦 = λ𝑡𝑦
            }
   = ∘↦-intro γ𝑥↦𝑦 (lam↦-intro₂ _ λ𝑡𝑦)
