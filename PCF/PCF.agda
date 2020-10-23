@@ -34,4 +34,4 @@ record PCF : Set₂ where
     iszeroeq₂ : ∀ {m Γ n} →
                 ap {m} {Γ} iszero (ap suc n) ≈ false
     fixeq : ∀ {m Γ 𝐴} → (f : Tm {m} Γ (𝐴 ⇒ 𝐴)) →
-            ap {m} {Γ} fix f ≈ ap f (ap fix f)
+            ap fix f ≈ ap f (ap fix f)
