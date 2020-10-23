@@ -4,9 +4,10 @@ open import Base.Core
 
 module Scwf.DomainScwf.ArrowStructure.apSub (𝐴 𝐵 : Ty) where
 
-open import Appmap.Equivalence
 open import Appmap.Composition.Instance
 open import Appmap.Composition.Relation
+open import Appmap.Equivalence
+open import Appmap.Lemmata
 open import Base.FinFun
 open import Base.Variables hiding (𝐴 ; 𝐵)
 open import NbhSys.Definition
@@ -41,8 +42,8 @@ apSubLemma₁ {𝑡 = 𝑡} {γ = γ} {𝑢}
   = ∘↦-intro γ𝑥↦𝑦⊔𝑧 ap𝑡𝑢𝑦𝑧↦y
   where con𝑦𝑧 = Appmap.↦-con γ γ𝑥↦𝑦 γ𝑥↦𝑧 valConRefl
         γ𝑥↦𝑦⊔𝑧 = Appmap.↦-↑directed γ γ𝑥↦𝑦 γ𝑥↦𝑧 con𝑦𝑧
-        𝑡𝑦𝑧↦𝑓 = Appmap.↦-mono 𝑡 (NbhSys.⊑-⊔-fst (ValNbhSys _) _) 𝑡𝑦↦𝑓
-        𝑢𝑦𝑧↦x = Appmap.↦-mono 𝑢 (NbhSys.⊑-⊔-snd (ValNbhSys _) _) 𝑢𝑧↦x
+        𝑡𝑦𝑧↦𝑓 = appmapLemma₁ {γ = 𝑡} con𝑦𝑧 𝑡𝑦↦𝑓
+        𝑢𝑦𝑧↦x = appmapLemma₂ {γ = 𝑢} con𝑦𝑧 𝑢𝑧↦x
         ap𝑡𝑢𝑦𝑧↦y = ap↦-intro₂ _ _ 𝑡𝑦𝑧↦𝑓 𝑢𝑦𝑧↦x xy⊑𝑓
 
 apSubLemma₂ : ∀ {𝑥 𝑦} → [ ap 𝑡 𝑢 ∘ γ ] 𝑥 ↦ 𝑦 →
