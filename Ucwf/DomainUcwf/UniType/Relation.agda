@@ -12,10 +12,10 @@ open import Agda.Builtin.Size
 private
   variable i j : Size
 
-record ⊑ᵤ-proof {i j : Size} (𝑓 : FinFunₛ {j})
+record ⊑ᵤ-proof {i : Size} (𝑓 : FinFunₛ {i})
                 (x y : UniNbh {i}) : Set
 
-data _⊑ᵤ_ : UniNbh {i} → UniNbh {j} → Set
+data _⊑ᵤ_ : UniNbh {i} → UniNbh {i} → Set
 
 record ⊑ᵤ-proof 𝑓 x y where
   inductive
@@ -26,10 +26,10 @@ record ⊑ᵤ-proof 𝑓 x y where
     sub⊆𝑓′ : sub ⊆ 𝑓
 
 data _⊑ᵤ_ where
-  ⊑ᵤ-intro₁ : ∀ {i j} → {x : UniNbh {j}} →
-              (⊥ᵤ {i}) ⊑ᵤ x
-  ⊑ᵤ-intro₂ : ∀ {i j} → (𝑓 : FinFunₛ {i}) →
-              (𝑓′ : FinFunₛ {j}) →
+  ⊑ᵤ-intro₁ : ∀ {i} → {x : UniNbh {i}} →
+              ⊥ᵤ ⊑ᵤ x
+  ⊑ᵤ-intro₂ : ∀ {i} → (𝑓 : FinFunₛ {i}) →
+              (𝑓′ : FinFunₛ {i}) →
               ((x y : UniNbh {i}) → (x , y) ∈ 𝑓 →
-              ⊑ᵤ-proof {i} {j} 𝑓′ x y) →
-              _⊑ᵤ_ {↑ i} {↑ j} (λᵤ 𝑓) (λᵤ 𝑓′)
+              ⊑ᵤ-proof {i} 𝑓′ x y) →
+              _⊑ᵤ_ {↑ i} (λᵤ 𝑓) (λᵤ 𝑓′)

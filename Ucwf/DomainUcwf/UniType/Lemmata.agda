@@ -11,8 +11,8 @@ open import Ucwf.DomainUcwf.UniType.Relation
 open import Agda.Builtin.Equality
 open import Agda.Builtin.Size
 
-lift⊑ᵤ-proof : ∀ {i j} → (𝑓 𝑓′ : FinFunₛ {i}) →
-               (x y : UniNbh {j}) → 𝑓 ⊆ 𝑓′ →
+lift⊑ᵤ-proof : ∀ {i} → (𝑓 𝑓′ : FinFunₛ {i}) →
+               (x y : UniNbh {i}) → 𝑓 ⊆ 𝑓′ →
                ⊑ᵤ-proof 𝑓 x y → ⊑ᵤ-proof 𝑓′ x y
 lift⊑ᵤ-proof 𝑓 𝑓′ x y 𝑓⊆𝑓′
   record { sub = sub
@@ -26,17 +26,17 @@ lift⊑ᵤ-proof 𝑓 𝑓′ x y 𝑓⊆𝑓′
            ; sub⊆𝑓′ = ⊆-trans sub⊆𝑓′ 𝑓⊆𝑓′
            }
 
-shrink⊑ᵤ : ∀ {i j} → {𝑓 𝑓′ : FinFunₛ {i}} →
-           {𝑓″ : FinFunₛ {j}} → λᵤ 𝑓′ ⊑ᵤ λᵤ 𝑓″ → 𝑓 ⊆ 𝑓′ →
+shrink⊑ᵤ : ∀ {i} → {𝑓 𝑓′ 𝑓″ : FinFunₛ {i}} →
+           λᵤ 𝑓′ ⊑ᵤ λᵤ 𝑓″ → 𝑓 ⊆ 𝑓′ →
            λᵤ 𝑓 ⊑ᵤ λᵤ 𝑓″
 shrink⊑ᵤ {𝑓 = 𝑓} {𝑓′} {𝑓″} (⊑ᵤ-intro₂ _ _ p) 𝑓⊆𝑓′
   = ⊑ᵤ-intro₂ 𝑓 𝑓″ (λ x y xy∈𝑓 → p x y (𝑓⊆𝑓′ xy∈𝑓))
 
-∅-⊥ᵤ : ∀ {𝑓} → (λᵤ ∅) ⊑ᵤ (λᵤ 𝑓)
-∅-⊥ᵤ {𝑓} = ⊑ᵤ-intro₂ ∅ 𝑓 (λ x y → xy∈∅-abs)
+∅-⊥ᵤ : ∀ {i} → {𝑓 : FinFunₛ {i}} → (λᵤ ∅) ⊑ᵤ (λᵤ 𝑓)
+∅-⊥ᵤ {𝑓 = 𝑓} = ⊑ᵤ-intro₂ ∅ 𝑓 (λ x y → xy∈∅-abs)
 
-⊑ᵤ-⊔ᵤ-lemma₁ : ∀ {i j} → (x : UniNbh {i}) →
-               (y z : UniNbh {j}) → x ⊑ᵤ y →
+⊑ᵤ-⊔ᵤ-lemma₁ : ∀ {i} → (x y z : UniNbh {i}) →
+               x ⊑ᵤ y →
                x ⊑ᵤ (y ⊔ᵤ z [ con-all ])
 ⊑ᵤ-⊔ᵤ-lemma₁ _ y z ⊑ᵤ-intro₁ = ⊑ᵤ-intro₁
 ⊑ᵤ-⊔ᵤ-lemma₁ (λᵤ 𝑓) (λᵤ 𝑓′) ⊥ᵤ (⊑ᵤ-intro₂ _ _ p)
@@ -45,8 +45,8 @@ shrink⊑ᵤ {𝑓 = 𝑓} {𝑓′} {𝑓″} (⊑ᵤ-intro₂ _ _ p) 𝑓⊆�
   ⊑ᵤ-intro₂ 𝑓 (𝑓′ ∪ 𝑓″) (λ x′ y′ x′y′∈𝑓 →
     lift⊑ᵤ-proof 𝑓′ (𝑓′ ∪ 𝑓″) x′ y′ ∪-lemma₃ (p x′ y′ x′y′∈𝑓))
 
-⊑ᵤ-⊔ᵤ-lemma₂ : ∀ {i j} → (x : UniNbh {i}) →
-               (y z : UniNbh {j}) → x ⊑ᵤ z →
+⊑ᵤ-⊔ᵤ-lemma₂ : ∀ {i} → (x y z : UniNbh {i}) →
+               x ⊑ᵤ z →
                x ⊑ᵤ (y ⊔ᵤ z [ con-all ])
 ⊑ᵤ-⊔ᵤ-lemma₂ _ y z ⊑ᵤ-intro₁ = ⊑ᵤ-intro₁
 ⊑ᵤ-⊔ᵤ-lemma₂ (λᵤ 𝑓) ⊥ᵤ (λᵤ 𝑓″) (⊑ᵤ-intro₂ _ _ p)
@@ -55,8 +55,8 @@ shrink⊑ᵤ {𝑓 = 𝑓} {𝑓′} {𝑓″} (⊑ᵤ-intro₂ _ _ p) 𝑓⊆�
   = ⊑ᵤ-intro₂ 𝑓 (𝑓′ ∪ 𝑓″) (λ x′ y′ x′y′∈𝑓 →
       lift⊑ᵤ-proof 𝑓″ (𝑓′ ∪ 𝑓″) x′ y′ ∪-lemma₄ (p x′ y′ x′y′∈𝑓))
 
-⊑ᵤ-⊔ᵤ-lemma₃' : ∀ {i j} → {𝑓 𝑓′ : FinFunₛ {i}} →
-                {𝑓″ 𝑓‴ : FinFunₛ {j}} → (λᵤ 𝑓) ⊑ᵤ (λᵤ 𝑓″) →
+⊑ᵤ-⊔ᵤ-lemma₃' : ∀ {i} → {𝑓 𝑓′ 𝑓″ 𝑓‴ : FinFunₛ {i}} →
+                (λᵤ 𝑓) ⊑ᵤ (λᵤ 𝑓″) →
                 (λᵤ 𝑓′) ⊑ᵤ (λᵤ 𝑓‴) →
                 ∀ x y → (x , y) ∈ (𝑓 ∪ 𝑓′) →
                 ⊑ᵤ-proof (𝑓″ ∪ 𝑓‴) x y
@@ -89,8 +89,8 @@ shrink⊑ᵤ {𝑓 = 𝑓} {𝑓′} {𝑓″} (⊑ᵤ-intro₂ _ _ p) 𝑓⊆�
            ; sub⊆𝑓′ = λ x′y′∈sub → ∪-lemma₄ (sub⊆𝑓′ x′y′∈sub)
            }
 
-⊑ᵤ-⊔ᵤ-lemma₃ : ∀ {i j} → (x y : UniNbh {i}) →
-               (z w : UniNbh {j}) → x ⊑ᵤ z → y ⊑ᵤ w →
+⊑ᵤ-⊔ᵤ-lemma₃ : ∀ {i} → (x y z w : UniNbh {i}) →
+               x ⊑ᵤ z → y ⊑ᵤ w →
                (x ⊔ᵤ y [ con-all ]) ⊑ᵤ (z ⊔ᵤ w [ con-all ])
 ⊑ᵤ-⊔ᵤ-lemma₃ ⊥ᵤ ⊥ᵤ _ _ _ _ = ⊑ᵤ-intro₁
 ⊑ᵤ-⊔ᵤ-lemma₃ (λᵤ 𝑓) _ z w x⊑z ⊑ᵤ-intro₁
