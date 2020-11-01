@@ -3,12 +3,12 @@
 module Ucwf.DomainUcwf.UniType.Transitivity where
 
 open import Base.Core
+open import Base.FinFun
 open import Ucwf.DomainUcwf.UniType.AxiomProofs
 open import Ucwf.DomainUcwf.UniType.Definition
 open import Ucwf.DomainUcwf.UniType.Lemmata
 open import Ucwf.DomainUcwf.UniType.Relation
 open import Ucwf.DomainUcwf.UniType.PrePost
-open import Ucwf.DomainUcwf.UniType.SizedFinFun
 
 open import Agda.Builtin.Size
 
@@ -22,17 +22,17 @@ record ⊑ᵤ-proof₂ (𝑓 : FinFunₛ {i}) (𝑓′ : FinFunₛ {j}) :
     sub : FinFunₛ
     p𝑓⊑ᵤpost : (post 𝑓) ⊑ᵤ (post sub)
     pre⊑ᵤp𝑓 : (pre sub) ⊑ᵤ (pre 𝑓)
-    sub⊆𝑓′ : sub ⊆ₛ 𝑓′
+    sub⊆𝑓′ : sub ⊆ 𝑓′
 
 Ω-post : ∀ {i j} → {x y : UniNbh {i}} →
          {𝑓 𝑓′ : FinFunₛ {j}} → x ⊑ᵤ post 𝑓 →
-         y ⊑ᵤ post 𝑓′ → (x ⊔ᵤ y [ con-all ]) ⊑ᵤ post (𝑓 ∪ₛ 𝑓′)
+         y ⊑ᵤ post 𝑓′ → (x ⊔ᵤ y [ con-all ]) ⊑ᵤ post (𝑓 ∪ 𝑓′)
 Ω-post {x = x} {y} {𝑓} {𝑓′} x⊑post𝑓 y⊑post𝑓′ rewrite (post-≡ 𝑓 𝑓′)
   = ⊑ᵤ-⊔ᵤ-lemma₃ x y (post 𝑓) (post 𝑓′) x⊑post𝑓 y⊑post𝑓′
 
 Ω-pre : ∀ {i j} → {x y : UniNbh {i}} →
         {𝑓 𝑓′ : FinFunₛ {j}} → pre 𝑓 ⊑ᵤ x →
-        pre 𝑓′ ⊑ᵤ y → pre (𝑓 ∪ₛ 𝑓′) ⊑ᵤ (x ⊔ᵤ y [ con-all ])
+        pre 𝑓′ ⊑ᵤ y → pre (𝑓 ∪ 𝑓′) ⊑ᵤ (x ⊔ᵤ y [ con-all ])
 Ω-pre {x = x} {y} {𝑓} {𝑓′} pre𝑓⊑x pre𝑓′⊑y rewrite (pre-≡ 𝑓 𝑓′)
   = ⊑ᵤ-⊔ᵤ-lemma₃ (pre 𝑓) (pre 𝑓′) x y pre𝑓⊑x pre𝑓′⊑y
 
@@ -42,7 +42,7 @@ record ⊑ᵤ-proof₂ (𝑓 : FinFunₛ {i}) (𝑓′ : FinFunₛ {j}) :
   record { sub = ∅
          ; p𝑓⊑ᵤpost = ⊑ᵤ-intro₁
          ; pre⊑ᵤp𝑓 = ⊑ᵤ-intro₁
-         ; sub⊆𝑓′ = ∅-isSubsetₛ
+         ; sub⊆𝑓′ = ∅-isSubset
          }
 Ω ((x₁ , x₂) ∷ 𝑓″) 𝑓′ (⊑ᵤ-intro₂ _ _ p)
   with (p x₁ x₂ here)
@@ -52,10 +52,10 @@ record ⊑ᵤ-proof₂ (𝑓 : FinFunₛ {i}) (𝑓′ : FinFunₛ {j}) :
            ; pre⊑ᵤx = pre⊑ᵤx
            ; sub⊆𝑓′ = sub⊆𝑓′
            }
-  = record { sub = sub ∪ₛ sub′
+  = record { sub = sub ∪ sub′
            ; p𝑓⊑ᵤpost = Ω-post {𝑓 = sub} y⊑ᵤpost p𝑓⊑ᵤpost′
            ; pre⊑ᵤp𝑓 = Ω-pre {𝑓 = sub} pre⊑ᵤx pre⊑ᵤp𝑓′
-           ; sub⊆𝑓′ = ∪ₛ-lemma₁ sub⊆𝑓′ sub′⊆𝑓′
+           ; sub⊆𝑓′ = ∪-lemma₁ sub⊆𝑓′ sub′⊆𝑓′
            }
   where recur = Ω 𝑓″ 𝑓′ (⊑ᵤ-intro₂ 𝑓″ 𝑓′
                 (λ a b ab∈𝑓″ → p a b (there ab∈𝑓″)))
@@ -69,7 +69,7 @@ record ⊑ᵤ-proof₂ (𝑓 : FinFunₛ {i}) (𝑓′ : FinFunₛ {j}) :
 
 ⊑ᵤ-trans' : ∀ {i} → ∀ 𝑓 → (𝑓′ : FinFunₛ {i}) → ∀ 𝑓″ →
             (λᵤ 𝑓) ⊑ᵤ (λᵤ 𝑓′) → (λᵤ 𝑓′) ⊑ᵤ (λᵤ 𝑓″) →
-            ∀ x′ y′ → (x′ , y′) ∈ₛ 𝑓 → ⊑ᵤ-proof 𝑓″ x′ y′
+            ∀ x′ y′ → (x′ , y′) ∈ 𝑓 → ⊑ᵤ-proof 𝑓″ x′ y′
 
 ⊑ᵤ-trans {x = ⊥ᵤ} _ _ = ⊑ᵤ-intro₁
 ⊑ᵤ-trans {x = λᵤ ∅} {⊥ᵤ} {⊥ᵤ} ()

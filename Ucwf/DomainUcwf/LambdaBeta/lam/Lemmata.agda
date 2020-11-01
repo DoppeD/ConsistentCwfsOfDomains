@@ -2,6 +2,8 @@
 
 module Ucwf.DomainUcwf.LambdaBeta.lam.Lemmata where
 
+open import Base.Core
+open import Base.FinFun
 open import Base.Variables
 open import NbhSys.Definition
 open import NbhSys.Lemmata
@@ -11,7 +13,6 @@ open import Ucwf.DomainUcwf.LambdaBeta.lam.Relation
 open import Ucwf.DomainUcwf.UniType.Definition
 open import Ucwf.DomainUcwf.UniType.Instance
 open import Ucwf.DomainUcwf.UniType.PrePost
-open import Ucwf.DomainUcwf.UniType.SizedFinFun
 
 open import Agda.Builtin.Nat
 
@@ -19,20 +20,20 @@ private
   variable
     𝑡 : uTerm (suc n)
 
-pre-biggest : ∀ 𝑓 x y → (x , y) ∈ₛ 𝑓 →
+pre-biggest : ∀ 𝑓 x y → (x , y) ∈ 𝑓 →
               [ UniType ] x ⊑ pre 𝑓
 pre-biggest ((x , y) ∷ 𝑓) x y here
   = NbhSys.⊑-⊔-fst UniType con-all
 pre-biggest ((x′ , y′) ∷ 𝑓′) x y (there xy∈𝑓′)
   = ⊑-⊔-lemma₅ UniType (pre-biggest 𝑓′ x y xy∈𝑓′) con-all
 
-shrinklam : ∀ {𝑥 𝑓 𝑓′} → 𝑓 ⊆ₛ 𝑓′ →
+shrinklam : ∀ {𝑥 𝑓 𝑓′} → 𝑓 ⊆ 𝑓′ →
             [ 𝑡 ] 𝑥 lam↦ (λᵤ 𝑓′) → [ 𝑡 ] 𝑥 lam↦ (λᵤ 𝑓)
 shrinklam {𝑓 = 𝑓} 𝑓⊆𝑓′ (lam↦-intro₂ p)
   = lam↦-intro₂ (λ xy∈𝑓 → p (𝑓⊆𝑓′ xy∈𝑓))
 
 ↓closed-lemma' : ∀ 𝑥 𝑓 → [ 𝑡 ] 𝑥 lam↦ (λᵤ 𝑓) →
-                 ∀ x y → (x , y) ∈ₛ 𝑓 →
+                 ∀ x y → (x , y) ∈ 𝑓 →
                  [ 𝑡 ] ⟪ pre 𝑓 ,, 𝑥 ⟫ ↦ y
 ↓closed-lemma' {n} {𝑡 = 𝑡} 𝑥 (x ∷ 𝑓′) (lam↦-intro₂ p)
   x′ y′ x′y′∈𝑓

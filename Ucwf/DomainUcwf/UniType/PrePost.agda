@@ -2,6 +2,8 @@
 
 module Ucwf.DomainUcwf.UniType.PrePost where
 
+open import Base.Core
+open import Base.FinFun
 open import Ucwf.DomainUcwf.UniType.Definition
 
 pre : ∀ {i} → FinFunₛ {i} → UniNbh {i}

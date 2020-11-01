@@ -9,6 +9,7 @@ module Ucwf.DomainUcwf.LambdaBeta.lam.AxiomProofs
   {𝑡 : uTerm (suc n)} where
 
 open import Base.Core
+open import Base.FinFun
 open import NbhSys.Definition
 open import Ucwf.DomainUcwf.Appmap.Valuation
 open import Ucwf.DomainUcwf.LambdaBeta.lam.Lemmata
@@ -17,7 +18,6 @@ open import Ucwf.DomainUcwf.UniType.Definition
 open import Ucwf.DomainUcwf.UniType.Instance
 open import Ucwf.DomainUcwf.UniType.PrePost
 open import Ucwf.DomainUcwf.UniType.Relation
-open import Ucwf.DomainUcwf.UniType.SizedFinFun
 
 lam↦-mono : ∀ {𝑥 𝑦 𝑧} → ⊑ᵥ (nToCtx n) 𝑥 𝑦 →
             [ 𝑡 ] 𝑥 lam↦ 𝑧 → [ 𝑡 ] 𝑦 lam↦ 𝑧
@@ -32,7 +32,7 @@ lam↦-bottom = lam↦-intro₁
 
 lam↦-↓closed' : ∀ {𝑥 𝑓 𝑓′} → [ UniType ] λᵤ 𝑓 ⊑ λᵤ 𝑓′ →
                 [ 𝑡 ] 𝑥 lam↦ (λᵤ 𝑓′) →
-                ∀ {x y} → (x , y) ∈ₛ 𝑓 →
+                ∀ {x y} → (x , y) ∈ 𝑓 →
                 [ 𝑡 ] ⟪ x ,, 𝑥 ⟫ ↦ y
 lam↦-↓closed' (⊑ᵤ-intro₂ _ _ p) _ xy∈𝑓 with (p _ _ xy∈𝑓)
 lam↦-↓closed' {𝑥 = 𝑥} _ 𝑡𝑥↦𝑓′ xy∈𝑓
@@ -56,10 +56,10 @@ lam↦-↓closed {y = λᵤ 𝑓} {λᵤ 𝑓′} 𝑓⊑𝑓′ 𝑡𝑥↦𝑓
 
 lam↦-↑directed' : ∀ {𝑥 𝑓 𝑓′} → [ 𝑡 ] 𝑥 lam↦ (λᵤ 𝑓) →
                   [ 𝑡 ] 𝑥 lam↦ (λᵤ 𝑓′) → ∀ {x y} →
-                  (x , y) ∈ₛ (𝑓 ∪ₛ 𝑓′) →
+                  (x , y) ∈ (𝑓 ∪ 𝑓′) →
                   [ 𝑡 ] ⟪ x ,, 𝑥 ⟫ ↦ y
 lam↦-↑directed' {𝑓 = 𝑓} _ _ xy∈𝑓∪𝑓′
-  with (∪ₛ-lemma₂ {𝑓 = 𝑓} xy∈𝑓∪𝑓′)
+  with (∪-lemma₂ {𝑓 = 𝑓} xy∈𝑓∪𝑓′)
 lam↦-↑directed' (lam↦-intro₂ p) _ _
   | inl xy∈𝑓 = p xy∈𝑓
 lam↦-↑directed' _ (lam↦-intro₂ p) _

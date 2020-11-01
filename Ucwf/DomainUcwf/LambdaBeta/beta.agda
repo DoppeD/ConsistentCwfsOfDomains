@@ -6,6 +6,7 @@ open import Appmap.Equivalence
 open import Appmap.Composition.Instance
 open import Appmap.Composition.Relation
 open import Base.Core
+open import Base.FinFun
 open import Base.Variables
 open import NbhSys.Definition
 open import Scwf.DomainScwf.Appmap.Identity.Instance
@@ -23,7 +24,6 @@ open import Ucwf.DomainUcwf.UniType.Definition
 open import Ucwf.DomainUcwf.UniType.Instance
 open import Ucwf.DomainUcwf.UniType.PrePost
 open import Ucwf.DomainUcwf.UniType.Relation
-open import Ucwf.DomainUcwf.UniType.SizedFinFun
 
 open import Agda.Builtin.Nat
 
@@ -61,7 +61,7 @@ private
 
 β-lemma₂' : ∀ 𝑥 x′ y′ →
             [ 𝑢 ] ⟪ x′ ,, 𝑥 ⟫ ↦ y′ →
-            ∀ {x y} → (x , y) ∈ₛ ((x′ , y′) ∷ ∅) →
+            ∀ {x y} → (x , y) ∈ ((x′ , y′) ∷ ∅) →
             [ 𝑢 ] ⟪ x ,, 𝑥 ⟫ ↦ y
 β-lemma₂' _ _ _ 𝑢x′𝑥↦y′ here = 𝑢x′𝑥↦y′
 

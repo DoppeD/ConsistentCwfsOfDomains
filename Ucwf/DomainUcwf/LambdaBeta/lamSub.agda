@@ -5,6 +5,8 @@ module Ucwf.DomainUcwf.LambdaBeta.lamSub where
 open import Appmap.Equivalence
 open import Appmap.Composition.Instance
 open import Appmap.Composition.Relation
+open import Base.Core
+open import Base.FinFun
 open import Base.Variables
 open import NbhSys.Definition
 open import NbhSys.Lemmata
@@ -20,7 +22,6 @@ open import Ucwf.DomainUcwf.LambdaBeta.lam.Instance
 open import Ucwf.DomainUcwf.LambdaBeta.lam.Relation
 open import Ucwf.DomainUcwf.UniType.Definition
 open import Ucwf.DomainUcwf.UniType.Instance
-open import Ucwf.DomainUcwf.UniType.SizedFinFun
 
 open import Agda.Builtin.Nat
 
@@ -36,7 +37,7 @@ private
     𝑡 : uTerm (suc m)
 
 lamSubLemma₁' : ∀ {𝑥 𝑓} → [ lam 𝑡 ∘ γ ] 𝑥 ↦ (λᵤ 𝑓) →
-                ∀ {x y} → (x , y) ∈ₛ 𝑓 →
+                ∀ {x y} → (x , y) ∈ 𝑓 →
                 [ 𝑡 ∘ ⟨ γ ∘ p , q ⟩ ] ⟪ x ,, 𝑥 ⟫ ↦ y
 lamSubLemma₁' (∘↦-intro γ𝑥↦𝑦 (lam↦-intro₂ p)) xy∈𝑓
   = ∘↦-intro γ∘pq↦ (p xy∈𝑓)
@@ -59,14 +60,14 @@ record P-Struct (γ : uSub n m)
   field
     𝑦 : uValuation m
     γ𝑥↦𝑦 : [ γ ] 𝑥 ↦ 𝑦
-    λ𝑡𝑦 : ∀ {x y} → (x , y) ∈ₛ 𝑓 → [ 𝑡 ] ⟪ x ,, 𝑦 ⟫ ↦ y
+    λ𝑡𝑦 : ∀ {x y} → (x , y) ∈ 𝑓 → [ 𝑡 ] ⟪ x ,, 𝑦 ⟫ ↦ y
 
 getP-Struct' : ∀ 𝑥 x y 𝑦 𝑧 𝑓 →
                [ 𝑡 ∘ ⟨ γ ∘ p , q ⟩ ] 𝑥 lam↦ (λᵤ ((x , y) ∷ 𝑓)) →
                [ 𝑡 ] ⟪ x ,, 𝑦 ⟫ ↦ y →
-               (∀ {x′ y′} → (x′ , y′) ∈ₛ 𝑓 →
+               (∀ {x′ y′} → (x′ , y′) ∈ 𝑓 →
                [ 𝑡 ] ⟪ x′ ,, 𝑧 ⟫ ↦ y′) →
-               ∀ {x′ y′} → (x′ , y′) ∈ₛ ((x , y) ∷ 𝑓) →
+               ∀ {x′ y′} → (x′ , y′) ∈ ((x , y) ∷ 𝑓) →
                [ 𝑡 ] ⟪ x′ ,, 𝑦 ⊔ᵥ 𝑧 [ valConAll ] ⟫ ↦ y′
 getP-Struct' {m} {𝑡 = 𝑡} 𝑥 x y 𝑦 𝑧 𝑓 _ 𝑡x𝑦↦y _ here
   = Appmap.↦-mono 𝑡 x𝑦⊑x⊔ 𝑡x𝑦↦y

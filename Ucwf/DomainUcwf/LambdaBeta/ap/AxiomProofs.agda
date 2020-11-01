@@ -6,6 +6,8 @@ open import Base.Variables
 module Ucwf.DomainUcwf.LambdaBeta.ap.AxiomProofs
   {𝑡 𝑢 : uTerm n} where
 
+open import Base.Core
+open import Base.FinFun
 open import NbhSys.Definition
 open import Ucwf.DomainUcwf.Appmap.Valuation
 open import Ucwf.DomainUcwf.LambdaBeta.ap.Relation
@@ -14,7 +16,6 @@ open import Ucwf.DomainUcwf.UniType.Instance
 open import Ucwf.DomainUcwf.UniType.PrePost
 open import Ucwf.DomainUcwf.UniType.Relation
 open import Ucwf.DomainUcwf.UniType.Transitivity
-open import Ucwf.DomainUcwf.UniType.SizedFinFun
 
 private
   UT : NbhSys
@@ -35,7 +36,7 @@ ap↦-↓closed' : ∀ {𝑓′ x y 𝑓} →
                [ UT ] (λᵤ 𝑓) ⊑ y →
                [ UT ] λᵤ ((x , y) ∷ ∅) ⊑ λᵤ 𝑓′ →
                ∀ x′ y′ →
-               (x′ , y′) ∈ₛ ((x , λᵤ 𝑓) ∷ ∅) →
+               (x′ , y′) ∈ ((x , λᵤ 𝑓) ∷ ∅) →
                ⊑ᵤ-proof 𝑓′ x′ y′
 ap↦-↓closed' {x = x} {y} 𝑓⊑y (⊑ᵤ-intro₂ _ _ p) _ _ here
   = record { sub = sub
@@ -61,15 +62,15 @@ ap↦-↓closed {y = λᵤ 𝑓} 𝑓⊑y
 ap↦-↑directed' : ∀ {𝑓 𝑓′ x x′ y y′} →
                  λᵤ ((x , y) ∷ ∅) ⊑ᵤ (λᵤ 𝑓) →
                  λᵤ ((x′ , y′) ∷ ∅) ⊑ᵤ (λᵤ 𝑓′) → ∀ x″ y″ →
-                 (x″ , y″) ∈ₛ
+                 (x″ , y″) ∈
                  (((x ⊔ᵤ x′ [ con-all ]) , (y ⊔ᵤ y′ [ con-all ])) ∷ ∅) →
-                 ⊑ᵤ-proof (𝑓 ∪ₛ 𝑓′) x″ y″
+                 ⊑ᵤ-proof (𝑓 ∪ 𝑓′) x″ y″
 ap↦-↑directed' {x = x} {x′} {y} {y′} (⊑ᵤ-intro₂ _ _ p₁)
   (⊑ᵤ-intro₂ _ _ p₂) x″ y″ here
-  = record { sub = p₁sub ∪ₛ p₂sub
+  = record { sub = p₁sub ∪ p₂sub
            ; y⊑ᵤpost = Ω-post {𝑓 = p₁sub} p₁y⊑post p₂y⊑post
            ; pre⊑ᵤx = Ω-pre {𝑓 = p₁sub} p₁pre⊑x p₂pre⊑x
-           ; sub⊆𝑓′ = ∪ₛ-lemma₅ p₁sub⊆𝑓 p₂sub⊆𝑓
+           ; sub⊆𝑓′ = ∪-lemma₅ p₁sub⊆𝑓 p₂sub⊆𝑓
            }
   where p₁xyh    = p₁ x y here
         p₂x′y′h  = p₂ x′ y′ here
@@ -96,6 +97,6 @@ ap↦-↑directed {y = λᵤ 𝑓} {λᵤ 𝑓′}
                     con-all
           𝑢𝑥↦x⊔x′ = Appmap.↦-↑directed 𝑢 𝑢𝑥↦x 𝑢𝑥↦x′
                     con-all
-          𝑓∪𝑓′ = λᵤ (𝑓 ∪ₛ 𝑓′)
+          𝑓∪𝑓′ = λᵤ (𝑓 ∪ 𝑓′)
           big⊑ = ⊑ᵤ-intro₂ (([ UT ] x ⊔ x′ [ con-all ] , 𝑓∪𝑓′) ∷ ∅)
-                 (𝑔 ∪ₛ 𝑔′) (ap↦-↑directed' x𝑓⊑𝑔 x′𝑓′⊑𝑔′)
+                 (𝑔 ∪ 𝑔′) (ap↦-↑directed' x𝑓⊑𝑔 x′𝑓′⊑𝑔′)

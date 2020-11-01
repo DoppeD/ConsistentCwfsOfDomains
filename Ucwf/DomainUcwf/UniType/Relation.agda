@@ -2,10 +2,10 @@
 
 module Ucwf.DomainUcwf.UniType.Relation where
 
-open import Base.Core hiding (_,_)
+open import Base.Core
+open import Base.FinFun
 open import Ucwf.DomainUcwf.UniType.Definition
 open import Ucwf.DomainUcwf.UniType.PrePost
-open import Ucwf.DomainUcwf.UniType.SizedFinFun
 
 open import Agda.Builtin.Size
 
@@ -23,13 +23,13 @@ record ⊑ᵤ-proof 𝑓 x y where
     sub : FinFunₛ
     y⊑ᵤpost : y ⊑ᵤ (post sub)
     pre⊑ᵤx : (pre sub) ⊑ᵤ x
-    sub⊆𝑓′ : sub ⊆ₛ 𝑓
+    sub⊆𝑓′ : sub ⊆ 𝑓
 
 data _⊑ᵤ_ where
   ⊑ᵤ-intro₁ : ∀ {i j} → {x : UniNbh {j}} →
               (⊥ᵤ {i}) ⊑ᵤ x
   ⊑ᵤ-intro₂ : ∀ {i j} → (𝑓 : FinFunₛ {i}) →
               (𝑓′ : FinFunₛ {j}) →
-              ((x y : UniNbh {i}) → (x , y) ∈ₛ 𝑓 →
+              ((x y : UniNbh {i}) → (x , y) ∈ 𝑓 →
               ⊑ᵤ-proof {i} {j} 𝑓′ x y) →
               _⊑ᵤ_ {↑ i} {↑ j} (λᵤ 𝑓) (λᵤ 𝑓′)

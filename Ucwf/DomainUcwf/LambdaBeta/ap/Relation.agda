@@ -2,11 +2,12 @@
 
 module Ucwf.DomainUcwf.LambdaBeta.ap.Relation where
 
+open import Base.Core
+open import Base.FinFun
 open import Ucwf.DomainUcwf.Appmap.Definition
 open import Ucwf.DomainUcwf.Appmap.Valuation
 open import Ucwf.DomainUcwf.UniType.Definition
 open import Ucwf.DomainUcwf.UniType.Relation
-open import Ucwf.DomainUcwf.UniType.SizedFinFun
 
 open import Agda.Builtin.Nat
 
