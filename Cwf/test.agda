@@ -1,20 +1,7 @@
-module test where
+module Cwf.test where
 
-open import Agda.Builtin.Sigma
-
-data _×_ (A B : Set) : Set where
-  _,_ : A → B → A × B
-
-data FinFun (A B : Set) : Set where
-  ∅ : FinFun A B
-  _∷_ : A × B → FinFun A B → FinFun A B
-
-data _∈_ {A B : Set} : A × B → FinFun A B → Set where
-  here : ∀ {x 𝑓} → x ∈ 𝑓
-
-_∪_ : {A B : Set} → FinFun A B → FinFun A B → FinFun A B
-∅ ∪ 𝑔 = 𝑔
-(x ∷ 𝑓) ∪ 𝑔 = x ∷ (𝑓 ∪ 𝑔)
+open import Base.Core using (_,_)
+open import Base.FinFun
 
 data _∨_ (A B : Set) : Set where
   inl : A → A ∨ B
@@ -49,7 +36,7 @@ data ConFinFun where
          ConFinFun ((x , y) ∷ ((x′ , y′) ∷ 𝑓))
 
 data ¬Con where
-  ¬con-λ : ∀ {𝑓} → ¬ConFinFun 𝑓 → ¬Con (λᵤ 𝑓) (λᵤ 𝑓)
+  ¬con-λ : ∀ {𝑓 𝑔} → ¬ConFinFun (𝑓 ∪ 𝑔) → ¬Con (λᵤ 𝑓) (λᵤ 𝑔)
   ¬con-sym : ∀ {x y} → ¬Con x y → ¬Con y x
   ¬con-0λ : ∀ {𝑓} → ¬Con 0ₙ (λᵤ 𝑓)
   ¬con-0ℕ : ¬Con 0ₙ ℕ
@@ -69,6 +56,8 @@ data ¬ConFinFun where
 -- Maybe have Con as a predicate to Bool and ConFinFun as a data type, and remove ¬Con?
 
 aff : ∀ {x y} → Con x y ∨ ¬Con x y
+laff : ∀ {𝑓} → ConFinFun 𝑓 ∨ ¬ConFinFun 𝑓
+
 aff {⊥} {y} = inl con-⊥₁
 aff {0ₙ} {⊥} = inl con-⊥₂
 aff {0ₙ} {0ₙ} = inl con-refl
@@ -81,7 +70,11 @@ aff {ℕ} {λᵤ 𝑓} = inr ¬con-ℕλ
 aff {λᵤ 𝑓} {⊥} = inl con-⊥₂
 aff {λᵤ 𝑓} {0ₙ} = inr (¬con-sym ¬con-0λ)
 aff {λᵤ 𝑓} {ℕ} = inr (¬con-sym ¬con-ℕλ)
-aff {λᵤ 𝑓} {λᵤ 𝑔} = {!!}
+aff {λᵤ 𝑓} {λᵤ 𝑔} with (laff {𝑓 ∪ 𝑔})
+... | inl cff∪ = inl (con-λ cff∪)
+... | inr ¬cff∪ = inr (¬con-λ ¬cff∪)
+
+laff = {!!}
 
 data absurd : Set where
 
