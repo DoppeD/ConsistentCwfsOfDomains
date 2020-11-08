@@ -149,12 +149,12 @@ cff∨¬cff {𝑓 = ((x , y) ∷ ((x′ , y′) ∷ 𝑓))}
   | inr ¬cffxy𝑓 | _
   = inr (conLemma₁ (⊆-lemma₄ here (⊆-lemma₂ ⊆-lemma₃)) ¬cffxy𝑓)
 
+-- These show that two neighborhoods can't both be consistent and not consistent.
 ¬con∧¬con : ∀ {i} → {x y : Nbh i} → Con x y →
             ¬Con x y → absurd
 ¬cff∧¬cff : ∀ {i} → {𝑓 : FinFun (Nbh i) (Nbh i)} →
             ConFinFun 𝑓 → ¬CffProof i 𝑓 → absurd
 
--- These show that two neighborhoods can't both be consistent and not consistent.
 ¬con∧¬con {x = ⊥} conxy (¬con-sym (¬con-sym ¬conxy))
   = ¬con∧¬con conxy ¬conxy
 ¬con∧¬con {x = 0ₙ} conxy (¬con-sym (¬con-sym ¬conxy))
