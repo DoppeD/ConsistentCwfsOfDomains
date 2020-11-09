@@ -31,10 +31,16 @@ tail (_ :: xs) = xs
 data _⊠_ (A B : Set) : Set where
   _,_ : A → B → A ⊠ B
 
+-- Logical and.
+data _∧_ (A B : Set) : Set where
+  ∧-intro : A → B → A ∧ B
+
 -- Logical or.
 data _∨_ (A B : Set) : Set where
   inl : A → A ∨ B
   inr : B → A ∨ B
+
+data absurd : Set where
 
 -- Types are neighborhood systems.
 Ty : Set₁

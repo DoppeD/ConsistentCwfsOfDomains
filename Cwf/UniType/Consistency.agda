@@ -1,30 +1,16 @@
-module Cwf.UniType where
+module Cwf.UniType.Consistency where
 
-open import Base.Core using (_,_)
+open import Base.Core
 open import Base.FinFun
+open import Cwf.UniType.Definition
 
 open import Agda.Builtin.Bool
 open import Agda.Builtin.Equality
 open import Agda.Builtin.Size
 
-data _∨_ (A B : Set) : Set where
-  inl : A → A ∨ B
-  inr : B → A ∨ B
-
-data _∧_ (A B : Set) : Set where
-  ∧-intro : A → B → A ∧ B
-
-data absurd : Set where
-
-data Nbh : Size → Set where
-  ⊥ : ∀ {i} → Nbh i
-  0ₙ : ∀ {i} → Nbh i
-  sᵤ : ∀ {i} → Nbh i → Nbh i
-  ℕ : ∀ {i} → Nbh i
-  𝒰 : ∀ {i} → Nbh i
-  λᵤ : ∀ {i} → FinFun (Nbh i) (Nbh i) → Nbh (↑ i)
-  Π : ∀ {i} → Nbh i → FinFun (Nbh i) (Nbh i) → Nbh (↑ i)
-
+-- Not ideal, but better than having lots of corresponding
+-- constructors of ¬Con. Now we can instead have the constructor
+-- ¬con-br.
 sameBranch : ∀ {i} → Nbh i → Nbh i → Bool
 sameBranch ⊥ y = true
 sameBranch 0ₙ ⊥ = true
@@ -117,3 +103,19 @@ record ¬CffProof i 𝑓 where
 
 data ¬ConFinFun where
   ¬cff : ∀ {i 𝑓} → ¬CffProof i 𝑓 → ¬ConFinFun 𝑓
+
+subsetIsCon' : ∀ {i} → {𝑓 𝑓′ : FinFun (Nbh i) (Nbh i)} → 𝑓 ⊆ 𝑓′ →
+               ConFinFun 𝑓′ → ∀ {x y x′ y′ : Nbh i} →
+               (x , y) ∈ 𝑓 → (x′ , y′) ∈ 𝑓 → ¬Con x x′ ∨ Con y y′
+subsetIsCon' 𝑓⊆𝑓′ (cff p) xy∈𝑓 x′y′∈𝑓
+  = p (𝑓⊆𝑓′ xy∈𝑓) (𝑓⊆𝑓′ x′y′∈𝑓)
+
+subsetIsCon : ∀ {i} → {𝑓 𝑓′ : FinFun (Nbh i) (Nbh i)} → 𝑓 ⊆ 𝑓′ →
+              ConFinFun 𝑓′ → ConFinFun 𝑓
+subsetIsCon 𝑓⊆𝑓′ cff𝑓′ = cff (subsetIsCon' 𝑓⊆𝑓′ cff𝑓′)
+
+getCff : ∀ {i} → {𝑓 : FinFun (Nbh i) (Nbh i)} →
+         {x y x′ y′ : Nbh i} → ConFinFun 𝑓 →
+         (x , y) ∈ 𝑓 → (x′ , y′) ∈ 𝑓 →
+         ¬Con x x′ ∨ Con y y′
+getCff (cff p) = p
