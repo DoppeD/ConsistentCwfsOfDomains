@@ -39,7 +39,11 @@ conSym : ∀ {i} → {x y : Nbh i} → Con x y → Con y x
 conSym con-⊥₁ = con-⊥₂
 conSym con-⊥₂ = con-⊥₁
 conSym con-refl-0 = con-refl-0
+conSym (con-s consxsy) = con-s (conSym consxsy)
 conSym con-refl-ℕ = con-refl-ℕ
+conSym con-refl-𝒰 = con-refl-𝒰
+conSym (con-Π {𝑓 = 𝑓} conxy cff𝑓∪𝑔)
+  = con-Π (conSym conxy) (cffSym {𝑓 = 𝑓} cff𝑓∪𝑔)
 conSym (con-λ {𝑓 = 𝑓} cff∪) = con-λ (cffSym {𝑓 = 𝑓} cff∪)
 
 cff∨¬cff'' : ∀ {i} → {x y x′ y′ x″ y″ : Nbh i} →
@@ -85,21 +89,48 @@ con∨¬con : ∀ {i} → {x y : Nbh i} →
 cff∨¬cff : ∀ {i} → {𝑓 : FinFun (Nbh i) (Nbh i)} →
            ConFinFun 𝑓 ∨ ¬ConFinFun 𝑓
 
-con∨¬con {x = ⊥} {y} = inl con-⊥₁
+con∨¬con {x = ⊥} {_} = inl con-⊥₁
 con∨¬con {x = 0ₙ} {⊥} = inl con-⊥₂
 con∨¬con {x = 0ₙ} {0ₙ} = inl con-refl-0
+con∨¬con {x = 0ₙ} {sᵤ _} = inr (¬con-sym ¬con-s0)
 con∨¬con {x = 0ₙ} {ℕ} = inr ¬con-0ℕ
-con∨¬con {x = 0ₙ} {λᵤ 𝑓} = inr ¬con-0λ
+con∨¬con {x = 0ₙ} {𝒰} = inr (¬con-sym ¬con-𝒰0)
+con∨¬con {x = 0ₙ} {λᵤ _} = inr ¬con-0λ
+con∨¬con {x = 0ₙ} {Π _ _} = inr (¬con-sym ¬con-Π0)
+con∨¬con {x = sᵤ _} {⊥} = inl con-⊥₂
+con∨¬con {x = sᵤ _} {0ₙ} = inr ¬con-s0
+con∨¬con {x = sᵤ x} {sᵤ y}
+  with (con∨¬con {x = x} {y})
+... | inl conxy = inl (con-s conxy)
+... | inr ¬conxy = inr (¬con-s ¬conxy)
+con∨¬con {x = sᵤ _} {ℕ} = inr ¬con-sℕ
+con∨¬con {x = sᵤ _} {𝒰} = inr ¬con-s𝒰
+con∨¬con {x = sᵤ _} {λᵤ _} = inr ¬con-sλ
+con∨¬con {x = sᵤ _} {Π _ 𝑔} = inr (¬con-sym (¬con-Πs {𝑔 = 𝑔}))
 con∨¬con {x = ℕ} {⊥} = inl con-⊥₂
 con∨¬con {x = ℕ} {0ₙ} = inr (¬con-sym ¬con-0ℕ)
+con∨¬con {x = ℕ} {sᵤ _} = inr (¬con-sym ¬con-sℕ)
 con∨¬con {x = ℕ} {ℕ} = inl con-refl-ℕ
-con∨¬con {x = ℕ} {λᵤ 𝑓} = inr ¬con-ℕλ
-con∨¬con {x = λᵤ 𝑓} {⊥} = inl con-⊥₂
-con∨¬con {x = λᵤ 𝑓} {0ₙ} = inr (¬con-sym ¬con-0λ)
-con∨¬con {x = λᵤ 𝑓} {ℕ} = inr (¬con-sym ¬con-ℕλ)
+con∨¬con {x = ℕ} {𝒰} = inr (¬con-sym ¬con-𝒰ℕ)
+con∨¬con {x = ℕ} {λᵤ _} = inr ¬con-ℕλ
+con∨¬con {x = ℕ} {Π _ _} = inr (¬con-sym ¬con-Πℕ)
+con∨¬con {x = 𝒰} {⊥} = inl con-⊥₂
+con∨¬con {x = 𝒰} {0ₙ} = inr ¬con-𝒰0
+con∨¬con {x = 𝒰} {sᵤ _} = inr (¬con-sym ¬con-s𝒰)
+con∨¬con {x = 𝒰} {ℕ} = inr ¬con-𝒰ℕ
+con∨¬con {x = 𝒰} {λᵤ _} = inr ¬con-𝒰λ
+con∨¬con {x = 𝒰} {𝒰} = inl con-refl-𝒰
+con∨¬con {x = 𝒰} {Π _ _} = inr (¬con-sym ¬con-Π𝒰)
+con∨¬con {x = λᵤ _} {⊥} = inl con-⊥₂
+con∨¬con {x = λᵤ _} {0ₙ} = inr (¬con-sym ¬con-0λ)
+con∨¬con {x = λᵤ _} {sᵤ _} = inr (¬con-sym ¬con-sλ)
+con∨¬con {x = λᵤ _} {ℕ} = inr (¬con-sym ¬con-ℕλ)
+con∨¬con {x = λᵤ _} {𝒰} = inr (¬con-sym ¬con-𝒰λ)
 con∨¬con {x = λᵤ 𝑓} {λᵤ 𝑔} with (cff∨¬cff {𝑓 = 𝑓 ∪ 𝑔})
 ... | inl cff∪ = inl (con-λ cff∪)
 ... | inr ¬cff∪ = inr (¬con-λ ¬cff∪)
+con∨¬con {x = λᵤ 𝑓} {Π _ _} = inr (¬con-sym ¬con-Πλ)
+con∨¬con {x = Π x 𝑓} {y = Π y 𝑔} = {!!}
 
 cff∨¬cff {𝑓 = ∅} = inl (cff xy∈∅-abs)
 cff∨¬cff {𝑓 = ((x , y) ∷ ∅)}
@@ -159,7 +190,15 @@ cff∨¬cff {𝑓 = ((x , y) ∷ ((x′ , y′) ∷ 𝑓))}
   = ¬con∧¬con conxy ¬conxy
 ¬con∧¬con {x = 0ₙ} conxy (¬con-sym (¬con-sym ¬conxy))
   = ¬con∧¬con conxy ¬conxy
+¬con∧¬con {x = sᵤ x} conxy (¬con-sym (¬con-sym ¬conxy))
+  = ¬con∧¬con conxy ¬conxy
+¬con∧¬con {x = sᵤ x} (con-s conxy) (¬con-sym (¬con-s ¬conxy))
+  = ¬con∧¬con conxy (¬con-sym ¬conxy)
+¬con∧¬con {x = sᵤ x} (con-s conxy) (¬con-s ¬conxy)
+  = ¬con∧¬con conxy ¬conxy
 ¬con∧¬con {x = ℕ} conxy (¬con-sym (¬con-sym ¬conxy))
+  = ¬con∧¬con conxy ¬conxy
+¬con∧¬con {x = 𝒰} conxy (¬con-sym (¬con-sym ¬conxy))
   = ¬con∧¬con conxy ¬conxy
 ¬con∧¬con {x = λᵤ 𝑓} {y = ⊥}  conxy (¬con-sym (¬con-sym ¬conxy))
   = ¬con∧¬con conxy ¬conxy
