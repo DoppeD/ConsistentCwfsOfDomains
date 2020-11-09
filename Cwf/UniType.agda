@@ -3,6 +3,8 @@ module Cwf.UniType where
 open import Base.Core using (_,_)
 open import Base.FinFun
 
+open import Agda.Builtin.Bool
+open import Agda.Builtin.Equality
 open import Agda.Builtin.Size
 
 data _∨_ (A B : Set) : Set where
@@ -21,7 +23,52 @@ data Nbh : Size → Set where
   ℕ : ∀ {i} → Nbh i
   𝒰 : ∀ {i} → Nbh i
   λᵤ : ∀ {i} → FinFun (Nbh i) (Nbh i) → Nbh (↑ i)
-  Π : ∀ {i} → Nbh i → FinFun (Nbh i) (Nbh i) → Nbh i
+  Π : ∀ {i} → Nbh i → FinFun (Nbh i) (Nbh i) → Nbh (↑ i)
+
+sameBranch : ∀ {i} → Nbh i → Nbh i → Bool
+sameBranch ⊥ y = true
+sameBranch 0ₙ ⊥ = true
+sameBranch 0ₙ 0ₙ = true
+sameBranch 0ₙ (sᵤ _) = false
+sameBranch 0ₙ ℕ = false
+sameBranch 0ₙ 𝒰 = false
+sameBranch 0ₙ (λᵤ _) = false
+sameBranch 0ₙ (Π _ _) = false
+sameBranch (sᵤ _) ⊥ = true
+sameBranch (sᵤ _) 0ₙ = false
+sameBranch (sᵤ _) (sᵤ _) = true
+sameBranch (sᵤ _) ℕ = false
+sameBranch (sᵤ _) 𝒰 = false
+sameBranch (sᵤ _) (λᵤ _) = false
+sameBranch (sᵤ _) (Π _ _) = false
+sameBranch ℕ ⊥ = true
+sameBranch ℕ 0ₙ = false
+sameBranch ℕ (sᵤ _) = false
+sameBranch ℕ ℕ = true
+sameBranch ℕ 𝒰 = false
+sameBranch ℕ (λᵤ _) = false
+sameBranch ℕ (Π _ _) = false
+sameBranch 𝒰 ⊥ = true
+sameBranch 𝒰 0ₙ = false
+sameBranch 𝒰 (sᵤ _) = false
+sameBranch 𝒰 ℕ = false
+sameBranch 𝒰 𝒰 = true
+sameBranch 𝒰 (λᵤ _) = false
+sameBranch 𝒰 (Π _ _) = false
+sameBranch (λᵤ _) ⊥ = true
+sameBranch (λᵤ _) 0ₙ = false
+sameBranch (λᵤ _) (sᵤ _) = false
+sameBranch (λᵤ _) ℕ = false
+sameBranch (λᵤ _) 𝒰 = false
+sameBranch (λᵤ _) (λᵤ _) = true
+sameBranch (λᵤ _) (Π _ _) = false
+sameBranch (Π _ _) ⊥ = true
+sameBranch (Π _ _) 0ₙ = false
+sameBranch (Π _ _) (sᵤ _) = false
+sameBranch (Π _ _) ℕ = false
+sameBranch (Π _ _) 𝒰 = false
+sameBranch (Π _ _) (λᵤ _) = false
+sameBranch (Π _ _) (Π _ _) = true
 
 data Con : ∀ {i} → Nbh i → Nbh i → Set
 data ConFinFun : ∀ {i} → FinFun (Nbh i) (Nbh i) → Set
@@ -48,39 +95,16 @@ data ConFinFun where
         ({x y x′ y′ : Nbh i} → (x , y) ∈ 𝑓 → (x′ , y′) ∈ 𝑓 →
         ¬Con x x′ ∨ Con y y′) → ConFinFun 𝑓
 
--- Perhaps we should introduce a function sameBranch : Nbh → Nbh → Bool
--- such that sameBranch x y ≡ true iff x and y start with the same constructor
--- or at least one is ⊥? That way we can remove most of the below constructors.
 data ¬Con where
-  ¬con-0ℕ : ∀ {i} → ¬Con (0ₙ {i}) ℕ
-  ¬con-0λ : ∀ {i} → {𝑓 : FinFun (Nbh i) (Nbh i)} → ¬Con 0ₙ (λᵤ 𝑓)
-  ¬con-ℕλ : ∀ {i} → {𝑓 : FinFun (Nbh i) (Nbh i)} → ¬Con ℕ (λᵤ 𝑓)
-  ¬con-𝒰0 : ∀ {i} → ¬Con (𝒰 {i}) 0ₙ
-  ¬con-𝒰ℕ : ∀ {i} → ¬Con (𝒰 {i}) ℕ
-  ¬con-𝒰λ : ∀ {i} → {𝑓 : FinFun (Nbh i) (Nbh i)} → ¬Con 𝒰 (λᵤ 𝑓)
-  ¬con-sym : ∀ {i} → {x y : Nbh i} → ¬Con x y → ¬Con y x
   ¬con-s : ∀ {i} → {x y : Nbh i} → ¬Con x y → ¬Con (sᵤ x) (sᵤ y)
-  ¬con-sℕ : ∀ {i} → {x : Nbh i} → ¬Con (sᵤ x) ℕ
-  ¬con-s𝒰 : ∀ {i} → {x : Nbh i} → ¬Con (sᵤ x) 𝒰
-  ¬con-s0 : ∀ {i} → {x : Nbh i} → ¬Con (sᵤ x) 0ₙ
-  ¬con-sλ : ∀ {i} → {x : Nbh (↑ i)} → {𝑓 : FinFun (Nbh i) (Nbh i)} →
-            ¬Con (sᵤ x) (λᵤ 𝑓)
   ¬con-λ : ∀ {i} → {𝑓 𝑔 : FinFun (Nbh i) (Nbh i)} →
            ¬ConFinFun (𝑓 ∪ 𝑔) → ¬Con (λᵤ 𝑓) (λᵤ 𝑔)
   ¬con-Π₁ : ∀ {i} → {x y : Nbh i} → {𝑓 𝑔 : FinFun (Nbh i) (Nbh i)} →
             ¬Con x y → ¬Con (Π x 𝑓) (Π y 𝑔)
   ¬con-Π₂ : ∀ {i} → {x y : Nbh i} → {𝑓 𝑔 : FinFun (Nbh i) (Nbh i)} →
             ¬ConFinFun (𝑓 ∪ 𝑔) → ¬Con (Π x 𝑓) (Π y 𝑔)
-  ¬con-Πℕ : ∀ {i} → {x : Nbh i} → {𝑓 : FinFun (Nbh i) (Nbh i)} →
-            ¬Con (Π x 𝑓) ℕ
-  ¬con-Π0 : ∀ {i} → {x : Nbh i} → {𝑓 : FinFun (Nbh i) (Nbh i)} →
-            ¬Con (Π x 𝑓) 0ₙ
-  ¬con-Π𝒰 : ∀ {i} → {x : Nbh i} → {𝑓 : FinFun (Nbh i) (Nbh i)} →
-            ¬Con (Π x 𝑓) 𝒰
-  ¬con-Πλ : ∀ {i} → {x : Nbh (↑ i)} → {𝑓 : FinFun (Nbh (↑ i)) (Nbh (↑ i))} →
-            {𝑔 : FinFun (Nbh i) (Nbh i)} → ¬Con (Π x 𝑓) (λᵤ 𝑔)
-  ¬con-Πs : ∀ {i} → {x y : Nbh i} → {𝑓 𝑔 : FinFun (Nbh i) (Nbh i)} →
-            ¬Con (Π x 𝑓) (sᵤ y)
+  ¬con-br : ∀ {i} → {x y : Nbh i} → sameBranch x y ≡ false →
+            ¬Con x y
 
 record ¬CffProof i 𝑓 where
   inductive
