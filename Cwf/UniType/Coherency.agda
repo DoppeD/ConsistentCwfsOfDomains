@@ -2,6 +2,7 @@ module Cwf.UniType.Coherency where
 
 open import Base.Core
 open import Base.FinFun
+open import Cwf.UniType.Consistency
 open import Cwf.UniType.Definition
 open import Cwf.UniType.Relation
 
