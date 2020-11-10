@@ -1,6 +1,7 @@
 module Cwf.UniType.Relation where
 
 open import Base.FinFun
+open import Cwf.UniType.Consistency
 open import Cwf.UniType.Definition
 
 -- TODO

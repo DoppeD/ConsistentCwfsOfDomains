@@ -1,8 +1,9 @@
-module Cwf.ConProperties where
+module Cwf.UniType.ConProperties where
 
-open import Base.Core using (_,_)
+open import Base.Core
 open import Base.FinFun
-open import Cwf.UniType
+open import Cwf.UniType.Consistency
+open import Cwf.UniType.Definition
 
 open import Agda.Builtin.Bool
 open import Agda.Builtin.Equality
@@ -271,11 +272,11 @@ cff∨¬cff {𝑓 = ((x , y) ∷ ((x′ , y′) ∷ 𝑓))}
 ¬con∧¬con' : ∀ {i} → {x : Nbh i} → ¬Con x ⊥ → absurd
 ¬con∧¬con' {x = ⊥} (¬con-br ())
 ¬con∧¬con' {x = 0ₙ} (¬con-br ())
-¬con∧¬con' {x = sᵤ x} (¬con-br ())
+¬con∧¬con' {x = sᵤ _} (¬con-br ())
 ¬con∧¬con' {x = ℕ} (¬con-br ())
 ¬con∧¬con' {x = 𝒰} (¬con-br ())
-¬con∧¬con' {x = λᵤ x} (¬con-br ())
-¬con∧¬con' {x = Π x x₁} (¬con-br ())
+¬con∧¬con' {x = λᵤ _} (¬con-br ())
+¬con∧¬con' {x = Π _ _} (¬con-br ())
 
 -- These show that two neighborhoods can't both be consistent and not consistent.
 ¬con∧¬con : ∀ {i} → {x y : Nbh i} → Con x y →
