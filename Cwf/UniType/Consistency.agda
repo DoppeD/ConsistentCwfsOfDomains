@@ -11,7 +11,7 @@ open import Agda.Builtin.Size
 -- Not ideal, but better than having lots of corresponding
 -- constructors of ¬Con. Now we can instead have the constructor
 -- ¬con-br.
-sameBranch : ∀ {i} → Nbh i → Nbh i → Bool
+sameBranch : ∀ {i} → Nbh {i} → Nbh {i} → Bool
 sameBranch ⊥ y = true
 sameBranch 0ₙ ⊥ = true
 sameBranch 0ₙ 0ₙ = true
@@ -56,46 +56,46 @@ sameBranch (Π _ _) 𝒰 = false
 sameBranch (Π _ _) (λᵤ _) = false
 sameBranch (Π _ _) (Π _ _) = true
 
-data Con : ∀ {i} → Nbh i → Nbh i → Set
-data ConFinFun : ∀ {i} → FinFun (Nbh i) (Nbh i) → Set
-data ¬Con : ∀ {i} → Nbh i → Nbh i → Set
-data ¬ConFinFun : ∀ {i} → FinFun (Nbh i) (Nbh i) → Set
+data Con : ∀ {i} → Nbh {i} → Nbh {i} → Set
+data ConFinFun : ∀ {i} → FinFun (Nbh {i}) (Nbh {i}) → Set
+data ¬Con : ∀ {i} → Nbh {i} → Nbh {i} → Set
+data ¬ConFinFun : ∀ {i} → FinFun (Nbh {i}) (Nbh {i}) → Set
 -- This is a record that proves that there exist pairs (x , y) ∈ 𝑓 and
 -- (x′ , y′) ∈ 𝑓 such that x and x′ are consistent but y and y′ are not.
-record ¬CffProof (i : Size) (𝑓 : FinFun (Nbh i) (Nbh i)) : Set
+record ¬CffProof (i : Size) (𝑓 : FinFun (Nbh {i}) (Nbh {i})) : Set
 
 data Con where
-  con-⊥₁ : ∀ {i} → {x : Nbh i} → Con ⊥ x
-  con-⊥₂ : ∀ {i} → {x : Nbh i} → Con x ⊥
+  con-⊥₁ : ∀ {i} → {x : Nbh {i}} → Con ⊥ x
+  con-⊥₂ : ∀ {i} → {x : Nbh {i}} → Con x ⊥
   con-refl-0 : ∀ {i} → Con (0ₙ {i}) 0ₙ
-  con-s : ∀ {i} → {x y : Nbh i} → Con x y → Con (sᵤ x) (sᵤ y)
+  con-s : ∀ {i} → {x y : Nbh {i}} → Con x y → Con (sᵤ x) (sᵤ y)
   con-refl-ℕ : ∀ {i} → Con (ℕ {i}) ℕ
   con-refl-𝒰 : ∀ {i} → Con (𝒰 {i}) 𝒰
-  con-λ : ∀ {i} → {𝑓 𝑔 : FinFun (Nbh i) (Nbh i)} → ConFinFun (𝑓 ∪ 𝑔) →
+  con-λ : ∀ {i} → {𝑓 𝑔 : FinFun (Nbh {i}) (Nbh {i})} → ConFinFun (𝑓 ∪ 𝑔) →
           Con (λᵤ 𝑓) (λᵤ 𝑔)
-  con-Π : ∀ {i} → {x y : Nbh i} → {𝑓 𝑔 : FinFun (Nbh i) (Nbh i)} →
+  con-Π : ∀ {i} → {x y : Nbh {i}} → {𝑓 𝑔 : FinFun (Nbh {i}) (Nbh {i})} →
           Con x y → ConFinFun (𝑓 ∪ 𝑔) → Con (Π x 𝑓) (Π y 𝑔)
 
 data ConFinFun where
-  cff : ∀ {i} → {𝑓 : FinFun (Nbh i) (Nbh i)} →
-        ({x y x′ y′ : Nbh i} → (x , y) ∈ 𝑓 → (x′ , y′) ∈ 𝑓 →
+  cff : ∀ {i} → {𝑓 : FinFun (Nbh {i}) (Nbh {i})} →
+        ({x y x′ y′ : Nbh {i}} → (x , y) ∈ 𝑓 → (x′ , y′) ∈ 𝑓 →
         ¬Con x x′ ∨ Con y y′) → ConFinFun 𝑓
 
 data ¬Con where
-  ¬con-s : ∀ {i} → {x y : Nbh i} → ¬Con x y → ¬Con (sᵤ x) (sᵤ y)
-  ¬con-λ : ∀ {i} → {𝑓 𝑔 : FinFun (Nbh i) (Nbh i)} →
+  ¬con-s : ∀ {i} → {x y : Nbh {i}} → ¬Con x y → ¬Con (sᵤ x) (sᵤ y)
+  ¬con-λ : ∀ {i} → {𝑓 𝑔 : FinFun (Nbh {i}) (Nbh {i})} →
            ¬ConFinFun (𝑓 ∪ 𝑔) → ¬Con (λᵤ 𝑓) (λᵤ 𝑔)
-  ¬con-Π₁ : ∀ {i} → {x y : Nbh i} → {𝑓 𝑔 : FinFun (Nbh i) (Nbh i)} →
+  ¬con-Π₁ : ∀ {i} → {x y : Nbh {i}} → {𝑓 𝑔 : FinFun (Nbh {i}) (Nbh {i})} →
             ¬Con x y → ¬Con (Π x 𝑓) (Π y 𝑔)
-  ¬con-Π₂ : ∀ {i} → {x y : Nbh i} → {𝑓 𝑔 : FinFun (Nbh i) (Nbh i)} →
+  ¬con-Π₂ : ∀ {i} → {x y : Nbh {i}} → {𝑓 𝑔 : FinFun (Nbh {i}) (Nbh {i})} →
             ¬ConFinFun (𝑓 ∪ 𝑔) → ¬Con (Π x 𝑓) (Π y 𝑔)
-  ¬con-br : ∀ {i} → {x y : Nbh i} → sameBranch x y ≡ false →
+  ¬con-br : ∀ {i} → {x y : Nbh {i}} → sameBranch x y ≡ false →
             ¬Con x y
 
 record ¬CffProof i 𝑓 where
   inductive
   field
-    x y x′ y′ : Nbh i
+    x y x′ y′ : Nbh {i}
     xy∈𝑓 : (x , y) ∈ 𝑓
     x′y′∈𝑓 : (x′ , y′) ∈ 𝑓
     conxx′ : Con x x′
@@ -104,18 +104,18 @@ record ¬CffProof i 𝑓 where
 data ¬ConFinFun where
   ¬cff : ∀ {i 𝑓} → ¬CffProof i 𝑓 → ¬ConFinFun 𝑓
 
-subsetIsCon' : ∀ {i} → {𝑓 𝑓′ : FinFun (Nbh i) (Nbh i)} → 𝑓 ⊆ 𝑓′ →
-               ConFinFun 𝑓′ → ∀ {x y x′ y′ : Nbh i} →
+subsetIsCon' : ∀ {i} → {𝑓 𝑓′ : FinFun (Nbh {i}) (Nbh {i})} → 𝑓 ⊆ 𝑓′ →
+               ConFinFun 𝑓′ → ∀ {x y x′ y′ : Nbh {i}} →
                (x , y) ∈ 𝑓 → (x′ , y′) ∈ 𝑓 → ¬Con x x′ ∨ Con y y′
 subsetIsCon' 𝑓⊆𝑓′ (cff p) xy∈𝑓 x′y′∈𝑓
   = p (𝑓⊆𝑓′ xy∈𝑓) (𝑓⊆𝑓′ x′y′∈𝑓)
 
-subsetIsCon : ∀ {i} → {𝑓 𝑓′ : FinFun (Nbh i) (Nbh i)} → 𝑓 ⊆ 𝑓′ →
+subsetIsCon : ∀ {i} → {𝑓 𝑓′ : FinFun (Nbh {i}) (Nbh {i})} → 𝑓 ⊆ 𝑓′ →
               ConFinFun 𝑓′ → ConFinFun 𝑓
 subsetIsCon 𝑓⊆𝑓′ cff𝑓′ = cff (subsetIsCon' 𝑓⊆𝑓′ cff𝑓′)
 
-getCff : ∀ {i} → {𝑓 : FinFun (Nbh i) (Nbh i)} →
-         {x y x′ y′ : Nbh i} → ConFinFun 𝑓 →
+getCff : ∀ {i} → {𝑓 : FinFun (Nbh {i}) (Nbh {i})} →
+         {x y x′ y′ : Nbh {i}} → ConFinFun 𝑓 →
          (x , y) ∈ 𝑓 → (x′ , y′) ∈ 𝑓 →
          ¬Con x x′ ∨ Con y y′
 getCff (cff p) = p

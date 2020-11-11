@@ -6,7 +6,7 @@ open import Cwf.UniType.Consistency
 open import Cwf.UniType.Definition
 open import Cwf.UniType.Relation
 
-coherency' : ∀ {i} → {𝑓 𝑔 ℎ : FinFun (Nbh i) (Nbh i)} →
+coherency' : ∀ {i} → {𝑓 𝑔 ℎ : FinFun (Nbh {i}) (Nbh {i})} →
            ConFinFun (𝑓 ∪ 𝑔) → ConFinFun (𝑓 ∪ ℎ) →
            ConFinFun (𝑔 ∪ ℎ) → ∀ {x y x′ y′} →
            (x , y) ∈ (𝑓 ∪ (𝑔 ∪ ℎ)) →
@@ -31,7 +31,7 @@ coherency' _ (cff p) _ _ _ | inr _ | inl x′y′∈𝑓 | inr xy∈ℎ
 coherency' {𝑔 = 𝑔} {ℎ} _ _ cff𝑔∪ℎ _ _ | inr xy∈𝑔∪ℎ | inr x′y′∈𝑔∪ℎ
   = getCff {𝑓 = 𝑔 ∪ ℎ} cff𝑔∪ℎ xy∈𝑔∪ℎ x′y′∈𝑔∪ℎ
 
-coherency : ∀ {i} → {x y z : Nbh i} → Con x y →
+coherency : ∀ {i} → {x y z : Nbh {i}} → Con x y →
           Con x z → (conyz : Con y z) →
           Con x (y ⊔ᵤ z [ conyz ])
 coherency con-⊥₁ _ conyz = con-⊥₁

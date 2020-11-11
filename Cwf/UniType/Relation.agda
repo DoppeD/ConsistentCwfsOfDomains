@@ -5,12 +5,15 @@ open import Cwf.UniType.Consistency
 open import Cwf.UniType.Definition
 
 -- TODO
-data _⊑ᵤ_ : ∀ {i} → Nbh i → Nbh i → Set where
-  ⊑ᵤ-bot : ∀ {i} → {x : Nbh i} → ⊥ ⊑ᵤ x
-  ⊑ᵤ-refl : ∀ {i} → {x : Nbh i} → x ⊑ᵤ x
-  ⊑ᵤ-s : ∀ {i} → {x y : Nbh i} → x ⊑ᵤ y → sᵤ x ⊑ᵤ sᵤ y
+data _⊑ᵤ_ : ∀ {i} → Nbh {i} → Nbh {i} → Set where
+  ⊑ᵤ-bot : ∀ {i} → {x : Nbh {i}} → ⊥ ⊑ᵤ x
+  ⊑ᵤ-ref : ∀ {i} → {x : Nbh {i}} → x ⊑ᵤ x
+  ⊑ᵤ-s : ∀ {i} → {x y : Nbh {i}} → x ⊑ᵤ y → sᵤ x ⊑ᵤ sᵤ y
+  ⊑ᵤ-Π : ∀ {i} → {x y : Nbh {i}} → {𝑓 𝑔 : FinFun (Nbh {i}) (Nbh {i})} →
+         {con𝑓 : ConFinFun 𝑓} → {con𝑔 : ConFinFun 𝑔} →
+         x ⊑ᵤ y → (λᵤ 𝑓) ⊑ᵤ (λᵤ 𝑔) → (Π x 𝑓) ⊑ᵤ (Π y 𝑔)
 
-_⊔ᵤ_[_] : ∀ {i} → (x y : Nbh i) → Con x y → Nbh i
+_⊔ᵤ_[_] : ∀ {i} → (x y : Nbh {i}) → Con x y → Nbh {i}
 ⊥ ⊔ᵤ y [ _ ] = y
 0ₙ ⊔ᵤ ⊥ [ _ ] = 0ₙ
 (sᵤ x) ⊔ᵤ ⊥ [ _ ] = sᵤ x
