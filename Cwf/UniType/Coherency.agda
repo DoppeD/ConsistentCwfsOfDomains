@@ -11,7 +11,7 @@ coherency' : ∀ {i} → {𝑓 𝑔 ℎ : FinFun (Nbh {i}) (Nbh {i})} →
            ConFinFun (𝑔 ∪ ℎ) → ∀ {x y x′ y′} →
            (x , y) ∈ (𝑓 ∪ (𝑔 ∪ ℎ)) →
            (x′ , y′) ∈ (𝑓 ∪ (𝑔 ∪ ℎ)) →
-           ¬Con x x′ ∨ Con y y′
+           Con x x′ → Con y y′
 coherency' {𝑓 = 𝑓} _ _ _ xy∈∪ x′y′∈∪
   with (∪-lemma₂ {𝑓 = 𝑓} xy∈∪) | ∪-lemma₂ {𝑓 = 𝑓} x′y′∈∪
 coherency' {𝑓 = 𝑓} cff𝑓∪𝑔 _ _ _ _ | inl xy∈𝑓 | inl x′y′∈𝑓
@@ -47,12 +47,12 @@ coherency con-refl-𝒰 con-⊥₂ _ = con-refl-𝒰
 coherency con-refl-𝒰 con-refl-𝒰 _ = con-refl-𝒰
 coherency (con-λ cff𝑓∪𝑔) con-⊥₂ _
   = con-λ cff𝑓∪𝑔
-coherency {x = λᵤ 𝑓}
+coherency {x = λᵤ 𝑓 _}
   (con-λ cff𝑓∪𝑔) (con-λ cff𝑓∪ℎ) (con-λ cff𝑔∪ℎ)
   = con-λ (cff (coherency' {𝑓 = 𝑓} cff𝑓∪𝑔 cff𝑓∪ℎ cff𝑔∪ℎ))
 coherency (con-Π conxy cff𝑓∪𝑔) _ con-⊥₂
   = con-Π conxy cff𝑓∪𝑔
-coherency {x = Π _ 𝑓}
+coherency {x = Π _ 𝑓 _}
   (con-Π conxy cff𝑓∪𝑔) (con-Π conxz cff𝑓∪ℎ) (con-Π conyz cff𝑔∪ℎ)
   = con-Π conxyz cff𝑓∪𝑔∪ℎ
   where conxyz = coherency conxy conxz conyz
