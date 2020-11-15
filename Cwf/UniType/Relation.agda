@@ -2,7 +2,6 @@ module Cwf.UniType.Relation where
 
 open import Base.Core
 open import Base.FinFun
-open import Cwf.UniType.Consistency
 open import Cwf.UniType.Definition
 open import Cwf.UniType.PrePost
 
@@ -30,7 +29,7 @@ data _⊑ᵤ_ where
   ⊑ᵤ-refl-𝒰 : ∀ {i} → 𝒰 {i} ⊑ᵤ 𝒰
   ⊑ᵤ-s : ∀ {i} → {x y : Nbh {i}} → x ⊑ᵤ y → sᵤ x ⊑ᵤ sᵤ y
   ⊑ᵤ-λ : ∀ {i} → {𝑓 𝑔 : FinFun (Nbh {i}) (Nbh {i})} → ∀ {con𝑓 con𝑔} →
-         (∀ {x y} → (x , y) ∈ 𝑓 → λ-proof 𝑓 con𝑓 x y) →
+         (∀ {x y} → (x , y) ∈ 𝑓 → λ-proof {i} 𝑓 con𝑓 x y) →
          (λᵤ 𝑓 con𝑓) ⊑ᵤ (λᵤ 𝑔 con𝑔)
   ⊑ᵤ-Π : ∀ {i} → {x y : Nbh {i}} → {𝑓 𝑔 : FinFun (Nbh {i}) (Nbh {i})} →
          ∀ {con𝑓 con𝑔} → x ⊑ᵤ y → (λᵤ 𝑓 con𝑓) ⊑ᵤ (λᵤ 𝑔 con𝑔) →

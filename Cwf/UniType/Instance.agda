@@ -1,6 +1,6 @@
 module Cwf.UniType.Instance where
 
-open import Cwf.UniType.Consistency
+open import Cwf.UniType.AxiomProofs
 open import Cwf.UniType.Definition
 open import Cwf.UniType.Relation
 open import NbhSys.Definition
@@ -12,9 +12,9 @@ NbhSys.Con UniType = Con
 NbhSys._⊔_[_] UniType = _⊔ᵤ_[_]
 NbhSys.⊥ UniType = ⊥
 NbhSys.Con-⊔ UniType = {!!}
-NbhSys.⊑-refl UniType = {!!}
+NbhSys.⊑-refl UniType = ⊑ᵤ-refl
 NbhSys.⊑-trans UniType = {!!}
-NbhSys.⊑-⊥ UniType = {!!}
-NbhSys.⊑-⊔ UniType = {!!}
-NbhSys.⊑-⊔-fst UniType = {!!}
-NbhSys.⊑-⊔-snd UniType = {!!}
+NbhSys.⊑-⊥ UniType = ⊑ᵤ-⊥
+NbhSys.⊑-⊔ UniType = ⊑ᵤ-⊔
+NbhSys.⊑-⊔-fst UniType = ⊑ᵤ-⊔-fst
+NbhSys.⊑-⊔-snd UniType = ⊑ᵤ-⊔-snd

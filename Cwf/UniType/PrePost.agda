@@ -3,7 +3,6 @@ module Cwf.UniType.PrePost where
 open import Base.Core
 open import Base.FinFun
 open import Cwf.UniType.Definition
-open import Cwf.UniType.Consistency
 
 data Preable : ∀ {i} → FinFun (Nbh {i}) (Nbh {i}) → Set
 pre : ∀ {i} → (𝑓 : FinFun (Nbh {i}) (Nbh {i})) → Preable 𝑓 → Nbh {i}

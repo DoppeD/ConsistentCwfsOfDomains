@@ -1,10 +1,12 @@
-module Cwf.UniType.Consistency where
+module Cwf.UniType.Lemmata where
 
 open import Base.Core
 open import Base.FinFun
 open import Cwf.UniType.Definition
+open import Cwf.UniType.Relation
 
 open import Agda.Builtin.Bool
+open import Agda.Builtin.Equality
 open import Agda.Builtin.Size
 
 getCff : ∀ {i} → {𝑓 : FinFun (Nbh {i}) (Nbh {i})} →

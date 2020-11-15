@@ -2,9 +2,19 @@ module Cwf.UniType.Coherency where
 
 open import Base.Core
 open import Base.FinFun
-open import Cwf.UniType.Consistency
 open import Cwf.UniType.Definition
+open import Cwf.UniType.Lemmata
 open import Cwf.UniType.Relation
+
+coherency'' : ∀ {i} → {x y : Nbh {i}} → ∀ {con⊥y} →
+              Con x y → Con x (⊥ ⊔ᵤ y [ con⊥y ])
+coherency'' {y = ⊥} conxy = conxy
+coherency'' {y = 0ₙ} conxy = conxy
+coherency'' {y = sᵤ y} conxy = conxy
+coherency'' {y = ℕ} conxy = conxy
+coherency'' {y = 𝒰} conxy = conxy
+coherency'' {y = λᵤ 𝑓 x} conxy = conxy
+coherency'' {y = Π y 𝑓 x} conxy = conxy
 
 coherency' : ∀ {i} → {𝑓 𝑔 ℎ : FinFun (Nbh {i}) (Nbh {i})} →
            ConFinFun (𝑓 ∪ 𝑔) → ConFinFun (𝑓 ∪ ℎ) →
@@ -35,7 +45,7 @@ coherency : ∀ {i} → {x y z : Nbh {i}} → Con x y →
           Con x z → (conyz : Con y z) →
           Con x (y ⊔ᵤ z [ conyz ])
 coherency con-⊥₁ _ conyz = con-⊥₁
-coherency con-⊥₂ conxz _ = conxz
+coherency con-⊥₂ conxz _ = coherency'' conxz
 coherency con-refl-0 con-⊥₂ _ = con-refl-0
 coherency con-refl-0 con-refl-0 _ = con-refl-0
 coherency (con-s conxy) con-⊥₂ _ = con-s conxy
