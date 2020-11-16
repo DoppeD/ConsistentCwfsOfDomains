@@ -7,27 +7,6 @@ open import Cwf.UniType.Lemmata
 open import Cwf.UniType.PrePost
 open import Cwf.UniType.Relation
 
-liftλ-proof : ∀ {i} → {𝑓 𝑓′ : FinFun (Nbh {i}) (Nbh {i})} →
-              ∀ {con𝑓 con𝑓′ x y} → 𝑓 ⊆ 𝑓′ →
-              λ-proof 𝑓 con𝑓 x y → λ-proof {i} 𝑓′ con𝑓′ x y
-liftλ-proof 𝑓⊆𝑓′
-  record
-      { sub = sub
-      ; sub⊆𝑓 = sub⊆𝑓
-      ; preablesub = preablesub
-      ; postablesub = postablesub
-      ; y⊑post = y⊑post
-      ; pre⊑x = pre⊑x
-      }
-  = record
-      { sub = sub
-      ; sub⊆𝑓 = ⊆-trans sub⊆𝑓 𝑓⊆𝑓′
-      ; preablesub = preablesub
-      ; postablesub = postablesub
-      ; y⊑post = y⊑post
-      ; pre⊑x = pre⊑x
-      }
-
 ⊑ᵤ-refl : ∀ {i} → {x : Nbh {i}} → x ⊑ᵤ x
 ⊑ᵤ-refl' : ∀ {i} → {𝑓 : FinFun (Nbh {i}) (Nbh {i})} →
            ∀ {con𝑓 x y} → (x , y) ∈ 𝑓 → λ-proof 𝑓 con𝑓 x y
@@ -74,13 +53,13 @@ liftλ-proof 𝑓⊆𝑓′
 ⊑ᵤ-⊥ : ∀ {x} → ⊥ ⊑ᵤ x
 ⊑ᵤ-⊥ = ⊑ᵤ-bot
 
-⊑ᵤ-⊔' : ∀ {𝑓 𝑓′ con𝑓 con𝑓′ con∪} →
-        ({x y : Nbh} → (x , y) ∈ 𝑓 → λ-proof 𝑓 con𝑓 x y) →
-        ({x y : Nbh} → (x , y) ∈ 𝑓′ → λ-proof 𝑓′ con𝑓′ x y) →
-        {x y : Nbh} → (x , y) ∈ (𝑓 ∪ 𝑓′) → λ-proof (𝑓 ∪ 𝑓′) con∪ x y
+⊑ᵤ-⊔' : ∀ {𝑓 𝑓′ 𝑔 con𝑔} →
+        ({x y : Nbh} → (x , y) ∈ 𝑓 → λ-proof 𝑔 con𝑔 x y) →
+        ({x y : Nbh} → (x , y) ∈ 𝑓′ → λ-proof 𝑔 con𝑔 x y) →
+        {x y : Nbh} → (x , y) ∈ (𝑓 ∪ 𝑓′) → λ-proof 𝑔 con𝑔 x y
 ⊑ᵤ-⊔' {𝑓} p₁ p₂ xy∈∪ with (∪-lemma₂ {𝑓 = 𝑓} xy∈∪)
-... | inl xy∈𝑓 = liftλ-proof ∪-lemma₆ (p₁ xy∈𝑓)
-... | inr xy∈𝑓′ = liftλ-proof ∪-lemma₇ (p₂ xy∈𝑓′)
+... | inl xy∈𝑓 = p₁ xy∈𝑓
+... | inr xy∈𝑓′ = p₂ xy∈𝑓′
 
 ⊑ᵤ-⊔ : ∀ {x y z} → y ⊑ᵤ x → z ⊑ᵤ x → (con : Con y z) →
       (y ⊔ᵤ z [ con ]) ⊑ᵤ x
@@ -91,7 +70,7 @@ liftλ-proof 𝑓⊆𝑓′
   = ⊑ᵤ-s (⊑ᵤ-⊔ y⊑x z⊑x con)
 ⊑ᵤ-⊔ y⊑x _ con-refl-ℕ = y⊑x
 ⊑ᵤ-⊔ y⊑x _ con-refl-𝒰 = y⊑x
-⊑ᵤ-⊔ (⊑ᵤ-λ p₁) (⊑ᵤ-λ p₂) (con-λ _)
+⊑ᵤ-⊔ (⊑ᵤ-λ p₁) (⊑ᵤ-λ p₂) (con-λ con∪)
   = ⊑ᵤ-λ (⊑ᵤ-⊔' p₁ p₂)
 ⊑ᵤ-⊔ (⊑ᵤ-Π y⊑x (⊑ᵤ-λ p₁)) (⊑ᵤ-Π z⊑x (⊑ᵤ-λ p₂)) (con-Π _ _)
   = ⊑ᵤ-Π (⊑ᵤ-⊔ y⊑x z⊑x _) (⊑ᵤ-λ (⊑ᵤ-⊔' p₁ p₂))
@@ -103,9 +82,10 @@ liftλ-proof 𝑓⊆𝑓′
 ⊑ᵤ-⊔-fst (con-s conxy) = ⊑ᵤ-s (⊑ᵤ-⊔-fst conxy)
 ⊑ᵤ-⊔-fst con-refl-ℕ = ⊑ᵤ-refl-ℕ
 ⊑ᵤ-⊔-fst con-refl-𝒰 = ⊑ᵤ-refl-𝒰
-⊑ᵤ-⊔-fst (con-λ x) = ⊑ᵤ-λ ⊑ᵤ-refl'
+⊑ᵤ-⊔-fst (con-λ cff𝑓∪𝑔)
+  = ⊑ᵤ-λ (shrinkλ-proof ∪-lemma₆ ⊑ᵤ-refl)
 ⊑ᵤ-⊔-fst (con-Π conxy con𝑓∪𝑔)
-  = ⊑ᵤ-Π (⊑ᵤ-⊔-fst conxy) (⊑ᵤ-λ ⊑ᵤ-refl')
+  = ⊑ᵤ-Π (⊑ᵤ-⊔-fst conxy) (⊑ᵤ-λ (shrinkλ-proof ∪-lemma₆ ⊑ᵤ-refl))
 
 ⊑ᵤ-⊔-snd : ∀ {x y} → ∀ conxy → y ⊑ᵤ (x ⊔ᵤ y [ conxy ])
 ⊑ᵤ-⊔-snd con-⊥₁ = ⊥-leftId₂ ⊑ᵤ-refl
@@ -114,6 +94,7 @@ liftλ-proof 𝑓⊆𝑓′
 ⊑ᵤ-⊔-snd (con-s conxy) = ⊑ᵤ-s (⊑ᵤ-⊔-snd conxy)
 ⊑ᵤ-⊔-snd con-refl-ℕ = ⊑ᵤ-refl-ℕ
 ⊑ᵤ-⊔-snd con-refl-𝒰 = ⊑ᵤ-refl-𝒰
-⊑ᵤ-⊔-snd (con-λ x) = ⊑ᵤ-λ ⊑ᵤ-refl'
+⊑ᵤ-⊔-snd (con-λ x)
+  = ⊑ᵤ-λ (shrinkλ-proof ∪-lemma₇ ⊑ᵤ-refl)
 ⊑ᵤ-⊔-snd (con-Π conxy con𝑓∪𝑔)
-  = ⊑ᵤ-Π (⊑ᵤ-⊔-snd conxy) (⊑ᵤ-λ ⊑ᵤ-refl')
+  = ⊑ᵤ-Π (⊑ᵤ-⊔-snd conxy) (⊑ᵤ-λ (shrinkλ-proof ∪-lemma₇ ⊑ᵤ-refl))
