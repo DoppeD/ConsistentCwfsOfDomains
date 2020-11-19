@@ -7,6 +7,8 @@ open import Cwf.UniType.Lemmata
 open import Cwf.UniType.PrePost
 open import Cwf.UniType.Relation
 
+open import Agda.Builtin.Size
+
 ⊑ᵤ-refl : ∀ {i} → {x : Nbh {i}} → x ⊑ᵤ x
 ⊑ᵤ-refl' : ∀ {i} → {𝑓 : FinFun (Nbh {i}) (Nbh {i})} →
            ∀ {con𝑓 x y} → (x , y) ∈ 𝑓 → λ-proof 𝑓 con𝑓 x y
@@ -32,16 +34,18 @@ open import Cwf.UniType.Relation
 ⊑ᵤ-refl {x = λᵤ _ _} = ⊑ᵤ-λ ⊑ᵤ-refl'
 ⊑ᵤ-refl {x = Π _ _ _} = ⊑ᵤ-Π ⊑ᵤ-refl ⊑ᵤ-refl
 
-⊥-leftId₁ : ∀ {x y} → x ⊑ᵤ y → (⊥ ⊔ᵤ x [ con-⊥₁ ]) ⊑ᵤ y
-⊥-leftId₁ {⊥} x⊑y = x⊑y
-⊥-leftId₁ {0ₙ} x⊑y = x⊑y
-⊥-leftId₁ {sᵤ x} x⊑y = x⊑y
-⊥-leftId₁ {ℕ} x⊑y = x⊑y
-⊥-leftId₁ {𝒰} x⊑y = x⊑y
-⊥-leftId₁ {λᵤ 𝑓 x} x⊑y = x⊑y
-⊥-leftId₁ {Π x 𝑓 x₁} x⊑y = x⊑y
+⊥-leftId₁ : ∀ {i} → {x y : Nbh {i}} → x ⊑ᵤ y →
+            (⊥ ⊔ᵤ x [ con-⊥₁ ]) ⊑ᵤ y
+⊥-leftId₁ {x = ⊥} x⊑y = x⊑y
+⊥-leftId₁ {x = 0ₙ} x⊑y = x⊑y
+⊥-leftId₁ {x = sᵤ _} x⊑y = x⊑y
+⊥-leftId₁ {x = ℕ} x⊑y = x⊑y
+⊥-leftId₁ {x = 𝒰} x⊑y = x⊑y
+⊥-leftId₁ {x = λᵤ _ _} x⊑y = x⊑y
+⊥-leftId₁ {x = Π _ _ _} x⊑y = x⊑y
 
-⊥-leftId₂ : ∀ {x y} → x ⊑ᵤ y → x ⊑ᵤ (⊥ ⊔ᵤ y [ con-⊥₁ ])
+⊥-leftId₂ : {i : Size} → {x y : Nbh {i}} → x ⊑ᵤ y →
+            x ⊑ᵤ (⊥ ⊔ᵤ y [ con-⊥₁ ])
 ⊥-leftId₂ {y = ⊥} x⊑y = x⊑y
 ⊥-leftId₂ {y = 0ₙ} x⊑y = x⊑y
 ⊥-leftId₂ {y = sᵤ _} x⊑y = x⊑y
@@ -53,16 +57,16 @@ open import Cwf.UniType.Relation
 ⊑ᵤ-⊥ : ∀ {x} → ⊥ ⊑ᵤ x
 ⊑ᵤ-⊥ = ⊑ᵤ-bot
 
-⊑ᵤ-⊔' : ∀ {𝑓 𝑓′ 𝑔 con𝑔} →
+⊑ᵤ-⊔' : ∀ {i} → {𝑓 𝑓′ : FinFun (Nbh {i}) (Nbh {i})} → ∀ {𝑔 con𝑔} →
         ({x y : Nbh} → (x , y) ∈ 𝑓 → λ-proof 𝑔 con𝑔 x y) →
         ({x y : Nbh} → (x , y) ∈ 𝑓′ → λ-proof 𝑔 con𝑔 x y) →
         {x y : Nbh} → (x , y) ∈ (𝑓 ∪ 𝑓′) → λ-proof 𝑔 con𝑔 x y
-⊑ᵤ-⊔' {𝑓} p₁ p₂ xy∈∪ with (∪-lemma₂ {𝑓 = 𝑓} xy∈∪)
+⊑ᵤ-⊔' {𝑓 = 𝑓} p₁ p₂ xy∈∪ with (∪-lemma₂ {𝑓 = 𝑓} xy∈∪)
 ... | inl xy∈𝑓 = p₁ xy∈𝑓
 ... | inr xy∈𝑓′ = p₂ xy∈𝑓′
 
-⊑ᵤ-⊔ : ∀ {x y z} → y ⊑ᵤ x → z ⊑ᵤ x → (con : Con y z) →
-      (y ⊔ᵤ z [ con ]) ⊑ᵤ x
+⊑ᵤ-⊔ : ∀ {i} → {x y z : Nbh {i}} → y ⊑ᵤ x → z ⊑ᵤ x →
+       (con : Con y z) → (y ⊔ᵤ z [ con ]) ⊑ᵤ x
 ⊑ᵤ-⊔ _ z⊑x con-⊥₁ = ⊥-leftId₁ z⊑x
 ⊑ᵤ-⊔ y⊑x _ con-⊥₂ = y⊑x
 ⊑ᵤ-⊔ y⊑x z⊑x con-refl-0 = y⊑x
@@ -75,7 +79,7 @@ open import Cwf.UniType.Relation
 ⊑ᵤ-⊔ (⊑ᵤ-Π y⊑x (⊑ᵤ-λ p₁)) (⊑ᵤ-Π z⊑x (⊑ᵤ-λ p₂)) (con-Π _ _)
   = ⊑ᵤ-Π (⊑ᵤ-⊔ y⊑x z⊑x _) (⊑ᵤ-λ (⊑ᵤ-⊔' p₁ p₂))
 
-⊑ᵤ-⊔-fst : ∀ {x y} → ∀ conxy → x ⊑ᵤ (x ⊔ᵤ y [ conxy ])
+⊑ᵤ-⊔-fst : ∀ {i} → {x y : Nbh {i}} → ∀ conxy → x ⊑ᵤ (x ⊔ᵤ y [ conxy ])
 ⊑ᵤ-⊔-fst con-⊥₁ = ⊑ᵤ-bot
 ⊑ᵤ-⊔-fst con-⊥₂ = ⊑ᵤ-refl
 ⊑ᵤ-⊔-fst con-refl-0 = ⊑ᵤ-refl-0
@@ -87,7 +91,7 @@ open import Cwf.UniType.Relation
 ⊑ᵤ-⊔-fst (con-Π conxy con𝑓∪𝑔)
   = ⊑ᵤ-Π (⊑ᵤ-⊔-fst conxy) (⊑ᵤ-λ (shrinkλ-proof ∪-lemma₆ ⊑ᵤ-refl))
 
-⊑ᵤ-⊔-snd : ∀ {x y} → ∀ conxy → y ⊑ᵤ (x ⊔ᵤ y [ conxy ])
+⊑ᵤ-⊔-snd : ∀ {i} → {x y : Nbh {i}} → ∀ conxy → y ⊑ᵤ (x ⊔ᵤ y [ conxy ])
 ⊑ᵤ-⊔-snd con-⊥₁ = ⊥-leftId₂ ⊑ᵤ-refl
 ⊑ᵤ-⊔-snd con-⊥₂ = ⊑ᵤ-bot
 ⊑ᵤ-⊔-snd con-refl-0 = ⊑ᵤ-refl-0
