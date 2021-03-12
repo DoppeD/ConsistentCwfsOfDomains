@@ -3,34 +3,33 @@ module Cwf.UniType.Relation where
 open import Base.Core
 open import Base.FinFun
 open import Cwf.UniType.Definition
-open import Cwf.UniType.PrePost
 
-open import Agda.Builtin.Size
+record Thingy (g : FinFun Nbh Nbh) (u v : Nbh) : Set
+data _⊑_ : (u v : Nbh) → Set
 
-record λ-proof {i : Size} (𝑓 : FinFun (Nbh {i}) (Nbh {i}))
-               (con𝑓 : ConFinFun 𝑓) (x y : Nbh {i}) :
-               Set
-data _⊑ᵤ_ : ∀ {i} → Nbh {i} → Nbh {i} → Set
-
-record λ-proof {i} 𝑓 con𝑓 x y where
+record Thingy g u v where
   inductive
   field
-    sub : FinFun (Nbh {i}) (Nbh {i})
-    sub⊆𝑓 : sub ⊆ 𝑓
-    preablesub : Preable sub
-    postablesub : Postable sub
-    y⊑post : y ⊑ᵤ (post sub postablesub)
-    pre⊑x : (pre sub preablesub) ⊑ᵤ x
+    sub : FinFun Nbh Nbh
+    preable : con (pre sub)
+    sub⊆g : sub ⊆ g
+    pre⊑u : pre sub ⊑ u
+    v⊑post : v ⊑ post sub
 
-data _⊑ᵤ_ where
-  ⊑ᵤ-bot : ∀ {i} → {x : Nbh {i}} → ⊥ ⊑ᵤ x
-  ⊑ᵤ-refl-0 : ∀ {i} → 0ₙ {i} ⊑ᵤ 0ₙ
-  ⊑ᵤ-refl-ℕ : ∀ {i} → ℕ {i} ⊑ᵤ ℕ
-  ⊑ᵤ-refl-𝒰 : ∀ {i} → 𝒰 {i} ⊑ᵤ 𝒰
-  ⊑ᵤ-s : ∀ {i} → {x y : Nbh {i}} → x ⊑ᵤ y → sᵤ x ⊑ᵤ sᵤ y
-  ⊑ᵤ-λ : ∀ {i} → {𝑓 𝑔 : FinFun (Nbh {i}) (Nbh {i})} → ∀ {con𝑓 con𝑔} →
-         (∀ {x y} → (x , y) ∈ 𝑓 → λ-proof {i} 𝑔 con𝑔 x y) →
-         (λᵤ 𝑓 con𝑓) ⊑ᵤ (λᵤ 𝑔 con𝑔)
-  ⊑ᵤ-Π : ∀ {i} → {x y : Nbh {i}} → {𝑓 𝑔 : FinFun (Nbh {i}) (Nbh {i})} →
-         ∀ {con𝑓 con𝑔} → x ⊑ᵤ y → (λᵤ 𝑓 con𝑓) ⊑ᵤ (λᵤ 𝑔 con𝑔) →
-         (Π x 𝑓 con𝑓) ⊑ᵤ (Π y 𝑔 con𝑔)
+data _⊑_ where
+  ⊑-refl : ∀ {u} → con u → u ⊑ u
+  ⊑-⊥ : ∀ {u} → con u → ⊥ ⊑ u
+  ⊑-s : ∀ {u v} → u ⊑ v → s u ⊑ s v
+  ⊑-F : ∀ {f g} → (conf : conFinFun f) → (cong : conFinFun g) →
+        (∀ u v → (u , v) ∈ f → Thingy g u v) →
+        F f ⊑ F g
+  ⊑-Π : ∀ {u v f g} → u ⊑ v → F f ⊑ F g → Π u f ⊑ Π v g
+
+-- Ordering is only defined for consistent neighborhoods
+orderOnlyCon : ∀ {u v} → u ⊑ v → con u ⊠ con v
+orderOnlyCon (⊑-refl conu) = conu , conu
+orderOnlyCon (⊑-⊥ conu) = * , conu
+orderOnlyCon (⊑-s u⊑v) = orderOnlyCon u⊑v
+orderOnlyCon (⊑-F conf cong f) = conf , cong
+orderOnlyCon (⊑-Π u⊑v f⊑g) with (orderOnlyCon u⊑v) | orderOnlyCon f⊑g
+... | conu , conv | conf , cong = ( conu , conf ) , ( conv , cong )

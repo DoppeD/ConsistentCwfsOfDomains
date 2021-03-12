@@ -40,7 +40,10 @@ data _∨_ (A B : Set) : Set where
   inl : A → A ∨ B
   inr : B → A ∨ B
 
-data absurd : Set where
+data 𝟘 : Set where
+
+data 𝟙 : Set where
+  * : 𝟙
 
 -- Types are neighborhood systems.
 Ty : Set₁
