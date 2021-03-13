@@ -67,22 +67,6 @@ _⊔_ : ∀ {i} → Nbh {i} -> Nbh {i} -> Nbh {i}
 𝒰 ⊔ incons = incons
 incons ⊔ _ = incons
 
-con : ∀ {i} → Nbh {i} -> Set
-conFinFun : ∀ {i} → FinFun (Nbh {i}) (Nbh {i}) → Set
-con ⊥ = 𝟙
-con 0ᵤ = 𝟙
-con (s u) = con u
-con ℕ = 𝟙
-con (F f) = conFinFun f
-con (Π u f) = con u ⊠ conFinFun f
-con 𝒰 = 𝟙
-con incons = 𝟘
-
-conFinFun f = ∀ {u v u′ v′} → (u , v) ∈ f → (u′ , v′) ∈ f → con (u ⊔ u′) → con (v ⊔ v′)
-
-subsetIsCon : ∀ {f g} → f ⊆ g → conFinFun g → conFinFun f
-subsetIsCon f⊆g cong uv∈f u′v′∈f conuu′ = cong (f⊆g uv∈f) (f⊆g u′v′∈f) conuu′
-
 pre : FinFun Nbh Nbh → Nbh
 pre ∅ = ⊥
 pre ((u , v) ∷ f) = u ⊔ pre f
