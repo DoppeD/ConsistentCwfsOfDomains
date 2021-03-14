@@ -73,12 +73,12 @@ _∪_ : FinFun A B → FinFun A B → FinFun A B
 ∪-lemma₂ (there y∈∪) | inl y∈𝑓″ = inl (there y∈𝑓″)
 ∪-lemma₂ (there y∈∪) | inr y∈𝑓′ = inr y∈𝑓′
 
-∪-lemma₃ : ∀ {x} → x ∈ 𝑓 → x ∈ (𝑓 ∪ 𝑓′)
+∪-lemma₃ : 𝑓 ⊆ (𝑓 ∪ 𝑓′)
 ∪-lemma₃ {𝑓 = x ∷ 𝑓″} here = here
 ∪-lemma₃ {𝑓 = x ∷ 𝑓″} {x = y} (there y∈𝑓″) = ⊆-lemma₃ y∈𝑓″∪𝑓′
   where y∈𝑓″∪𝑓′ = ∪-lemma₃ y∈𝑓″
 
-∪-lemma₄ : ∀ {x} → x ∈ 𝑓′ → x ∈ (𝑓 ∪ 𝑓′)
+∪-lemma₄ : 𝑓′ ⊆ (𝑓 ∪ 𝑓′)
 ∪-lemma₄ {𝑓 = ∅} x∈𝑓′ = x∈𝑓′
 ∪-lemma₄ {𝑓 = x ∷ 𝑓″} {x = y} y∈𝑓′ = ⊆-lemma₃ y∈𝑓″∪𝑓′
   where y∈𝑓″∪𝑓′ = ∪-lemma₄ y∈𝑓′
@@ -90,30 +90,24 @@ _∪_ : FinFun A B → FinFun A B → FinFun A B
 ∪-lemma₅ _ 𝑓′⊆𝑓‴ x∈𝑓∪𝑓′ | inr x∈𝑓′
   = ∪-lemma₄ (𝑓′⊆𝑓‴ x∈𝑓′)
 
-∪-lemma₆ : 𝑓 ⊆ (𝑓 ∪ 𝑓′)
-∪-lemma₆ x∈𝑓 = ∪-lemma₃ x∈𝑓
-
-∪-lemma₇ : 𝑓′ ⊆ (𝑓 ∪ 𝑓′)
-∪-lemma₇ x∈𝑓 = ∪-lemma₄ x∈𝑓
-
-∪-lemma₈ : ∀ {x} → x ∈ (𝑓 ∪ 𝑓′) → x ∈ (𝑓′ ∪ 𝑓)
-∪-lemma₈ {𝑓 = 𝑓} x∈𝑓∪𝑓′ with (∪-lemma₂ {𝑓 = 𝑓} x∈𝑓∪𝑓′)
+∪-lemma₆ : (𝑓 ∪ 𝑓′) ⊆ (𝑓′ ∪ 𝑓)
+∪-lemma₆ {𝑓 = 𝑓} x∈𝑓∪𝑓′ with (∪-lemma₂ {𝑓 = 𝑓} x∈𝑓∪𝑓′)
 ... | inl xy∈𝑓 = ∪-lemma₄ xy∈𝑓
 ... | inr xy∈𝑓′ = ∪-lemma₃ xy∈𝑓′
 
-∪-lemma₉ :  𝑓′ ⊆ 𝑓″ → (𝑓 ∪ 𝑓′) ⊆ (𝑓 ∪ 𝑓″)
-∪-lemma₉ {𝑓 = 𝑓} 𝑓′⊆𝑓″ x∈𝑓∪𝑓′ with (∪-lemma₂ {𝑓 = 𝑓} x∈𝑓∪𝑓′)
+∪-lemma₇ :  𝑓′ ⊆ 𝑓″ → (𝑓 ∪ 𝑓′) ⊆ (𝑓 ∪ 𝑓″)
+∪-lemma₇ {𝑓 = 𝑓} 𝑓′⊆𝑓″ x∈𝑓∪𝑓′ with (∪-lemma₂ {𝑓 = 𝑓} x∈𝑓∪𝑓′)
 ... | inl x∈𝑓 = ∪-lemma₃ x∈𝑓
 ... | inr x∈𝑓′ = ∪-lemma₄ (𝑓′⊆𝑓″ x∈𝑓′)
 
-∪-lemma₀ : ((𝑓 ∪ 𝑓′) ∪ 𝑓″) ⊆ (𝑓 ∪ (𝑓′ ∪ 𝑓″))
-∪-lemma₀ {𝑓 = 𝑓} {𝑓′} {𝑓″} x∈∪ with (∪-lemma₂ {𝑓 = 𝑓 ∪ 𝑓′} x∈∪)
-∪-lemma₀ {𝑓 = 𝑓} _ | inl x∈𝑓∪𝑓′ with (∪-lemma₂ {𝑓 = 𝑓} x∈𝑓∪𝑓′)
-∪-lemma₀ {𝑓 = 𝑓} _ | inl _ | inl x∈𝑓 = ∪-lemma₆ {𝑓 = 𝑓} x∈𝑓
-∪-lemma₀ {𝑓 = 𝑓} {𝑓′} {𝑓″} _ | inl _ | inr x∈𝑓′ =
-  ∪-lemma₇ {𝑓 = 𝑓} (∪-lemma₆ {𝑓 = 𝑓′} x∈𝑓′)
-∪-lemma₀ {𝑓 = 𝑓} {𝑓′} _ | inr x∈𝑓″
-  = ∪-lemma₇ {𝑓 = 𝑓} (∪-lemma₇ {𝑓 = 𝑓′} x∈𝑓″)
+∪-lemma₈ : ((𝑓 ∪ 𝑓′) ∪ 𝑓″) ⊆ (𝑓 ∪ (𝑓′ ∪ 𝑓″))
+∪-lemma₈ {𝑓 = 𝑓} {𝑓′} {𝑓″} x∈∪ with (∪-lemma₂ {𝑓 = 𝑓 ∪ 𝑓′} x∈∪)
+∪-lemma₈ {𝑓 = 𝑓} _ | inl x∈𝑓∪𝑓′ with (∪-lemma₂ {𝑓 = 𝑓} x∈𝑓∪𝑓′)
+∪-lemma₈ {𝑓 = 𝑓} _ | inl _ | inl x∈𝑓 = ∪-lemma₃ {𝑓 = 𝑓} x∈𝑓
+∪-lemma₈ {𝑓 = 𝑓} {𝑓′} {𝑓″} _ | inl _ | inr x∈𝑓′ =
+  ∪-lemma₄ {𝑓 = 𝑓} (∪-lemma₃ {𝑓 = 𝑓′} x∈𝑓′)
+∪-lemma₈ {𝑓 = 𝑓} {𝑓′} _ | inr x∈𝑓″
+  = ∪-lemma₄ {𝑓 = 𝑓} (∪-lemma₄ {𝑓 = 𝑓′} x∈𝑓″)
 
 -- From a proof that a pair of neighborhoods is in the
 -- empty set, anything.

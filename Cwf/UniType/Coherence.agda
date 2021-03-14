@@ -10,15 +10,15 @@ coherence'' : ∀ {f g h} → conFinFun (f ∪ g) → conFinFun (f ∪ h) → co
 coherence'' {f} {g} {h} conf∪g conf∪h cong∪h uv∈ u′v′∈ conuu′
   with (∪-lemma₂ {𝑓 = f} uv∈) | ∪-lemma₂ {𝑓 = f} u′v′∈
 coherence'' conf∪g _ _ _ _ conuu′ | inl uv∈f | inl u′v′∈f =
-  conf∪g (∪-lemma₆ uv∈f) (∪-lemma₆ u′v′∈f) conuu′
+  conf∪g (∪-lemma₃ uv∈f) (∪-lemma₃ u′v′∈f) conuu′
 coherence'' {g = g} conf∪g conf∪h _ _ _ conuu′ | inl uv∈f | inr u′v′∈g∪h
   with (∪-lemma₂ {𝑓 = g} u′v′∈g∪h)
-... | inl u′v′∈g = conf∪g (∪-lemma₆ uv∈f) (∪-lemma₇ u′v′∈g) conuu′
-... | inr u′v′∈h = conf∪h (∪-lemma₆ uv∈f) (∪-lemma₇ u′v′∈h) conuu′
+... | inl u′v′∈g = conf∪g (∪-lemma₃ uv∈f) (∪-lemma₄ u′v′∈g) conuu′
+... | inr u′v′∈h = conf∪h (∪-lemma₃ uv∈f) (∪-lemma₄ u′v′∈h) conuu′
 coherence'' {g = g} conf∪g conf∪h _ _ _ conuu′ | inr uv∈g∪h | inl u′v′∈f
   with (∪-lemma₂ {𝑓 = g} uv∈g∪h)
-... | inl uv∈g = conf∪g (∪-lemma₇ uv∈g) (∪-lemma₆ u′v′∈f) conuu′
-... | inr uv∈h = conf∪h (∪-lemma₇ uv∈h) (∪-lemma₆ u′v′∈f) conuu′
+... | inl uv∈g = conf∪g (∪-lemma₄ uv∈g) (∪-lemma₃ u′v′∈f) conuu′
+... | inr uv∈h = conf∪h (∪-lemma₄ uv∈h) (∪-lemma₃ u′v′∈f) conuu′
 coherence'' {g = g} _ _ cong∪h _ _ conuu′ | inr uv∈g∪h | inr u′v′∈g∪h = cong∪h uv∈g∪h u′v′∈g∪h conuu′
 
 coherence' : ∀ {u v w} → con (u ⊔ v) → con (u ⊔ w) → con (v ⊔ w) → con (u ⊔ (v ⊔ w))

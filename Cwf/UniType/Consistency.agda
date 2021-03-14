@@ -28,10 +28,10 @@ conLemma₁ {s u} {s _} conuv = conLemma₁ {u} conuv
 conLemma₁ {ℕ} _ = *
 conLemma₁ {F _} {⊥} conuv = conuv
 conLemma₁ {F f} {F g} confg uv∈f u′v′∈f conuu′
-  = confg (∪-lemma₆ uv∈f) (∪-lemma₆ u′v′∈f) conuu′
+  = confg (∪-lemma₃ uv∈f) (∪-lemma₃ u′v′∈f) conuu′
 conLemma₁ {Π _ _} {⊥} conuv = conuv
 conLemma₁ {Π u f} {Π v g} (conuv , confg)
-  = conLemma₁ {u} conuv , subsetIsCon (∪-lemma₆ {𝑓′ = g}) confg
+  = conLemma₁ {u} conuv , subsetIsCon (∪-lemma₃ {𝑓′ = g}) confg
 conLemma₁ {𝒰} _ = *
 
 conLemma₂ : ∀ {u v} → con (u ⊔ v) → con v
@@ -42,10 +42,10 @@ conLemma₂ {s u} {s _} conuv = conLemma₂ {u} conuv
 conLemma₂ {v = ℕ} _ = *
 conLemma₂ {⊥} {F _} conuv = conuv
 conLemma₂ {F f} {F g} confg uv∈g u′v′∈g conuu′
-  = confg (∪-lemma₇ uv∈g) (∪-lemma₇ u′v′∈g) conuu′
+  = confg (∪-lemma₄ uv∈g) (∪-lemma₄ u′v′∈g) conuu′
 conLemma₂ {⊥} {Π _ _} conuv = conuv
 conLemma₂ {Π u f} {Π v g} (conuv , confg)
-  = conLemma₂ {u} conuv , subsetIsCon (∪-lemma₇ {𝑓′ = g}) confg
+  = conLemma₂ {u} conuv , subsetIsCon (∪-lemma₄ {𝑓′ = g}) confg
 conLemma₂ {v = 𝒰} _ = *
 conLemma₂ {⊥} {incons} conuv = conuv
 conLemma₂ {0ᵤ} {incons} conuv = conuv
@@ -58,7 +58,7 @@ conLemma₂ {incons} {incons} conuv = conuv
 
 conFinFunSym : ∀ {f g} → conFinFun (f ∪ g) → conFinFun (g ∪ f)
 conFinFunSym {f} conf∪g uv∈∪ u′v′∈∪ conuu′
-  = conf∪g (∪-lemma₈ {𝑓′ = f} uv∈∪) (∪-lemma₈ {𝑓′ = f} u′v′∈∪) conuu′
+  = conf∪g (∪-lemma₆ {𝑓′ = f} uv∈∪) (∪-lemma₆ {𝑓′ = f} u′v′∈∪) conuu′
 
 conSym : ∀ {u v} → con (u ⊔ v) → con (v ⊔ u)
 conSym {⊥} {⊥} _ = *
@@ -83,7 +83,7 @@ conSym {𝒰} {𝒰} _ = *
 
 conFinFunAssoc : ∀ {f g h} → conFinFun (f ∪ (g ∪ h)) → conFinFun ((f ∪ g) ∪ h)
 conFinFunAssoc {f} {g} {h} confgh {u} {v} uv∈ u′v′∈ conuu′
-  = confgh {u} {v} (∪-lemma₀ {𝑓 = f} uv∈) (∪-lemma₀ {𝑓 = f} u′v′∈) conuu′
+  = confgh {u} {v} (∪-lemma₈ {𝑓 = f} uv∈) (∪-lemma₈ {𝑓 = f} u′v′∈) conuu′
 
 conAssoc'' : ∀ {u v} → con (u ⊔ v) → con ((u ⊔ ⊥) ⊔ v)
 conAssoc'' {⊥} conuv = conuv
@@ -141,11 +141,11 @@ conTrans {u} {ℕ} {ℕ} conuvw | _ | _ | _ | _ = conuvw
 conTrans {u} {⊥} {F _} conuvw | _ | _ | _ | _ = conuvw
 conTrans {⊥} {F _} {F _} _ | _ | _ | _ | conw = conw
 conTrans {F f} {F g} {F h} conuvw | _ | _ | _ | _
-  = subsetIsCon {g = f ∪ (g ∪ h)} (∪-lemma₉ {𝑓 = f} ∪-lemma₇) conuvw
+  = subsetIsCon {g = f ∪ (g ∪ h)} (∪-lemma₇ {𝑓 = f} ∪-lemma₄) conuvw
 conTrans {u} {⊥} {Π _ _} conuvw | _ | _ | _ | _ = conuvw
 conTrans {⊥} {Π _ _} {Π _ _} _ | _ | _ | _ | conw = conw
 conTrans {Π u f} {Π v g} {Π w h} (conuvw , confgh) | _ | _ | _ | _
-  = (conTrans {u} conuvw) , subsetIsCon {g = f ∪ (g ∪ h)} (∪-lemma₉ {𝑓 = f} ∪-lemma₇) confgh
+  = (conTrans {u} conuvw) , subsetIsCon {g = f ∪ (g ∪ h)} (∪-lemma₇ {𝑓 = f} ∪-lemma₄) confgh
 conTrans {u} {⊥} {𝒰} conuvw | _ | _ | _ | _ = conuvw
 conTrans {⊥} {𝒰} {𝒰} _ | _ | _ | _ | _ = *
 conTrans {𝒰} {𝒰} {𝒰} _ | _ | _ | _ | _ = *
