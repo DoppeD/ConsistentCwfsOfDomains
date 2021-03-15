@@ -5,8 +5,21 @@ open import Base.FinFun
 open import Cwf.UniType.Consistency
 open import Cwf.UniType.Definition
 
-coherence'' : ∀ {f g h} → conFinFun (f ∪ g) → conFinFun (f ∪ h) → conFinFun (g ∪ h) →
-             conFinFun (f ∪ (g ∪ h))
+private
+  conElems : ∀ {i} → FinFun (Nbh {i}) (Nbh {i}) → Set
+  conElems f = ∀ {u v} → (u , v) ∈ f → con u ⊠ con v
+
+  conPairs : ∀ {i} → FinFun (Nbh {i}) (Nbh {i}) → Set
+  conPairs f = ∀ {u v u′ v′} → (u , v) ∈ f → (u′ , v′) ∈ f → con (u ⊔ u′) → con (v ⊔ v′)
+
+coherence''' : ∀ {f g h} → conElems (f ∪ g) → conElems (f ∪ h) → conElems (g ∪ h) →
+              conElems (f ∪ (g ∪ h))
+coherence''' {f} _ _ _ uv∈ with (∪-lemma₂ {𝑓 = f} uv∈)
+coherence''' conElemsfg _ _ _ | inl uv∈f = conElemsfg (∪-lemma₃ uv∈f)
+coherence''' {g = g} _ _ conElemsgh _ | inr uv∈g∪h = conElemsgh uv∈g∪h
+
+coherence'' : ∀ {f g h} → conPairs (f ∪ g) → conPairs (f ∪ h) → conPairs (g ∪ h) →
+              conPairs (f ∪ (g ∪ h))
 coherence'' {f} {g} {h} conf∪g conf∪h cong∪h uv∈ u′v′∈ conuu′
   with (∪-lemma₂ {𝑓 = f} uv∈) | ∪-lemma₂ {𝑓 = f} u′v′∈
 coherence'' conf∪g _ _ _ _ conuu′ | inl uv∈f | inl u′v′∈f =
@@ -34,22 +47,29 @@ coherence' {ℕ} {ℕ} {⊥} _ _ _ = *
 coherence' {ℕ} {ℕ} {ℕ} _ _ _ = *
 coherence' {F _} {⊥} _ conuw _ = conuw
 coherence' {F _} {F _} {⊥} conuv _ _ = conuv
-coherence' {F f} {F _} {F _} = coherence'' {f = f}
+coherence' {F f} {F _} {F _} (conPairsfg , conElemsfg) (conPairsfh , conElemsfh) (conPairsgh , conElemsgh)
+  = (coherence'' {f} conPairsfg conPairsfh conPairsgh) ,
+    (coherence''' {f} conElemsfg conElemsfh conElemsgh)
 coherence' {Π _ _} {⊥} _ conuw _ = conuw
 coherence' {Π _ _} {Π _ _} {⊥} conuv _ _ = conuv
-coherence' {Π u f} {Π _ _} {Π _ _} (conuv , confg) (conuw , confh) (convw , congh) =
-  (coherence' {u = u} conuv conuw convw , coherence'' {f = f} confg confh congh )
+coherence' {Π u f} {Π _ _} {Π _ _}
+  (conuv , (conPairsfg , conElemsfg)) (conuw , (conPairsfh , conElemsfh)) (convw , (conPairsgh , conElemsgh)) =
+  (coherence' {u = u} conuv conuw convw) ,
+  ((coherence'' {f} conPairsfg conPairsfh conPairsgh) , coherence''' {f} conElemsfg conElemsfh conElemsgh)
 coherence' {𝒰} {⊥} {w} _ conuw _ = conuw
 coherence' {𝒰} {𝒰} {⊥} _ _ _ = *
 coherence' {𝒰} {𝒰} {𝒰} _ _ _ = *
 
 coherence : ∀ {f} → conFinFun f → con (pre f) → con (post f)
 coherence {∅} _ _ = *
-coherence {(u , v) ∷ ∅} conf conupref′ = {!!} -- Argh...need to ensure that every element is consistent itself
-coherence {(u , v) ∷ ((u′ , v′) ∷ f′)} conf conupref′ =
-  coherence' {u = v} {v = v′} {w = post f′} (conf here (there here) (conLemma₁ {u = u ⊔ u′} (conAssoc {u = u} conupref′)))
-  (coherence {f = (u , v) ∷ f′} (subsetIsCon lemma conf) (conTrans {u} conupref′))
-  (coherence {f = ((u′ , v′) ∷ f′)} (subsetIsCon ⊆-lemma₃ conf) (conLemma₂ {u} conupref′))
+coherence {(u , v) ∷ ∅} (_ , conElemsf) _′ with (conElemsf here)
+... | (_ , conv) = conAssoc' {u = v} conv
+coherence {(u , v) ∷ ((u′ , v′) ∷ f′)} (conPairsf , conElemsf) conupref′
+  = coherence' {v} {v′} {post f′} (conPairsf here (there here) (conLemma₁ {u ⊔ u′} (conAssoc {u} conupref′)))
+    (coherence (subsetIsCon lemma conf) (conTrans {u} conupref′))
+    (coherence {f = (u′ , v′) ∷ f′} (subsetIsCon ⊆-lemma₃ conf) (conLemma₂ {u} conupref′))
   where lemma : ∀ {u v f} → (u ∷ f) ⊆ (u ∷ (v ∷ f))
         lemma here = here
         lemma (there x∈) = there (there x∈)
+        conf : conFinFun ((u , v) ∷ ((u′ , v′) ∷ f′))
+        conf = conPairsf , conElemsf

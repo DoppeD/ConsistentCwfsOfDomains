@@ -15,10 +15,15 @@ con (Π u f) = con u ⊠ conFinFun f
 con 𝒰 = 𝟙
 con incons = 𝟘
 
-conFinFun f = ∀ {u v u′ v′} → (u , v) ∈ f → (u′ , v′) ∈ f → con (u ⊔ u′) → con (v ⊔ v′)
+conFinFun f
+  = (∀ {u v u′ v′} → (u , v) ∈ f → (u′ , v′) ∈ f → con (u ⊔ u′) → con (v ⊔ v′))
+    ⊠
+    (∀ {u v} → (u , v) ∈ f → con u ⊠ con v)
 
 subsetIsCon : ∀ {f g} → f ⊆ g → conFinFun g → conFinFun f
-subsetIsCon f⊆g cong uv∈f u′v′∈f conuu′ = cong (f⊆g uv∈f) (f⊆g u′v′∈f) conuu′
+subsetIsCon f⊆g (conPairsg , conElemsg)
+  = (λ uv∈f u′v′∈f conuu′ → conPairsg (f⊆g uv∈f) (f⊆g u′v′∈f) conuu′) ,
+    (λ uv∈f → conElemsg (f⊆g uv∈f))
 
 conLemma₁ : ∀ {u v} → con (u ⊔ v) → con u
 conLemma₁ {⊥} _ = *
@@ -27,8 +32,9 @@ conLemma₁ {s _} {⊥} conuv = conuv
 conLemma₁ {s u} {s _} conuv = conLemma₁ {u} conuv
 conLemma₁ {ℕ} _ = *
 conLemma₁ {F _} {⊥} conuv = conuv
-conLemma₁ {F f} {F g} confg uv∈f u′v′∈f conuu′
-  = confg (∪-lemma₃ uv∈f) (∪-lemma₃ u′v′∈f) conuu′
+conLemma₁ {F f} {F g} (conPairsfg , conElemsfg)
+  = (λ uv∈f u′v′∈f conuu′ → conPairsfg (∪-lemma₃ uv∈f) (∪-lemma₃ u′v′∈f) conuu′) ,
+    (λ uv∈f → conElemsfg (∪-lemma₃ uv∈f))
 conLemma₁ {Π _ _} {⊥} conuv = conuv
 conLemma₁ {Π u f} {Π v g} (conuv , confg)
   = conLemma₁ {u} conuv , subsetIsCon (∪-lemma₃ {𝑓′ = g}) confg
@@ -41,8 +47,9 @@ conLemma₂ {⊥} {s _} conuv = conuv
 conLemma₂ {s u} {s _} conuv = conLemma₂ {u} conuv
 conLemma₂ {v = ℕ} _ = *
 conLemma₂ {⊥} {F _} conuv = conuv
-conLemma₂ {F f} {F g} confg uv∈g u′v′∈g conuu′
-  = confg (∪-lemma₄ uv∈g) (∪-lemma₄ u′v′∈g) conuu′
+conLemma₂ {F f} {F g} (conPairsfg , conElemsfg)
+  = (λ uv∈g u′v′∈g conuu′ → conPairsfg (∪-lemma₄ uv∈g) (∪-lemma₄ u′v′∈g) conuu′) ,
+    (λ uv∈g → conElemsfg (∪-lemma₄ uv∈g))
 conLemma₂ {⊥} {Π _ _} conuv = conuv
 conLemma₂ {Π u f} {Π v g} (conuv , confg)
   = conLemma₂ {u} conuv , subsetIsCon (∪-lemma₄ {𝑓′ = g}) confg
@@ -57,8 +64,9 @@ conLemma₂ {𝒰} {incons} conuv = conuv
 conLemma₂ {incons} {incons} conuv = conuv
 
 conFinFunSym : ∀ {f g} → conFinFun (f ∪ g) → conFinFun (g ∪ f)
-conFinFunSym {f} conf∪g uv∈∪ u′v′∈∪ conuu′
-  = conf∪g (∪-lemma₆ {𝑓′ = f} uv∈∪) (∪-lemma₆ {𝑓′ = f} u′v′∈∪) conuu′
+conFinFunSym {f} (conPairsfg , conElemsfg)
+  = (λ uv∈∪ u′v′∈∪ conuu′ → conPairsfg (∪-lemma₆ {𝑓′ = f} uv∈∪) (∪-lemma₆ {𝑓′ = f} u′v′∈∪) conuu′) ,
+    (λ uv∈∪ → conElemsfg (∪-lemma₆ {𝑓′ = f} uv∈∪))
 
 conSym : ∀ {u v} → con (u ⊔ v) → con (v ⊔ u)
 conSym {⊥} {⊥} _ = *
@@ -81,9 +89,11 @@ conSym {Π u f} {Π _ _} (conuv , confg) = (conSym {u} conuv) , conFinFunSym {f}
 conSym {𝒰} {⊥} _ = *
 conSym {𝒰} {𝒰} _ = *
 
+
 conFinFunAssoc : ∀ {f g h} → conFinFun (f ∪ (g ∪ h)) → conFinFun ((f ∪ g) ∪ h)
-conFinFunAssoc {f} {g} {h} confgh {u} {v} uv∈ u′v′∈ conuu′
-  = confgh {u} {v} (∪-lemma₈ {𝑓 = f} uv∈) (∪-lemma₈ {𝑓 = f} u′v′∈) conuu′
+conFinFunAssoc {f} {g} {h} (conPairsfgh , conElemsfgh)
+  = (λ uv∈ u′v′∈ conuu′ → conPairsfgh (∪-lemma₈ {𝑓 = f} uv∈) (∪-lemma₈ {𝑓 = f} u′v′∈) conuu′) ,
+    (λ uv∈ → conElemsfgh (∪-lemma₈ {𝑓 = f} uv∈))
 
 conAssoc'' : ∀ {u v} → con (u ⊔ v) → con ((u ⊔ ⊥) ⊔ v)
 conAssoc'' {⊥} conuv = conuv
