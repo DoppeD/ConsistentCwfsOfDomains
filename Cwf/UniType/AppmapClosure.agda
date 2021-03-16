@@ -22,7 +22,6 @@ pre↦post {(u , v) ∷ f′} conf conPref with (pre↦post {f′})
   where pref′↦postf = ac-↑directed {u = pre f′} {v} {post f′} (coherence conf conPref) {!!} {!!}
 
 proof₁ : ∀ {f g u v} → (F f) ⊑ (F g) → (u , v) ∈ f → AppmapClosure g u v
-proof₁ (⊑-refl _) uv∈f = ac-inset uv∈f
 proof₁ (⊑-F conf cong f⊑g) uv∈f with (f⊑g uv∈f)
 ... | record { sub = sub ; preable = preable ; sub⊆g = sub⊆g ; pre⊑u = pre⊑u ; v⊑post = v⊑post }
   = {!!}
