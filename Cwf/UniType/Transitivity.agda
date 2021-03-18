@@ -1,11 +1,11 @@
 module Cwf.UniType.Transitivity where
 
 open import Base.Core
-open import Base.FinFun
 open import Cwf.UniType.AxiomProofs
 open import Cwf.UniType.Coherence
 open import Cwf.UniType.Consistency
 open import Cwf.UniType.Definition
+open import Cwf.UniType.FinFun
 open import Cwf.UniType.Relation
 
 open import Agda.Builtin.Equality
@@ -23,7 +23,7 @@ googa g⊆h p uv∈f with (p uv∈f)
       ; v⊑post = v⊑post
       }
 
-⊑-⊔-lemma₁ : ∀ {u v w} → u ⊑ v → con (v ⊔ w) → u ⊑ (v ⊔ w)
+⊑-⊔-lemma₁ : ∀ {i} → {u v w : Nbh {i}} → u ⊑ v → con (v ⊔ w) → u ⊑ (v ⊔ w)
 ⊑-⊔-lemma₁ (⊑-bot _) convw = ⊑-bot convw
 ⊑-⊔-lemma₁ {w = ⊥} ⊑-0 _ = ⊑-0
 ⊑-⊔-lemma₁ {w = 0ᵤ} ⊑-0 _ = ⊑-0
@@ -40,7 +40,7 @@ googa g⊆h p uv∈f with (p uv∈f)
 ⊑-⊔-lemma₁ {w = ⊥} ⊑-𝒰 _ = ⊑-𝒰
 ⊑-⊔-lemma₁ {w = 𝒰} ⊑-𝒰 _ = ⊑-𝒰
 
-⊑-⊔-lemma₂ : ∀ {u v w} → u ⊑ w → con (v ⊔ w) → u ⊑ (v ⊔ w)
+⊑-⊔-lemma₂ : ∀ {i} → {u v w : Nbh {i}} → u ⊑ w → con (v ⊔ w) → u ⊑ (v ⊔ w)
 ⊑-⊔-lemma₂ (⊑-bot _) conuw = ⊑-bot conuw
 ⊑-⊔-lemma₂ {v = ⊥} ⊑-0 _ = ⊑-0
 ⊑-⊔-lemma₂ {v = 0ᵤ} ⊑-0 _ = ⊑-0
@@ -61,50 +61,50 @@ googa g⊆h p uv∈f with (p uv∈f)
 ⊑-⊔-lemma₃ u⊑u′ v⊑v′ conuv conu′v′
   = ⊑-⊔ (⊑-⊔-lemma₁ u⊑u′ conu′v′) (⊑-⊔-lemma₂ v⊑v′ conu′v′) conuv
 
-∪-assoc : {f g h : FinFun Nbh Nbh} → (f ∪ (g ∪ h)) ≡ ((f ∪ g) ∪ h)
-∪-assoc {∅} {g} {h} = refl
-∪-assoc {_ ∷ f} {g} {h} rewrite (∪-assoc {f} {g} {h}) = refl
+∪-assoc : ∀ {i} → {f g h : FinFun {i}} → (f ∪ (g ∪ h)) ≡ ((f ∪ g) ∪ h)
+∪-assoc {f = ∅} {g} {h} = refl
+∪-assoc {f = _ ∷ f} {g} {h} rewrite (∪-assoc {f = f} {g} {h}) = refl
 
-⊔-assoc : ∀ {u v w} → con (u ⊔ v) → con (v ⊔ w) →
+⊔-assoc : ∀ {i} → {u v w : Nbh {i}} → con (u ⊔ v) → con (v ⊔ w) →
           ((u ⊔ v) ⊔ w) ≡ (u ⊔ (v ⊔ w))
-⊔-assoc {⊥} _ _ = refl
-⊔-assoc {0ᵤ} {⊥} _ _ = refl
-⊔-assoc {0ᵤ} {0ᵤ} {⊥} _ _ = refl
-⊔-assoc {0ᵤ} {0ᵤ} {0ᵤ} _ _ = refl
-⊔-assoc {s _} {⊥} _ _ = refl
-⊔-assoc {s _} {s _} {⊥} _ _ = refl
-⊔-assoc {s u} {s _} {s _} conuv convw
-  rewrite (⊔-assoc {u} conuv convw) = refl
-⊔-assoc {ℕ} {⊥} _ _ = refl
-⊔-assoc {ℕ} {ℕ} {⊥} _ _ = refl
-⊔-assoc {ℕ} {ℕ} {ℕ} _ _ = refl
-⊔-assoc {F _} {⊥} _ _ = refl
-⊔-assoc {F _} {F _} {⊥} _ _ = refl
-⊔-assoc {F f} {F g} {F h} _ _
-  rewrite (∪-assoc {f} {g} {h}) = refl
-⊔-assoc {Π _ _} {⊥} _ _ = refl
-⊔-assoc {Π _ _} {Π _ _} {⊥} _ _ = refl
-⊔-assoc {Π u f} {Π _ g} {Π _ h} (conuv , _) (convw , _)
-  rewrite (⊔-assoc {u} conuv convw)
-  rewrite (∪-assoc {f} {g} {h}) = refl
-⊔-assoc {𝒰} {⊥} _ _ = refl
-⊔-assoc {𝒰} {𝒰} {⊥} _ _ = refl
-⊔-assoc {𝒰} {𝒰} {𝒰} _ _ = refl
+⊔-assoc {u = ⊥} _ _ = refl
+⊔-assoc {u = 0ᵤ} {⊥} _ _ = refl
+⊔-assoc {u = 0ᵤ} {0ᵤ} {⊥} _ _ = refl
+⊔-assoc {u = 0ᵤ} {0ᵤ} {0ᵤ} _ _ = refl
+⊔-assoc {u = s _} {⊥} _ _ = refl
+⊔-assoc {u = s _} {s _} {⊥} _ _ = refl
+⊔-assoc {u = s u} {s _} {s _} conuv convw
+  rewrite (⊔-assoc {u = u} conuv convw) = refl
+⊔-assoc {u = ℕ} {⊥} _ _ = refl
+⊔-assoc {u = ℕ} {ℕ} {⊥} _ _ = refl
+⊔-assoc {u = ℕ} {ℕ} {ℕ} _ _ = refl
+⊔-assoc {u = F _} {⊥} _ _ = refl
+⊔-assoc {u = F _} {F _} {⊥} _ _ = refl
+⊔-assoc {u = F f} {F g} {F h} _ _
+  rewrite (∪-assoc {f = f} {g} {h}) = refl
+⊔-assoc {u = Π _ _} {⊥} _ _ = refl
+⊔-assoc {u = Π _ _} {Π _ _} {⊥} _ _ = refl
+⊔-assoc {u = Π u f} {Π _ g} {Π _ h} (conuv , _) (convw , _)
+  rewrite (⊔-assoc {u = u} conuv convw)
+  rewrite (∪-assoc {f = f} {g} {h}) = refl
+⊔-assoc {u = 𝒰} {⊥} _ _ = refl
+⊔-assoc {u = 𝒰} {𝒰} {⊥} _ _ = refl
+⊔-assoc {u = 𝒰} {𝒰} {𝒰} _ _ = refl
 
-a : ∀ {f g} → con (pre f ⊔ pre g) → pre (f ∪ g) ≡ pre f ⊔ pre g
-a {∅} _ = refl
-a {(u , v) ∷ f′} conprefg with (conLemma₁ {pre ((u , v) ∷ f′)} conprefg)
-a {(u , v) ∷ f′} conprefg | conpref with (conLemma₂ {u} conpref)
-a {(u , v) ∷ f′} {g} conprefg | conpref | conpref′
-  rewrite (⊔-assoc {u} {pre f′} {pre g} conpref {!!})
-  rewrite (a {f′} {g} (conLemma₂ {u} {pre f′ ⊔ pre g} (conAssoc₂ {u} conprefg)))
+a : ∀ {i} → {f g : FinFun {i}} → con (pre f ⊔ pre g) → pre (f ∪ g) ≡ pre f ⊔ pre g
+a {f = ∅} _ = refl
+a {f = (u , v) ∷ f′} conprefg with (conLemma₁ {u = pre ((u , v) ∷ f′)} conprefg)
+a {f = (u , v) ∷ f′} conprefg | conpref with (conLemma₂ {u = u} conpref)
+a {f = (u , v) ∷ f′} {g} conprefg | conpref | conpref′
+  rewrite (⊔-assoc {u = u} {pre f′} {pre g} conpref {!!})
+  rewrite (a {f = f′} {g} (conLemma₂ {u = u} {pre f′ ⊔ pre g} (conAssoc₂ {u = u} conprefg)))
   = refl
 
 b : ∀ {f g} → con (post f) → post (f ∪ g) ≡ (post f ⊔ post g)
 b {∅} conpostf = refl
 b {(u , v) ∷ f′} {g} conpostf
-  rewrite (⊔-assoc {v} {post f′} {post g} conpostf {!!})
-  rewrite (b {f′} {g} (conLemma₂ {v} conpostf))
+  rewrite (⊔-assoc {u = v} {post f′} {post g} conpostf {!!})
+  rewrite (b {f′} {g} (conLemma₂ {u = v} conpostf))
   = refl
 
 Ω : ∀ {f g} → F f ⊑ F g → con (pre f) → ⊑-proof g (pre f) (post f)
@@ -117,14 +117,14 @@ b {(u , v) ∷ f′} {g} conpostf
       ; v⊑post = ⊑-bot *
       }
 Ω {f = (u , v) ∷ f′} {g} (⊑-F conf cong p) conpref
-  with (p here) | Ω {f′} (⊑-F (subsetIsCon ⊆-lemma₃ conf) cong (λ u′v′∈f′ → p (there u′v′∈f′))) (conLemma₂ {u} conpref)
+  with (p here) | Ω {f′} (⊑-F (subsetIsCon ⊆-lemma₃ conf) cong (λ u′v′∈f′ → p (there u′v′∈f′))) (conLemma₂ {u = u} conpref)
 ... | record { sub = sub ; preable = preable ; sub⊆g = sub⊆g ; pre⊑u = pre⊑u ; v⊑post = v⊑post }
     | record { sub = rsub ; preable = rpreable ; sub⊆g = rsub⊆g ; pre⊑u = rpre⊑u ; v⊑post = rv⊑post }
   = record
       { sub = sub ∪ rsub
       ; preable = {!!}
       ; sub⊆g = ∪-lemma₁ sub⊆g rsub⊆g
-      ; pre⊑u = lemma₁ (a {sub} {!!}) (⊑-⊔-lemma₃ pre⊑u rpre⊑u {!!} conpref)
+      ; pre⊑u = lemma₁ (a {f = sub} {!!}) (⊑-⊔-lemma₃ pre⊑u rpre⊑u {!!} conpref)
       ; v⊑post = lemma₂ (b {sub} (coherence (subsetIsCon sub⊆g cong) preable)) (⊑-⊔-lemma₃ v⊑post rv⊑post (coherence conf conpref) {!!})
       }
   where lemma₁ : ∀ {u u′ v} → u′ ≡ u → u ⊑ v → u′ ⊑ v
@@ -138,14 +138,14 @@ gf {f} (⊑-F _ _ p₁) (⊑-F _ _ p₂) uv∈∪ with (∪-lemma₂ {𝑓 = f} 
 ... | inl uv∈f = p₁ uv∈f
 ... | inr uv∈g = p₂ uv∈g
 
-biff : ∀ {f g} → con (pre f ⊔ pre g) → con (pre (f ∪ g))
-biff {f} {g} conprefg rewrite (a {f} {g} conprefg) = conprefg
+biff : ∀ {i} → {f g : FinFun {i}} → con (pre f ⊔ pre g) → con (pre (f ∪ g))
+biff {f = f} {g} conprefg rewrite (a {f = f} {g} conprefg) = conprefg
 
-baff : ∀ {f g} → con (post (f ∪ g)) → con (post f ⊔ post g)
-baff {f} {g} conpostfg rewrite (b {f} {g} {!!}) = {!!}
+baff : ∀ {i} → {f g : FinFun {i}} → con (post (f ∪ g)) → con (post f ⊔ post g)
+baff {f = f} {g} conpostfg rewrite (b {f = f} {g} {!!}) = {!!}
 
-Con-⊔ : ∀ {u v w} → u ⊑ w → v ⊑ w → con (u ⊔ v)
-Con-⊔' : ∀ {f g h u v u′ v′} → ⊑-proof h u v → ⊑-proof h u′ v′ →
+Con-⊔ : ∀ {i} → {u v w : Nbh {i}} → u ⊑ w → v ⊑ w → con (u ⊔ v)
+Con-⊔' : ∀ {i} → {f g h : FinFun {i}} → ∀ {u v u′ v′} → ⊑-proof h u v → ⊑-proof h u′ v′ →
       ((u , v) ∈ f) ∨ ((u , v) ∈ g) → ((u′ , v′) ∈ f) ∨ ((u′ , v′) ∈ g) →
       con (u ⊔ u′) → con (v ⊔ v′)
 
@@ -159,8 +159,8 @@ Con-⊔ (⊑-s u⊑w) (⊑-s v⊑w) = Con-⊔ u⊑w v⊑w
 Con-⊔ ⊑-ℕ (⊑-bot _) = *
 Con-⊔ ⊑-ℕ ⊑-ℕ = *
 Con-⊔ (⊑-F conf _ _) (⊑-bot _) = conf
-Con-⊔ {F f} {F g} {F h} (⊑-F conf conh p₁) (⊑-F cong _ p₂)
-  = (λ uv∈∪ u′v′∈∪ → Con-⊔' {f} (gf u⊑w v⊑w uv∈∪) (gf u⊑w v⊑w u′v′∈∪) (∪-lemma₂ uv∈∪) (∪-lemma₂ u′v′∈∪)) , {!!}
+Con-⊔ {u = F f} {F g} {F h} (⊑-F conf conh p₁) (⊑-F cong _ p₂)
+  = (λ uv∈∪ u′v′∈∪ → Con-⊔' {f = f} (gf u⊑w v⊑w uv∈∪) (gf u⊑w v⊑w u′v′∈∪) (∪-lemma₂ uv∈∪) (∪-lemma₂ u′v′∈∪)) , {!!}
   where u⊑w = ⊑-F conf conh p₁
         v⊑w = ⊑-F cong conh p₂
 Con-⊔ (⊑-Π x x₂) x₁ = {!!}
@@ -171,11 +171,11 @@ Con-⊔' x x₁ (inl uv∈f) (inl u′v′∈f) conuu′ = {!!}
 Con-⊔' {u = u} {v} {u′} {v′} record { sub = sub ; preable = preable ; sub⊆g = sub⊆g ; pre⊑u = pre⊑u ; v⊑post = v⊑post }
   record { sub = sub′ ; preable = preable′ ; sub⊆g = sub⊆g′ ; pre⊑u = pre⊑u′ ; v⊑post = v⊑post′ }
   (inl here) (inr here) conuu′
-  = Con-⊔ {v} {v′} {post sub ⊔ post sub′} (⊑-⊔-lemma₁ v⊑post def) (⊑-⊔-lemma₂ v⊑post′ def)
+  = Con-⊔ {u = v} {v′} {post sub ⊔ post sub′} (⊑-⊔-lemma₁ v⊑post def) (⊑-⊔-lemma₂ v⊑post′ def)
   where abc : con (pre sub ⊔ pre sub′)
-        abc = Con-⊔ {pre sub} {pre sub′} {u ⊔ u′} (⊑-⊔-lemma₁ pre⊑u conuu′) (⊑-⊔-lemma₂ pre⊑u′ conuu′)
+        abc = Con-⊔ {u = pre sub} {pre sub′} {u ⊔ u′} (⊑-⊔-lemma₁ pre⊑u conuu′) (⊑-⊔-lemma₂ pre⊑u′ conuu′)
         def : con (post sub ⊔ post sub′)
-        def = baff {sub} {sub′} (coherence {sub ∪ sub′} {!!} (biff {sub} abc))
+        def = baff {f = sub} {sub′} (coherence {f = sub ∪ sub′} {!!} (biff {f = sub} abc))
 Con-⊔' x x₁ (inl here) (inr (there u′v′∈g)) conuu′ = {!!}
 Con-⊔' x x₁ (inl (there uv∈f)) (inr here) conuu′ = {!!}
 Con-⊔' x x₁ (inl (there uv∈f)) (inr (there u′v′∈g)) conuu′ = {!!}

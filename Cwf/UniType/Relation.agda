@@ -1,17 +1,19 @@
 module Cwf.UniType.Relation where
 
 open import Base.Core
-open import Base.FinFun
 open import Cwf.UniType.Consistency
 open import Cwf.UniType.Definition
+open import Cwf.UniType.FinFun
 
-record ⊑-proof (g : FinFun Nbh Nbh) (u v : Nbh) : Set
-data _⊑_ : (u v : Nbh) → Set
+open import Agda.Builtin.Size
 
-record ⊑-proof g u v where
+record ⊑-proof {i : Size} (g : FinFun {i}) (u v : Nbh {i}) : Set
+data _⊑_ : ∀ {i} → (u v : Nbh {i}) → Set
+
+record ⊑-proof {i} g u v where
   inductive
   field
-    sub : FinFun Nbh Nbh
+    sub : FinFun {i}
     preable : con (pre sub)
     sub⊆g : sub ⊆ g
     pre⊑u : pre sub ⊑ u

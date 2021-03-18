@@ -1,19 +1,29 @@
 module Cwf.UniType.Definition where
 
 open import Base.Core
-open import Base.FinFun
 
 open import Agda.Builtin.Size
 
-data Nbh : {Size} → Set where
+data Nbh : {Size} → Set
+data FinFun : {Size} → Set
+
+data Nbh where
   ⊥ : ∀ {i} → Nbh {i}
   0ᵤ : ∀ {i} → Nbh {i}
   s : ∀ {i} → Nbh {i} → Nbh {i}
   ℕ : ∀ {i} → Nbh {i}
-  F : ∀ {i} → FinFun (Nbh {i}) (Nbh {i}) -> Nbh {↑ i}
-  Π : ∀ {i} → Nbh {i} → FinFun (Nbh {i}) (Nbh {i}) → Nbh {↑ i}
+  F : ∀ {i} → FinFun {i} -> Nbh {↑ i}
+  Π : ∀ {i} → Nbh {i} → FinFun {i} → Nbh {↑ i}
   𝒰 : ∀ {i} → Nbh {i}
   incons : ∀ {i} → Nbh {i}
+
+data FinFun where
+  ∅ : ∀ {i} → FinFun {i}
+  _∷_ : ∀ {i} → (Nbh {i}) ⊠ (Nbh {i}) → FinFun {i} → FinFun {i}
+
+_∪_ : ∀ {i} → FinFun {i} → FinFun {i} → FinFun {i}
+(x ∷ 𝑓) ∪ 𝑓′ = x ∷ (𝑓 ∪ 𝑓′)
+∅ ∪ 𝑓′ = 𝑓′
 
 _⊔_ : ∀ {i} → Nbh {i} -> Nbh {i} -> Nbh {i}
 ⊥ ⊔ u = u
@@ -67,10 +77,10 @@ _⊔_ : ∀ {i} → Nbh {i} -> Nbh {i} -> Nbh {i}
 𝒰 ⊔ incons = incons
 incons ⊔ _ = incons
 
-pre : FinFun Nbh Nbh → Nbh
+pre : ∀ {i} → FinFun {i} → Nbh {i}
 pre ∅ = ⊥
 pre ((u , v) ∷ f) = u ⊔ pre f
 
-post : FinFun Nbh Nbh → Nbh
+post : ∀ {i} → FinFun {i} → Nbh {i}
 post ∅ = ⊥
 post ((u , v) ∷ f) = v ⊔ post f

@@ -1,9 +1,9 @@
 module Cwf.UniType.AxiomProofs where
 
 open import Base.Core
-open import Base.FinFun
 open import Cwf.UniType.Consistency
 open import Cwf.UniType.Definition
+open import Cwf.UniType.FinFun
 open import Cwf.UniType.Relation
 
 ⊑-reflLemma₁ : ∀ {u v} → u ⊑ v → (u ⊔ ⊥) ⊑ v
@@ -16,7 +16,7 @@ open import Cwf.UniType.Relation
 ⊑-reflLemma₁ ⊑-𝒰 = ⊑-𝒰
 
 ⊑-reflLemma₂ : ∀ {u v} → u ⊑ v → u ⊑ (v ⊔ ⊥)
-⊑-reflLemma₂ {v = v} (⊑-bot conv) = ⊑-bot (conAssoc' {v} conv)
+⊑-reflLemma₂ {v = v} (⊑-bot conv) = ⊑-bot (conAssoc' {u = v} conv)
 ⊑-reflLemma₂ ⊑-0 = ⊑-0
 ⊑-reflLemma₂ (⊑-s u⊑u) = ⊑-s u⊑u
 ⊑-reflLemma₂ ⊑-ℕ = ⊑-ℕ
@@ -40,7 +40,7 @@ open import Cwf.UniType.Relation
 ⊑-refl' {u = u} {v} _ uv∈f | (conu , conv)
   = record
       { sub = (u , v) ∷ ∅
-      ; preable = conAssoc' {u} conu
+      ; preable = conAssoc' {u = u} conu
       ; sub⊆g = ⊆-lemma₅ uv∈f
       ; pre⊑u = ⊑-reflLemma₁ (⊑-refl conu)
       ; v⊑post = ⊑-reflLemma₂ (⊑-refl conv)
