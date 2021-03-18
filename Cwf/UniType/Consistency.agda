@@ -113,29 +113,36 @@ conAssoc' {F f} conf = conf
 conAssoc' {Π u x} conux = conux
 conAssoc' {𝒰} _ = *
 
-conAssoc : ∀ {u v w} → con (u ⊔ (v ⊔ w)) → con ((u ⊔ v) ⊔ w)
-conAssoc {u} conuvw with (conLemma₁ {u} conuvw) | conLemma₂ {u} conuvw
-conAssoc {u} {v} _ | conu | convw with (conLemma₁ {v} convw) |  conLemma₂ {v} convw
-conAssoc {u} {⊥} {w} conuvw | conu | convw | conv | conw = conAssoc'' {u} conuvw
-conAssoc {u} {0ᵤ} {⊥} conuvw | conu | convw | conv | conw = conAssoc' {u ⊔ 0ᵤ} conuvw
-conAssoc {⊥} {0ᵤ} {0ᵤ} conuvw | conu | convw | conv | conw = *
-conAssoc {0ᵤ} {0ᵤ} {0ᵤ} conuvw | conu | convw | conv | conw = *
-conAssoc {u} {s v} {⊥} conuvw | conu | convw | conv | conw = conAssoc' {u ⊔ s v} conuvw
-conAssoc {⊥} {s v} {s w} conuvw | conu | convw | conv | conw = conuvw
-conAssoc {s u} {s v} {s w} conuvw | conu | convw | conv | conw = conAssoc {u} conuvw
-conAssoc {u} {ℕ} {⊥} conuvw | conu | convw | conv | conw = conAssoc' {u ⊔ ℕ} conuvw
-conAssoc {⊥} {ℕ} {ℕ} conuvw | conu | convw | conv | conw = *
-conAssoc {ℕ} {ℕ} {ℕ} conuvw | conu | convw | conv | conw = *
-conAssoc {u} {F f} {⊥} conuvw | conu | convw | conv | conw = conAssoc' {u ⊔ F f} conuvw
-conAssoc {⊥} {F f} {F g} conuvw | conu | convw | conv | conw = conuvw
-conAssoc {F f} {F g} {F h} conuvw | conu | convw | conv | conw = conFinFunAssoc {f} conuvw
-conAssoc {u} {Π v g} {⊥} conuvw | conu | convw | conv | conw = conAssoc' {u ⊔ Π v g} conuvw
-conAssoc {⊥} {Π v g} {Π w h} conuvw | conu | convw | conv | conw = conuvw
-conAssoc {Π u f} {Π v g} {Π w h} (conuvw , confgh) | conu | convw | conv | conw
-  = conAssoc {u} conuvw , conFinFunAssoc {f} confgh
-conAssoc {u} {𝒰} {⊥} conuvw | conu | convw | conv | conw = conAssoc' {u ⊔ 𝒰} conuvw
-conAssoc {⊥} {𝒰} {𝒰} conuvw | conu | convw | conv | conw = *
-conAssoc {𝒰} {𝒰} {𝒰} conuvw | conu | convw | conv | conw = *
+conAssoc₁ : ∀ {u v w} → con (u ⊔ (v ⊔ w)) → con ((u ⊔ v) ⊔ w)
+conAssoc₁ {u} conuvw with (conLemma₁ {u} conuvw) | conLemma₂ {u} conuvw
+conAssoc₁ {u} {v} _ | conu | convw with (conLemma₁ {v} convw) |  conLemma₂ {v} convw
+conAssoc₁ {u} {⊥} {w} conuvw | conu | convw | conv | conw = conAssoc'' {u} conuvw
+conAssoc₁ {u} {0ᵤ} {⊥} conuvw | conu | convw | conv | conw = conAssoc' {u ⊔ 0ᵤ} conuvw
+conAssoc₁ {⊥} {0ᵤ} {0ᵤ} conuvw | conu | convw | conv | conw = *
+conAssoc₁ {0ᵤ} {0ᵤ} {0ᵤ} conuvw | conu | convw | conv | conw = *
+conAssoc₁ {u} {s v} {⊥} conuvw | conu | convw | conv | conw = conAssoc' {u ⊔ s v} conuvw
+conAssoc₁ {⊥} {s v} {s w} conuvw | conu | convw | conv | conw = conuvw
+conAssoc₁ {s u} {s v} {s w} conuvw | conu | convw | conv | conw = conAssoc₁ {u} conuvw
+conAssoc₁ {u} {ℕ} {⊥} conuvw | conu | convw | conv | conw = conAssoc' {u ⊔ ℕ} conuvw
+conAssoc₁ {⊥} {ℕ} {ℕ} conuvw | conu | convw | conv | conw = *
+conAssoc₁ {ℕ} {ℕ} {ℕ} conuvw | conu | convw | conv | conw = *
+conAssoc₁ {u} {F f} {⊥} conuvw | conu | convw | conv | conw = conAssoc' {u ⊔ F f} conuvw
+conAssoc₁ {⊥} {F f} {F g} conuvw | conu | convw | conv | conw = conuvw
+conAssoc₁ {F f} {F g} {F h} conuvw | conu | convw | conv | conw = conFinFunAssoc {f} conuvw
+conAssoc₁ {u} {Π v g} {⊥} conuvw | conu | convw | conv | conw = conAssoc' {u ⊔ Π v g} conuvw
+conAssoc₁ {⊥} {Π v g} {Π w h} conuvw | conu | convw | conv | conw = conuvw
+conAssoc₁ {Π u f} {Π v g} {Π w h} (conuvw , confgh) | conu | convw | conv | conw
+  = conAssoc₁ {u} conuvw , conFinFunAssoc {f} confgh
+conAssoc₁ {u} {𝒰} {⊥} conuvw | conu | convw | conv | conw = conAssoc' {u ⊔ 𝒰} conuvw
+conAssoc₁ {⊥} {𝒰} {𝒰} conuvw | conu | convw | conv | conw = *
+conAssoc₁ {𝒰} {𝒰} {𝒰} conuvw | conu | convw | conv | conw = *
+
+conAssoc₂ : ∀ {u v w} → con ((u ⊔ v) ⊔ w) → con (u ⊔ (v ⊔ w))
+conAssoc₂ {u} {v} {w} conuvw = conSym {v ⊔ w} {u} convw|u
+  where conw|uv = conSym {u ⊔ v} {w} conuvw
+        conwu|v = conAssoc₁ {w} {u} {v} conw|uv
+        conv|wu = conSym {w ⊔ u} {v} conwu|v
+        convw|u = conAssoc₁ {v} {w} {u} conv|wu
 
 conTrans : ∀ {u v w} → con (u ⊔ (v ⊔ w)) → con (u ⊔ w)
 conTrans {u} conuvw with (conLemma₁ {u} conuvw) | conLemma₂ {u} conuvw

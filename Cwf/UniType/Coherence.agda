@@ -65,7 +65,7 @@ coherence {∅} _ _ = *
 coherence {(u , v) ∷ ∅} (_ , conElemsf) _′ with (conElemsf here)
 ... | (_ , conv) = conAssoc' {u = v} conv
 coherence {(u , v) ∷ ((u′ , v′) ∷ f′)} (conPairsf , conElemsf) conupref′
-  = coherence' {v} {v′} {post f′} (conPairsf here (there here) (conLemma₁ {u ⊔ u′} (conAssoc {u} conupref′)))
+  = coherence' {v} {v′} {post f′} (conPairsf here (there here) (conLemma₁ {u ⊔ u′} (conAssoc₁ {u} conupref′)))
     (coherence (subsetIsCon lemma conf) (conTrans {u} conupref′))
     (coherence {f = (u′ , v′) ∷ f′} (subsetIsCon ⊆-lemma₃ conf) (conLemma₂ {u} conupref′))
   where lemma : ∀ {u v f} → (u ∷ f) ⊆ (u ∷ (v ∷ f))
