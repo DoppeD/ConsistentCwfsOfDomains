@@ -37,27 +37,28 @@ open import Agda.Builtin.Equality
 ⊔-assoc {u = 𝒰} {𝒰} {⊥} _ _ = refl
 ⊔-assoc {u = 𝒰} {𝒰} {𝒰} _ _ = refl
 
-a : ∀ {i} → {f g : FinFun {i}} → con (pre f ⊔ pre g) → pre (f ∪ g) ≡ pre f ⊔ pre g
-a {f = ∅} _ = refl
-a {f = (u , v) ∷ f′} conprefg with (conLemma₁ {u = pre ((u , v) ∷ f′)} conprefg)
-a {f = (u , v) ∷ f′} conprefg | conpref with (conLemma₂ {u = u} conpref)
-a {f = (u , v) ∷ f′} {g} conprefg | conpref | conpref′
+preUnionLemma' : ∀ {i} → {f g : FinFun {i}} → con (pre f ⊔ pre g) → pre (f ∪ g) ≡ pre f ⊔ pre g
+preUnionLemma' {f = ∅} _ = refl
+preUnionLemma' {f = (u , v) ∷ f′} conprefg with (conLemma₁ {u = pre ((u , v) ∷ f′)} conprefg)
+preUnionLemma' {f = (u , v) ∷ f′} conprefg | conpref with (conLemma₂ {u = u} conpref)
+preUnionLemma' {f = (u , v) ∷ f′} {g} conprefg | conpref | conpref′
   rewrite (⊔-assoc {u = u} conpref (conLemma₂ {u = u} (conAssoc₂ {u = u} conprefg)))
-  rewrite (a {f = f′} {g} (conLemma₂ {u = u} (conAssoc₂ {u = u} conprefg)))
+  rewrite (preUnionLemma' {f = f′} {g} (conLemma₂ {u = u} (conAssoc₂ {u = u} conprefg)))
   = refl
 
-b : ∀ {f g} → con (post f ⊔ post g) → post (f ∪ g) ≡ (post f ⊔ post g)
-b {∅} conpostf = refl
-b {(u , v) ∷ f′} {g} conpostfg
-  rewrite (⊔-assoc {u = v} (conLemma₁ {u = v ⊔ post f′} conpostfg) (conLemma₂ {u = v} (conAssoc₂ {u = v} conpostfg)))
-  rewrite (b {f′} {g} (conLemma₂ {u = v} (conAssoc₂ {u = v} conpostfg)))
+preUnionLemma : ∀ {i} → {f g : FinFun {i}} → con (pre f ⊔ pre g) → con (pre (f ∪ g))
+preUnionLemma {f = f} {g} conprefg rewrite (preUnionLemma' {f = f} {g} conprefg) = conprefg
+
+postUnionLemma : ∀ {i} → {f g : FinFun {i}} → con (post (f ∪ g)) → con (post f ⊔ post g)
+postUnionLemma' : ∀ {i} → {f g : FinFun {i}} → con (post (f ∪ g)) → post f ⊔ post g ≡ post (f ∪ g)
+
+postUnionLemma {f = f} {g} conpostfg rewrite (postUnionLemma' {f = f} {g} conpostfg) = conpostfg
+
+postUnionLemma' {f = ∅} _ = refl
+postUnionLemma' {f = (u , v) ∷ f′} {g} conpostfg
+  rewrite (⊔-assoc {u = v} {post f′} {post g} {!!} (postUnionLemma {f = f′} {g} (conLemma₂ {u = v} conpostfg)))
+  rewrite (postUnionLemma' {f = f′} (conLemma₂ {u = v} conpostfg))
   = refl
-
-biff : ∀ {i} → {f g : FinFun {i}} → con (pre f ⊔ pre g) → con (pre (f ∪ g))
-biff {f = f} {g} conprefg rewrite (a {f = f} {g} conprefg) = conprefg
-
-baff : ∀ {i} → {f g : FinFun {i}} → con (post (f ∪ g)) → con (post f ⊔ post g)
-baff {f = f} {g} conpostfg rewrite (b {f = f} {g} {!!}) = {!!}
 
 Con-⊔ : ∀ {i} → {u v w : Nbh {i}} → u ⊑ w → v ⊑ w → con (u ⊔ v)
 Con-⊔' : ∀ {i} → {f g h : FinFun {i}} → ∀ {u v u′ v′} →
@@ -110,7 +111,7 @@ Con-⊔' {u = u} {v} {u′} {v′} _ _ conh
   where conpresubs : con (pre sub ⊔ pre sub′)
         conpresubs = Con-⊔ {u = pre sub} {pre sub′} {u ⊔ u′} (⊑-⊔-lemma₁ pre⊑u conuu′) (⊑-⊔-lemma₂ pre⊑u′ conuu′)
         conpostsubs : con (post sub ⊔ post sub′)
-        conpostsubs = baff {f = sub} (coherence {f = sub ∪ sub′} (subsetIsCon (∪-lemma₁ sub⊆g sub⊆g′) conh) (biff {f = sub} conpresubs))
+        conpostsubs = postUnionLemma {f = sub} (coherence {f = sub ∪ sub′} (subsetIsCon (∪-lemma₁ sub⊆g sub⊆g′) conh) (preUnionLemma {f = sub} conpresubs))
 Con-⊔' {u = u} {v} {u′} {v′} _ _ conh
   record { sub = sub ; preable = preable ; sub⊆g = sub⊆g ; pre⊑u = pre⊑u ; v⊑post = v⊑post }
   record { sub = sub′ ; preable = preable′ ; sub⊆g = sub⊆g′ ; pre⊑u = pre⊑u′ ; v⊑post = v⊑post′ }
@@ -119,8 +120,8 @@ Con-⊔' {u = u} {v} {u′} {v′} _ _ conh
   where conpresubs : con (pre sub ⊔ pre sub′)
         conpresubs = Con-⊔ {u = pre sub} {pre sub′} {u ⊔ u′} (⊑-⊔-lemma₁ pre⊑u conuu′) (⊑-⊔-lemma₂ pre⊑u′ conuu′)
         conpostsubs : con (post sub ⊔ post sub′)
-        conpostsubs = baff {f = sub} (coherence {f = sub ∪ sub′} (subsetIsCon (∪-lemma₁ sub⊆g sub⊆g′) conh) (biff {f = sub} conpresubs))
-Con-⊔' (conPairsf , _)  _ _ record {} record {} (inl uv∈f) (inl u′v′∈f) conuu′
+        conpostsubs = postUnionLemma {f = sub} (coherence {f = sub ∪ sub′} (subsetIsCon (∪-lemma₁ sub⊆g sub⊆g′) conh) (preUnionLemma {f = sub} conpresubs))
+Con-⊔' (conPairsf , _)  _ _ _ _ (inl uv∈f) (inl u′v′∈f) conuu′
   = conPairsf uv∈f u′v′∈f conuu′
-Con-⊔' _ (conPairsg , _) _ record {} record {} (inr uv∈g) (inr u′v′∈g) conuu′
+Con-⊔' _ (conPairsg , _) _ _ _ (inr uv∈g) (inr u′v′∈g) conuu′
   = conPairsg uv∈g u′v′∈g conuu′
