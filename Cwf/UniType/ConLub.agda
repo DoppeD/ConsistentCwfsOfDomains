@@ -46,11 +46,11 @@ a {f = (u , v) ∷ f′} {g} conprefg | conpref | conpref′
   rewrite (a {f = f′} {g} (conLemma₂ {u = u} (conAssoc₂ {u = u} conprefg)))
   = refl
 
-b : ∀ {f g} → con (post f) → post (f ∪ g) ≡ (post f ⊔ post g)
+b : ∀ {f g} → con (post f ⊔ post g) → post (f ∪ g) ≡ (post f ⊔ post g)
 b {∅} conpostf = refl
-b {(u , v) ∷ f′} {g} conpostf
-  rewrite (⊔-assoc {u = v} {post f′} {post g} conpostf {!!})
-  rewrite (b {f′} {g} (conLemma₂ {u = v} conpostf))
+b {(u , v) ∷ f′} {g} conpostfg
+  rewrite (⊔-assoc {u = v} (conLemma₁ {u = v ⊔ post f′} conpostfg) (conLemma₂ {u = v} (conAssoc₂ {u = v} conpostfg)))
+  rewrite (b {f′} {g} (conLemma₂ {u = v} (conAssoc₂ {u = v} conpostfg)))
   = refl
 
 biff : ∀ {i} → {f g : FinFun {i}} → con (pre f ⊔ pre g) → con (pre (f ∪ g))
@@ -77,58 +77,49 @@ Con-⊔ ⊑-ℕ (⊑-bot _) = *
 Con-⊔ ⊑-ℕ ⊑-ℕ = *
 Con-⊔ (⊑-F conf _ _) (⊑-bot _) = conf
 Con-⊔ {u = F f} {F g} {F h} (⊑-F conf conh p₁) (⊑-F cong _ p₂)
-  = (λ uv∈∪ u′v′∈∪ → Con-⊔' {f = f} conf cong conh (lemma uv∈∪) (lemma u′v′∈∪) (∪-lemma₂ uv∈∪) (∪-lemma₂ u′v′∈∪)) ,
-    {!!}
+  = (λ uv∈∪ u′v′∈∪ → Con-⊔' {f = f} conf cong conh (lemma uv∈∪) (lemma u′v′∈∪) (∪-lemma₂ uv∈∪) (∪-lemma₂ u′v′∈∪)) , lemma₂
   where lemma : ∀ {u v} → (u , v) ∈ (f ∪ g) → ⊑-proof h u v
         lemma uv∈∪ with (∪-lemma₂ {𝑓 = f} uv∈∪)
         ... | inl uv∈f = p₁ uv∈f
         ... | inr uv∈g = p₂ uv∈g
+        lemma₂ : ∀ {u v} → (u , v) ∈ (f ∪ g) → con u ⊠ con v
+        lemma₂ uv∈∪ with (∪-lemma₂ {𝑓 = f} uv∈∪)
+        ... | inl uv∈f = ⊠-snd conf uv∈f
+        ... | inr uv∈g = ⊠-snd cong uv∈g
 Con-⊔ (⊑-Π u⊑w f⊑h) (⊑-bot _) with (orderOnlyCon u⊑w) | orderOnlyCon f⊑h
 ... | (conu , _) | (conf , _) = conu , conf
 Con-⊔ {u = Π _ f} {Π _ g} {Π _ h} (⊑-Π u⊑w (⊑-F conf conh p₁)) (⊑-Π v⊑w (⊑-F cong _ p₂))
-  = (Con-⊔ u⊑w v⊑w) , ((λ uv∈∪ u′v′∈∪ → Con-⊔' {f = f} conf cong conh (lemma uv∈∪) (lemma u′v′∈∪) (∪-lemma₂ uv∈∪) (∪-lemma₂ u′v′∈∪)) ,
-    {!!})
+  = (Con-⊔ u⊑w v⊑w) ,
+    ((λ uv∈∪ u′v′∈∪ → Con-⊔' {f = f} conf cong conh (lemma uv∈∪) (lemma u′v′∈∪) (∪-lemma₂ uv∈∪) (∪-lemma₂ u′v′∈∪)) , lemma₂)
   where lemma : ∀ {u v} → (u , v) ∈ (f ∪ g) → ⊑-proof h u v
         lemma uv∈∪ with (∪-lemma₂ {𝑓 = f} uv∈∪)
         ... | inl uv∈f = p₁ uv∈f
         ... | inr uv∈g = p₂ uv∈g
+        lemma₂ : ∀ {u v} → (u , v) ∈ (f ∪ g) → con u ⊠ con v
+        lemma₂ uv∈∪ with (∪-lemma₂ {𝑓 = f} uv∈∪)
+        ... | inl uv∈f = ⊠-snd conf uv∈f
+        ... | inr uv∈g = ⊠-snd cong uv∈g
 Con-⊔ ⊑-𝒰 (⊑-bot _) = *
 Con-⊔ ⊑-𝒰 ⊑-𝒰 = *
 
 Con-⊔' {u = u} {v} {u′} {v′} _ _ conh
   record { sub = sub ; preable = preable ; sub⊆g = sub⊆g ; pre⊑u = pre⊑u ; v⊑post = v⊑post }
   record { sub = sub′ ; preable = preable′ ; sub⊆g = sub⊆g′ ; pre⊑u = pre⊑u′ ; v⊑post = v⊑post′ }
-  (inl here) (inr here) conuu′
+  (inl uv∈f) (inr u′v′∈g) conuu′
   = Con-⊔ {u = v} {v′} (⊑-⊔-lemma₁ v⊑post conpostsubs) (⊑-⊔-lemma₂ v⊑post′ conpostsubs)
   where conpresubs : con (pre sub ⊔ pre sub′)
         conpresubs = Con-⊔ {u = pre sub} {pre sub′} {u ⊔ u′} (⊑-⊔-lemma₁ pre⊑u conuu′) (⊑-⊔-lemma₂ pre⊑u′ conuu′)
         conpostsubs : con (post sub ⊔ post sub′)
         conpostsubs = baff {f = sub} (coherence {f = sub ∪ sub′} (subsetIsCon (∪-lemma₁ sub⊆g sub⊆g′) conh) (biff {f = sub} conpresubs))
-Con-⊔' conf cong conh p₁ p₂ (inl here) (inr (there u′v′∈g)) conuu′
-  = Con-⊔' conf (subsetIsCon ⊆-lemma₃ cong) conh p₁ p₂ (inl here) (inr u′v′∈g) conuu′
-Con-⊔' conf cong conh p₁ p₂ (inl (there uv∈f)) (inr here) conuu′
-  = Con-⊔' (subsetIsCon ⊆-lemma₃ conf) cong conh p₁ p₂ (inl uv∈f) (inr here) conuu′
-Con-⊔' conf cong conh p₁ p₂ (inl (there uv∈f)) (inr (there u′v′∈g)) conuu′
-  = Con-⊔' (subsetIsCon ⊆-lemma₃ conf)
-    (subsetIsCon ⊆-lemma₃ cong) conh p₁ p₂ (inl uv∈f) (inr u′v′∈g) conuu′
-
 Con-⊔' {u = u} {v} {u′} {v′} _ _ conh
   record { sub = sub ; preable = preable ; sub⊆g = sub⊆g ; pre⊑u = pre⊑u ; v⊑post = v⊑post }
   record { sub = sub′ ; preable = preable′ ; sub⊆g = sub⊆g′ ; pre⊑u = pre⊑u′ ; v⊑post = v⊑post′ }
-  (inr here) (inl here) conuu′
+  (inr uv∈g) (inl uv∈f) conuu′
   = Con-⊔ {u = v} {v′} (⊑-⊔-lemma₁ v⊑post conpostsubs) (⊑-⊔-lemma₂ v⊑post′ conpostsubs)
   where conpresubs : con (pre sub ⊔ pre sub′)
         conpresubs = Con-⊔ {u = pre sub} {pre sub′} {u ⊔ u′} (⊑-⊔-lemma₁ pre⊑u conuu′) (⊑-⊔-lemma₂ pre⊑u′ conuu′)
         conpostsubs : con (post sub ⊔ post sub′)
         conpostsubs = baff {f = sub} (coherence {f = sub ∪ sub′} (subsetIsCon (∪-lemma₁ sub⊆g sub⊆g′) conh) (biff {f = sub} conpresubs))
-Con-⊔' conf cong conh p₁ p₂ (inr here) (inl (there u′v′∈f)) conuu′
-  = Con-⊔' (subsetIsCon ⊆-lemma₃ conf) cong conh p₁ p₂ (inr here) (inl u′v′∈f) conuu′
-Con-⊔' conf cong conh p₁ p₂ (inr (there uv∈g)) (inl here) conuu′
-  = Con-⊔'  conf (subsetIsCon ⊆-lemma₃ cong) conh p₁ p₂ (inr uv∈g) (inl here) conuu′
-Con-⊔' conf cong conh p₁ p₂ (inr (there uv∈g)) (inl (there u′v′∈f)) conuu′
-  = Con-⊔' (subsetIsCon ⊆-lemma₃ conf)
-    (subsetIsCon ⊆-lemma₃ cong) conh p₁ p₂ (inr uv∈g) (inl u′v′∈f) conuu′
-
 Con-⊔' (conPairsf , _)  _ _ record {} record {} (inl uv∈f) (inl u′v′∈f) conuu′
   = conPairsf uv∈f u′v′∈f conuu′
 Con-⊔' _ (conPairsg , _) _ record {} record {} (inr uv∈g) (inr u′v′∈g) conuu′

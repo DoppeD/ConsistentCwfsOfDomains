@@ -31,6 +31,12 @@ tail (_ :: xs) = xs
 data _⊠_ (A B : Set) : Set where
   _,_ : A → B → A ⊠ B
 
+⊠-fst : {A B : Set} → A ⊠ B → A
+⊠-fst (a , _) = a
+
+⊠-snd : {A B : Set} → A ⊠ B → B
+⊠-snd (_ , b) = b
+
 -- Logical and.
 data _∧_ (A B : Set) : Set where
   ∧-intro : A → B → A ∧ B
