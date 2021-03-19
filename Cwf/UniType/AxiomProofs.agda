@@ -2,6 +2,7 @@ module Cwf.UniType.AxiomProofs where
 
 open import Base.Core
 open import Cwf.UniType.Consistency
+open import Cwf.UniType.ConsistencyLemmata
 open import Cwf.UniType.Definition
 open import Cwf.UniType.FinFun
 open import Cwf.UniType.Relation

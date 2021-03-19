@@ -31,7 +31,7 @@ data _⊑_ where
   ⊑-𝒰 : 𝒰 ⊑ 𝒰
 
 -- Ordering is only defined for consistent neighborhoods
-orderOnlyCon : ∀ {u v} → u ⊑ v → con u ⊠ con v
+orderOnlyCon : ∀ {i} → {u v : Nbh {i}} → u ⊑ v → con u ⊠ con v
 orderOnlyCon (⊑-bot conu) = * , conu
 orderOnlyCon ⊑-0 = * , *
 orderOnlyCon (⊑-s u⊑v) = orderOnlyCon u⊑v

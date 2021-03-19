@@ -1,8 +1,9 @@
 module Cwf.UniType.FinFun where
 
 open import Base.Core
---open import Base.Variables
 open import Cwf.UniType.Definition
+
+open import Agda.Builtin.Equality
 
 data _∈_ : ∀ {i} → (Nbh {i}) ⊠ (Nbh {i}) → FinFun {i} → Set where
   here : ∀ {i} → {x : Nbh {i} ⊠ Nbh {i}} → ∀ {𝑓} → x ∈ (x ∷ 𝑓)
@@ -86,6 +87,10 @@ _⊆_ : ∀ {i} → (𝑓 𝑓′ : FinFun {i}) → Set
   ∪-lemma₄ {𝑓 = 𝑓} (∪-lemma₃ {𝑓 = 𝑓′} x∈𝑓′)
 ∪-lemma₈ {𝑓 = 𝑓} {𝑓′} _ | inr x∈𝑓″
   = ∪-lemma₄ {𝑓 = 𝑓} (∪-lemma₄ {𝑓 = 𝑓′} x∈𝑓″)
+
+∪-assoc : ∀ {i} → {f g h : FinFun {i}} → (f ∪ (g ∪ h)) ≡ ((f ∪ g) ∪ h)
+∪-assoc {f = ∅} {g} {h} = refl
+∪-assoc {f = _ ∷ f} {g} {h} rewrite (∪-assoc {f = f} {g} {h}) = refl
 
 -- From a proof that a pair of neighborhoods is in the
 -- empty set, anything.
