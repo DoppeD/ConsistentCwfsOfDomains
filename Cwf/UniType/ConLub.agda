@@ -47,17 +47,22 @@ preUnionLemma' {f = (u , v) ∷ f′} {g} conprefg | conpref | conpref′
   = refl
 
 preUnionLemma : ∀ {i} → {f g : FinFun {i}} → con (pre f ⊔ pre g) → con (pre (f ∪ g))
-preUnionLemma {f = f} {g} conprefg rewrite (preUnionLemma' {f = f} {g} conprefg) = conprefg
+preUnionLemma {f = f} {g} conprefg
+  rewrite (preUnionLemma' {f = f} {g} conprefg)
+  = conprefg
 
-postUnionLemma : ∀ {i} → {f g : FinFun {i}} → con (post (f ∪ g)) → con (post f ⊔ post g)
-postUnionLemma' : ∀ {i} → {f g : FinFun {i}} → con (post (f ∪ g)) → post f ⊔ post g ≡ post (f ∪ g)
+postUnionLemma : ∀ {i} → {f g : FinFun {i}} → con (post f) → con (post (f ∪ g)) → con (post f ⊔ post g)
+postUnionLemma' : ∀ {i} → {f g : FinFun {i}} → con (post f) → con (post (f ∪ g)) → post f ⊔ post g ≡ post (f ∪ g)
 
-postUnionLemma {f = f} {g} conpostfg rewrite (postUnionLemma' {f = f} {g} conpostfg) = conpostfg
+postUnionLemma {f = f} {g} conpostf conpostfg
+  rewrite (postUnionLemma' {f = f} {g} conpostf conpostfg)
+  = conpostfg
 
-postUnionLemma' {f = ∅} _ = refl
-postUnionLemma' {f = (u , v) ∷ f′} {g} conpostfg
-  rewrite (⊔-assoc {u = v} {post f′} {post g} {!!} (postUnionLemma {f = f′} {g} (conLemma₂ {u = v} conpostfg)))
-  rewrite (postUnionLemma' {f = f′} (conLemma₂ {u = v} conpostfg))
+postUnionLemma' {f = ∅} _ _ = refl
+postUnionLemma' {f = (u , v) ∷ f′} conpostf conpostfg
+  rewrite (⊔-assoc {u = v} conpostf
+          (postUnionLemma {f = f′} (conLemma₂ {u = v} conpostf) (conLemma₂ {u = v} conpostfg)))
+  rewrite (postUnionLemma' {f = f′} (conLemma₂ {u = v} conpostf) (conLemma₂ {u = v} conpostfg))
   = refl
 
 Con-⊔ : ∀ {i} → {u v w : Nbh {i}} → u ⊑ w → v ⊑ w → con (u ⊔ v)
@@ -109,18 +114,26 @@ Con-⊔' {u = u} {v} {u′} {v′} _ _ conh
   (inl uv∈f) (inr u′v′∈g) conuu′
   = Con-⊔ {u = v} {v′} (⊑-⊔-lemma₁ v⊑post conpostsubs) (⊑-⊔-lemma₂ v⊑post′ conpostsubs)
   where conpresubs : con (pre sub ⊔ pre sub′)
-        conpresubs = Con-⊔ {u = pre sub} {pre sub′} {u ⊔ u′} (⊑-⊔-lemma₁ pre⊑u conuu′) (⊑-⊔-lemma₂ pre⊑u′ conuu′)
+        conpresubs = Con-⊔ (⊑-⊔-lemma₁ pre⊑u conuu′) (⊑-⊔-lemma₂ pre⊑u′ conuu′)
+        conpostsub : con (post sub)
+        conpostsub = coherence {f = sub} (subsetIsCon sub⊆g conh) preable
+        conpost∪ : con (post (sub ∪ sub′))
+        conpost∪ = (coherence (subsetIsCon (∪-lemma₁ sub⊆g sub⊆g′) conh) (preUnionLemma  {f = sub} conpresubs))
         conpostsubs : con (post sub ⊔ post sub′)
-        conpostsubs = postUnionLemma {f = sub} (coherence {f = sub ∪ sub′} (subsetIsCon (∪-lemma₁ sub⊆g sub⊆g′) conh) (preUnionLemma {f = sub} conpresubs))
+        conpostsubs = postUnionLemma {f = sub} conpostsub conpost∪
 Con-⊔' {u = u} {v} {u′} {v′} _ _ conh
   record { sub = sub ; preable = preable ; sub⊆g = sub⊆g ; pre⊑u = pre⊑u ; v⊑post = v⊑post }
   record { sub = sub′ ; preable = preable′ ; sub⊆g = sub⊆g′ ; pre⊑u = pre⊑u′ ; v⊑post = v⊑post′ }
   (inr uv∈g) (inl uv∈f) conuu′
   = Con-⊔ {u = v} {v′} (⊑-⊔-lemma₁ v⊑post conpostsubs) (⊑-⊔-lemma₂ v⊑post′ conpostsubs)
   where conpresubs : con (pre sub ⊔ pre sub′)
-        conpresubs = Con-⊔ {u = pre sub} {pre sub′} {u ⊔ u′} (⊑-⊔-lemma₁ pre⊑u conuu′) (⊑-⊔-lemma₂ pre⊑u′ conuu′)
+        conpresubs = Con-⊔ (⊑-⊔-lemma₁ pre⊑u conuu′) (⊑-⊔-lemma₂ pre⊑u′ conuu′)
+        conpostsub : con (post sub)
+        conpostsub = coherence {f = sub} (subsetIsCon sub⊆g conh) preable
+        conpost∪ : con (post (sub ∪ sub′))
+        conpost∪ = (coherence (subsetIsCon (∪-lemma₁ sub⊆g sub⊆g′) conh) (preUnionLemma  {f = sub} conpresubs))
         conpostsubs : con (post sub ⊔ post sub′)
-        conpostsubs = postUnionLemma {f = sub} (coherence {f = sub ∪ sub′} (subsetIsCon (∪-lemma₁ sub⊆g sub⊆g′) conh) (preUnionLemma {f = sub} conpresubs))
+        conpostsubs = postUnionLemma {f = sub} conpostsub conpost∪
 Con-⊔' (conPairsf , _)  _ _ _ _ (inl uv∈f) (inl u′v′∈f) conuu′
   = conPairsf uv∈f u′v′∈f conuu′
 Con-⊔' _ (conPairsg , _) _ _ _ (inr uv∈g) (inr u′v′∈g) conuu′
