@@ -1,17 +1,17 @@
 {-# OPTIONS --safe --sized-types #-}
 
-module Cwf.UniType.Transitivity where
+module Cwf.DomainCwf.UniType.Transitivity where
 
 open import Base.Core
-open import Cwf.UniType.Coherence
-open import Cwf.UniType.ConLub
-open import Cwf.UniType.Consistency
-open import Cwf.UniType.ConsistencyLemmata
-open import Cwf.UniType.ConLub
-open import Cwf.UniType.Definition
-open import Cwf.UniType.FinFun
-open import Cwf.UniType.Relation
-open import Cwf.UniType.RelationLemmata
+open import Cwf.DomainCwf.UniType.Coherence
+open import Cwf.DomainCwf.UniType.ConLub
+open import Cwf.DomainCwf.UniType.Consistency
+open import Cwf.DomainCwf.UniType.ConsistencyLemmata
+open import Cwf.DomainCwf.UniType.ConLub
+open import Cwf.DomainCwf.UniType.Definition
+open import Cwf.DomainCwf.UniType.FinFun
+open import Cwf.DomainCwf.UniType.Relation
+open import Cwf.DomainCwf.UniType.RelationLemmata
 
 open import Agda.Builtin.Equality
 

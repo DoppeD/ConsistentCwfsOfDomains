@@ -1,12 +1,12 @@
 {-# OPTIONS --safe --sized-types #-}
 
-module Cwf.UniType.Coherence where
+module Cwf.DomainCwf.UniType.Coherence where
 
 open import Base.Core
-open import Cwf.UniType.Consistency
-open import Cwf.UniType.ConsistencyLemmata
-open import Cwf.UniType.Definition
-open import Cwf.UniType.FinFun
+open import Cwf.DomainCwf.UniType.Consistency
+open import Cwf.DomainCwf.UniType.ConsistencyLemmata
+open import Cwf.DomainCwf.UniType.Definition
+open import Cwf.DomainCwf.UniType.FinFun
 
 private
   conElems : ∀ {i} → FinFun {i} → Set

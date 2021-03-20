@@ -1,13 +1,13 @@
 {-# OPTIONS --safe --sized-types #-}
 
-module Cwf.UniType.RelationLemmata where
+module Cwf.DomainCwf.UniType.RelationLemmata where
 
 open import Base.Core
-open import Cwf.UniType.AxiomProofs
-open import Cwf.UniType.Consistency
-open import Cwf.UniType.Definition
-open import Cwf.UniType.FinFun
-open import Cwf.UniType.Relation
+open import Cwf.DomainCwf.UniType.AxiomProofs
+open import Cwf.DomainCwf.UniType.Consistency
+open import Cwf.DomainCwf.UniType.Definition
+open import Cwf.DomainCwf.UniType.FinFun
+open import Cwf.DomainCwf.UniType.Relation
 
 grow-⊑ : ∀ {i} → {f g h : FinFun {i}} → g ⊆ h →
         (∀ {u v} → (u , v) ∈ f → ⊑-proof g u v) →

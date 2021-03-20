@@ -1,11 +1,11 @@
 {-# OPTIONS --safe --sized-types #-}
 
-module Cwf.UniType.Relation where
+module Cwf.DomainCwf.UniType.Relation where
 
 open import Base.Core
-open import Cwf.UniType.Consistency
-open import Cwf.UniType.Definition
-open import Cwf.UniType.FinFun
+open import Cwf.DomainCwf.UniType.Consistency
+open import Cwf.DomainCwf.UniType.Definition
+open import Cwf.DomainCwf.UniType.FinFun
 
 open import Agda.Builtin.Size
 

@@ -1,6 +1,6 @@
 {-# OPTIONS --safe --sized-types #-}
 
-module Cwf.UniType.Definition where
+module Cwf.DomainCwf.UniType.Definition where
 
 open import Base.Core
 
