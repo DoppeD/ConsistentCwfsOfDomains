@@ -7,7 +7,7 @@ open import Cwf.UniType.Definition
 open import Cwf.UniType.FinFun
 open import Cwf.UniType.Relation
 
-⊑-reflLemma₁ : ∀ {u v} → u ⊑ v → (u ⊔ ⊥) ⊑ v
+⊑-reflLemma₁ : ∀ {i} → {u v : Nbh {i}} → u ⊑ v → (u ⊔ ⊥) ⊑ v
 ⊑-reflLemma₁ (⊑-bot conv) = ⊑-bot conv
 ⊑-reflLemma₁ ⊑-0 = ⊑-0
 ⊑-reflLemma₁ (⊑-s u⊑u) = ⊑-s u⊑u
@@ -50,13 +50,13 @@ open import Cwf.UniType.Relation
 ⊑-⊥ : ∀ {u} → con u → ⊥ ⊑ u
 ⊑-⊥ conu = ⊑-bot conu
 
-⊑-⊔' : ∀ {f g h} → (F f) ⊑ (F h) → (F g) ⊑ (F h) →
+⊑-⊔' : ∀ {i} → {f g h : FinFun {i}} → (F f) ⊑ (F h) → (F g) ⊑ (F h) →
        ∀ {u v} → (u , v) ∈ (f ∪ g) → ⊑-proof h u v
-⊑-⊔' {f} (⊑-F _ _ p₁) (⊑-F _ _ p₂) uv∈f∪g with (∪-lemma₂ {𝑓 = f} uv∈f∪g)
+⊑-⊔' {f = f} (⊑-F _ _ p₁) (⊑-F _ _ p₂) uv∈f∪g with (∪-lemma₂ {𝑓 = f} uv∈f∪g)
 ... | inl uv∈f = p₁ uv∈f
 ... | inr uv∈g = p₂ uv∈g
 
-⊑-⊔ : ∀ {u v w} → u ⊑ w → v ⊑ w → con (u ⊔ v) → (u ⊔ v) ⊑ w
+⊑-⊔ : ∀ {i} → {u v w : Nbh {i}} → u ⊑ w → v ⊑ w → con (u ⊔ v) → (u ⊔ v) ⊑ w
 ⊑-⊔ u⊑w (⊑-bot _) _ = ⊑-reflLemma₁ u⊑w
 ⊑-⊔ (⊑-bot x) ⊑-0 _ = ⊑-0
 ⊑-⊔ ⊑-0 ⊑-0 _ = ⊑-0

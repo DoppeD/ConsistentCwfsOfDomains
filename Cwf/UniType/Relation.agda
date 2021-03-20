@@ -20,14 +20,14 @@ record ⊑-proof {i} g u v where
     v⊑post : v ⊑ post sub
 
 data _⊑_ where
-  ⊑-bot : ∀ {u} → con u → ⊥ ⊑ u
+  ⊑-bot : ∀ {i} → {u : Nbh {i}} → con u → ⊥ ⊑ u
   ⊑-0 : 0ᵤ ⊑ 0ᵤ
-  ⊑-s : ∀ {u v} → u ⊑ v → s u ⊑ s v
+  ⊑-s : ∀ {i} → {u v : Nbh {i}} → u ⊑ v → s u ⊑ s v
   ⊑-ℕ : ℕ ⊑ ℕ
-  ⊑-F : ∀ {f g} → (conf : conFinFun f) → (cong : conFinFun g) →
+  ⊑-F : ∀ {i} → {f g : FinFun {i}} → (conf : conFinFun f) → (cong : conFinFun g) →
         (∀ {u v} → (u , v) ∈ f → ⊑-proof g u v) →
         F f ⊑ F g
-  ⊑-Π : ∀ {u v f g} → u ⊑ v → F f ⊑ F g → Π u f ⊑ Π v g
+  ⊑-Π : ∀ {i} → {u v : Nbh {i}} → {f g : FinFun {i}} → u ⊑ v → F f ⊑ F g → Π u f ⊑ Π v g
   ⊑-𝒰 : 𝒰 ⊑ 𝒰
 
 -- Ordering is only defined for consistent neighborhoods

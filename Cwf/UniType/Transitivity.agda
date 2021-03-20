@@ -13,7 +13,7 @@ open import Cwf.UniType.RelationLemmata
 
 open import Agda.Builtin.Equality
 
-Ω : ∀ {f g} → F f ⊑ F g → con (pre f) → ⊑-proof g (pre f) (post f)
+Ω : ∀ {i} → {f g : FinFun {i}} → F f ⊑ F g → con (pre f) → ⊑-proof g (pre f) (post f)
 Ω {f = ∅} _ _
   = record
       { sub = ∅
@@ -23,7 +23,7 @@ open import Agda.Builtin.Equality
       ; v⊑post = ⊑-bot *
       }
 Ω {f = (u , v) ∷ f′} {g} (⊑-F conf cong p) conpref
-  with (p here) | Ω {f′} (⊑-F (subsetIsCon ⊆-lemma₃ conf) cong (λ u′v′∈f′ → p (there u′v′∈f′))) (conLemma₂ {u = u} conpref)
+  with (p here) | Ω {f = f′} (⊑-F (subsetIsCon ⊆-lemma₃ conf) cong (λ u′v′∈f′ → p (there u′v′∈f′))) (conLemma₂ {u = u} conpref)
 ... | record { sub = sub ; preable = preable ; sub⊆g = sub⊆g ; pre⊑u = pre⊑u ; v⊑post = v⊑post }
     | record { sub = rsub ; preable = rpreable ; sub⊆g = rsub⊆g ; pre⊑u = rpre⊑u ; v⊑post = rv⊑post }
   = record
@@ -51,13 +51,13 @@ open import Agda.Builtin.Equality
 ⊑-trans (⊑-s u⊑v) (⊑-s v⊑w) = ⊑-s (⊑-trans u⊑v v⊑w)
 ⊑-trans ⊑-ℕ v⊑w = v⊑w
 ⊑-trans (⊑-F conf cong p₁) (⊑-F _ conh p₂)
-  = ⊑-F conf conh (λ uv∈f → ⊑-trans' uv∈f (p₁ uv∈f) {!!})
-⊑-trans (⊑-Π u⊑v f⊑g) v⊑w = {!!}
+  = ⊑-F conf conh (λ uv∈f → ⊑-trans' uv∈f (p₁ uv∈f) (⊑-F cong conh p₂))
+⊑-trans (⊑-Π u⊑v f⊑g) (⊑-Π v⊑w g⊑h) = ⊑-Π (⊑-trans u⊑v v⊑w) (⊑-trans f⊑g g⊑h)
 ⊑-trans ⊑-𝒰 v⊑w = v⊑w
 
 ⊑-trans' {h = h} here
   record { sub = sub ; preable = preable ; sub⊆g = sub⊆g ; pre⊑u = pre⊑u ; v⊑post = v⊑post }
-  (⊑-F cong conh p) with (Ω {f = sub} {!!} preable)
+  (⊑-F cong conh p) with (Ω (⊑-F (subsetIsCon sub⊆g cong) conh (shrink-⊑ sub⊆g (⊑-F cong conh p))) preable)
 ... | record { sub = sub′ ; preable = preable′ ; sub⊆g = sub⊆g′ ; pre⊑u = pre⊑u′ ; v⊑post = v⊑post′ }
   = record
       { sub = sub′
@@ -66,4 +66,4 @@ open import Agda.Builtin.Equality
       ; pre⊑u = ⊑-trans pre⊑u′ pre⊑u
       ; v⊑post = ⊑-trans v⊑post v⊑post′
       }
-⊑-trans' {f = (_ ∷ f′)} (there uv∈f′) x₁ x₂ = {!!}
+⊑-trans' (there uv∈f′) proofguv g⊑h = ⊑-trans' uv∈f′ proofguv g⊑h
