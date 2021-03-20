@@ -1,3 +1,5 @@
+{-# OPTIONS --safe --sized-types #-}
+
 module Cwf.UniType.Definition where
 
 open import Base.Core

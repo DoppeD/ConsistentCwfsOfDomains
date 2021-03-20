@@ -1,3 +1,5 @@
+{-# OPTIONS --safe --sized-types #-}
+
 module Cwf.UniType.Instance where
 
 open import Base.Core
@@ -12,19 +14,16 @@ open import NbhSys.Definition
 data ConNbh : Set where
   conNbh : (u : Nbh) → con u → ConNbh
 
-unwrapNbh : ConNbh → Nbh
-unwrapNbh (conNbh u _) = u
-
 UniType : NbhSys
 NbhSys.Nbh UniType = ConNbh
-NbhSys._⊑_ UniType u v = unwrapNbh u ⊑ unwrapNbh v
-NbhSys.Con UniType u v = con (unwrapNbh u ⊔ unwrapNbh v)
-NbhSys._⊔_[_] UniType u v conuv = conNbh (unwrapNbh u ⊔ unwrapNbh v) conuv
+NbhSys._⊑_ UniType (conNbh u _) (conNbh v _) = u ⊑ v
+NbhSys.Con UniType (conNbh u _) (conNbh v _) = con (u ⊔ v)
+NbhSys._⊔_[_] UniType (conNbh u _) (conNbh v _) conuv = conNbh (u ⊔ v) conuv
 NbhSys.⊥ UniType = conNbh ⊥ *
-NbhSys.Con-⊔ UniType = Con-⊔
+NbhSys.Con-⊔ UniType {conNbh _ _} {conNbh _ _} {conNbh _ _} = Con-⊔
 NbhSys.⊑-refl UniType {conNbh _ conu} = ⊑-refl conu
-NbhSys.⊑-trans UniType = ⊑-trans
+NbhSys.⊑-trans UniType {conNbh _ _} {conNbh _ _} {conNbh _ _} = ⊑-trans
 NbhSys.⊑-⊥ UniType {conNbh _ conu} = ⊑-⊥ conu
-NbhSys.⊑-⊔ UniType = ⊑-⊔
-NbhSys.⊑-⊔-fst UniType = ⊑-⊔-fst
-NbhSys.⊑-⊔-snd UniType = ⊑-⊔-snd
+NbhSys.⊑-⊔ UniType {conNbh _ _} {conNbh _ _} {conNbh _ _} = ⊑-⊔
+NbhSys.⊑-⊔-fst UniType {conNbh _ _} {conNbh _ _} = ⊑-⊔-fst
+NbhSys.⊑-⊔-snd UniType {conNbh _ _} {conNbh _ _} = ⊑-⊔-snd

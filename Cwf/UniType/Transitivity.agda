@@ -1,3 +1,5 @@
+{-# OPTIONS --safe --sized-types #-}
+
 module Cwf.UniType.Transitivity where
 
 open import Base.Core

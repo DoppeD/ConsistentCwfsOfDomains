@@ -1,3 +1,5 @@
+{-# OPTIONS --safe --sized-types #-}
+
 module Cwf.UniType.ConsistencyLemmata where
 
 open import Base.Core
