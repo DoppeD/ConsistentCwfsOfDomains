@@ -26,6 +26,9 @@ conLemma₁ {u = F f} {F g} (conPairsfg , conElemsfg)
     (λ uv∈f → conElemsfg (∪-lemma₃ uv∈f))
 conLemma₁ {u = refl _} {⊥} conuv = conuv
 conLemma₁ {u = refl u} {refl v} conuv = conLemma₁ {u = u} conuv
+conLemma₁ {u = I _ _ _} {⊥} conuv = conuv
+conLemma₁ {u = I U u v} {I U′ u′ v′} (conUU′ , (conuu′ , convv′))
+  = (conLemma₁ {u = U} conUU′) , (conLemma₁ {u = u} conuu′ , conLemma₁ {u = v} convv′)
 conLemma₁ {u = Π _ _} {⊥} conuv = conuv
 conLemma₁ {u = Π u f} {Π v g} (conuv , confg)
   = conLemma₁ {u = u} conuv , subsetIsCon (∪-lemma₃ {𝑓′ = g}) confg
@@ -38,11 +41,14 @@ conLemma₂ {u = ⊥} {s _} conuv = conuv
 conLemma₂ {u = s u} {s _} conuv = conLemma₂ {u = u} conuv
 conLemma₂ {v = ℕ} _ = *
 conLemma₂ {u = ⊥} {F _} conuv = conuv
-conLemma₂ {u = ⊥} {refl _} conuv = conuv
-conLemma₂ {u = refl u} {refl v} conuv = conLemma₂ {u = u} conuv
 conLemma₂ {u = F f} {F g} (conPairsfg , conElemsfg)
   = (λ uv∈g u′v′∈g conuu′ → conPairsfg (∪-lemma₄ uv∈g) (∪-lemma₄ u′v′∈g) conuu′) ,
     (λ uv∈g → conElemsfg (∪-lemma₄ uv∈g))
+conLemma₂ {u = ⊥} {refl _} conuv = conuv
+conLemma₂ {u = refl u} {refl v} conuv = conLemma₂ {u = u} conuv
+conLemma₂ {u = ⊥} {I _ _ _} conuv = conuv
+conLemma₂ {u = I U u v} {I U′ u′ v′} (conUU′ , (conuu′ , convv′))
+  = conLemma₂ {u = U} conUU′ , (conLemma₂ {u = u} conuu′ , conLemma₂ {u = v} convv′)
 conLemma₂ {u = ⊥} {Π _ _} conuv = conuv
 conLemma₂ {u = Π u f} {Π v g} (conuv , confg)
   = conLemma₂ {u = u} conuv , subsetIsCon (∪-lemma₄ {𝑓′ = g}) confg
@@ -68,6 +74,7 @@ conSym {u = ⊥} {s _} conuv = conuv
 conSym {u = ⊥} {ℕ} _ = *
 conSym {u = ⊥} {F _} conuv = conuv
 conSym {u = ⊥} {refl _} conuv = conuv
+conSym {u = ⊥} {I _ _ _} conuv = conuv
 conSym {u = ⊥} {Π _ _} conuv = conuv
 conSym {u = ⊥} {𝒰} _ = *
 conSym {u = 0ᵤ} {⊥} _ = *
@@ -80,6 +87,9 @@ conSym {u = F _} {⊥} conuv = conuv
 conSym {u = F f} {F g} conuv = conFinFunSym {f = f} conuv
 conSym {u = refl _} {⊥} conuv = conuv
 conSym {u = refl u} {refl v} conuv = conSym {u = u} conuv
+conSym {u = I _ _ _} {⊥} conuv = conuv
+conSym {u = I U u v} {I U′ u′ v′} (conUU′ , (conuu′ , convv′))
+  = (conSym {u = U} conUU′) , (conSym {u = u} conuu′ , conSym {u = v} convv′)
 conSym {u = Π _ _} {⊥} conuv = conuv
 conSym {u = Π u f} {Π _ _} (conuv , confg) = (conSym {u = u} conuv) , conFinFunSym {f = f} confg
 conSym {u = 𝒰} {⊥} _ = *
@@ -97,6 +107,7 @@ conAssoc'' {u = s _} conuv = conuv
 conAssoc'' {u = ℕ} conuv = conuv
 conAssoc'' {u = F _} conuv = conuv
 conAssoc'' {u = refl _} conuv = conuv
+conAssoc'' {u = I _ _ _} conuv = conuv
 conAssoc'' {u = Π _ _} conuv = conuv
 conAssoc'' {u = 𝒰} conuv = conuv
 
@@ -107,7 +118,8 @@ conAssoc' {u = s _} conu = conu
 conAssoc' {u = ℕ} _ = *
 conAssoc' {u = F _} conf = conf
 conAssoc' {u = refl _} conu = conu
-conAssoc' {u = Π _ _} conux = conux
+conAssoc' {u = I _ _ _} conu = conu
+conAssoc' {u = Π _ _} conu = conu
 conAssoc' {u = 𝒰} _ = *
 
 conAssoc₁ : ∀ {i} → {u v w : Nbh {i}} → con (u ⊔ (v ⊔ w)) → con ((u ⊔ v) ⊔ w)
@@ -129,6 +141,10 @@ conAssoc₁ {u = F f} {F _} {F _} conuvw | _ | _ | _ | _ = conFinFunAssoc {f = f
 conAssoc₁ {u = u} {refl v} {⊥} conuvw | _ | _ | _ | _ = conAssoc' {u = u ⊔ refl v} conuvw
 conAssoc₁ {u = ⊥} {refl _} {refl _} conuvw | _ | _ | _ | _ = conuvw
 conAssoc₁ {u = refl u} {refl _} {refl _} conuvw | _ | _ | _ | _ = conAssoc₁ {u = u} conuvw
+conAssoc₁ {u = u} {I U′ u′ v′} {⊥} conuvw | _ | _ | _ | _ = conAssoc' {u = u ⊔ I U′ u′ v′} conuvw
+conAssoc₁ {u = ⊥} {I U′ u′ v′} {I U″ u″ v″} conuvw | _ | _ | _ | _ = conuvw
+conAssoc₁ {u = I U u v} {I U′ u′ v′} {I U″ u″ v″} (conUs , (conus , convs)) | _ | _ | _ | _
+  = conAssoc₁ {u = U} conUs , (conAssoc₁ {u = u} conus , conAssoc₁ {u = v} convs)
 conAssoc₁ {u = u} {Π v g} {⊥} conuvw | _ | _ | _ | _ = conAssoc' {u = u ⊔ Π v g} conuvw
 conAssoc₁ {u = ⊥} {Π v g} {Π w h} conuvw | _ | _ | _ | _ = conuvw
 conAssoc₁ {u = Π u f} {Π v g} {Π w h} (conuvw , confgh) | _ | _ | _ | _
@@ -162,6 +178,10 @@ conTrans {u = F f} {F g} {F h} conuvw | _ | _ | _ | _
 conTrans {u = u} {⊥} {refl _} conuvw | _ | _ | _ | _ = conuvw
 conTrans {u = ⊥} {refl _} {refl _} _ | _ | _ | _ | conw = conw
 conTrans {u = refl u} {refl _} {refl _} conuvw | _ | _ | _ | _ = conTrans {u = u} conuvw
+conTrans {u = u} {⊥} {I _ _ _} conuvw | _ | _ | _ | _ = conuvw
+conTrans {u = ⊥} {I _ _ _} {I _ _ _} _ | _ | _ | _ | conw = conw
+conTrans {u = I U u v} {I U′ u′ v′} {I U″ u″ v″} (conUs , (conus , convs)) | _ | _ | _ | _
+  = conTrans {u = U} conUs , (conTrans {u = u} conus , conTrans {u = v} convs)
 conTrans {u = u} {⊥} {Π _ _} conuvw | _ | _ | _ | _ = conuvw
 conTrans {u = ⊥} {Π _ _} {Π _ _} _ | _ | _ | _ | conw = conw
 conTrans {u = Π u f} {Π v g} {Π w h} (conuvw , confgh) | _ | _ | _ | _

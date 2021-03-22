@@ -14,6 +14,7 @@ con (s u) = con u
 con ℕ = 𝟙
 con (F f) = conFinFun f
 con (refl u) = con u
+con (I U u v) = con U ⊠ (con u ⊠ con v)
 con (Π u f) = con u ⊠ conFinFun f
 con 𝒰 = 𝟙
 con incons = 𝟘

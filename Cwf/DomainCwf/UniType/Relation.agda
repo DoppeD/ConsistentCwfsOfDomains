@@ -30,6 +30,7 @@ data _⊑_ where
         (∀ {u v} → (u , v) ∈ f → ⊑-proof g u v) →
         F f ⊑ F g
   ⊑-rfl : ∀ {i} → {u v : Nbh {i}} → u ⊑ v → refl u ⊑ refl v
+  ⊑-I : ∀ {i} → {U u v U′ u′ v′ : Nbh {i}} → U ⊑ U′ → u ⊑ u′ → v ⊑ v′ → I U u v ⊑ I U′ u′ v′
   ⊑-Π : ∀ {i} → {u v : Nbh {i}} → {f g : FinFun {i}} → u ⊑ v → F f ⊑ F g → Π u f ⊑ Π v g
   ⊑-𝒰 : 𝒰 ⊑ 𝒰
 
@@ -43,4 +44,8 @@ orderOnlyCon (⊑-F conf cong f) = conf , cong
 orderOnlyCon (⊑-rfl u⊑v) = orderOnlyCon u⊑v
 orderOnlyCon (⊑-Π u⊑v f⊑g) with (orderOnlyCon u⊑v) | orderOnlyCon f⊑g
 ... | conu , conv | conf , cong = ( conu , conf ) , ( conv , cong )
+orderOnlyCon (⊑-I U⊑U′ u⊑u′ v⊑v′)
+  with (orderOnlyCon U⊑U′) | orderOnlyCon u⊑u′ | orderOnlyCon v⊑v′
+... | conU , conU′ | conu , conu′ | conv , conv′
+  = (conU , (conu , conv)) , (conU′ , (conu′ , conv′))
 orderOnlyCon ⊑-𝒰 = * , *

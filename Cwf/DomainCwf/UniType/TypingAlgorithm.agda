@@ -27,6 +27,7 @@ data _⦂_ where
         (∀ {u v} → (u , v) ∈ f → u ⦂ U) →
         (∀ {u v} → (u , v) ∈ f → Σ (⊑-proof g u ⊥) λ uv⊑g → v ⦂ post (⊑-proof.sub uv⊑g)) →
         (F f) ⦂ (Π U g)
+  refl:I : ∀ {U u} → U Type → u ⦂ U → refl u ⦂ I U u u
   Π:𝒰 : ∀ {U f} → U ⦂ 𝒰 →
         (∀ {u V} → (u , V) ∈ f → (u ⦂ U) ∧ (V ⦂ 𝒰)) →
         (Π U f) ⦂ 𝒰

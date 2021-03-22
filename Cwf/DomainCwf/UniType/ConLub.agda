@@ -34,6 +34,13 @@ open import Agda.Builtin.Equality
 ⊔-assoc {u = refl _} {refl _} {⊥} _ _ = refl
 ⊔-assoc {u = refl u} {refl _} {refl _} conuv convw
   rewrite (⊔-assoc {u = u} conuv convw) = refl
+⊔-assoc {u = I _ _ _} {⊥} _ _ = refl
+⊔-assoc {u = I _ _ _} {I _ _ _} {⊥} _ _ = refl
+⊔-assoc {u = I U u v} {I _ _ _} {I _ _ _} (conUU′ , (conuu′ , convv′)) (conU′U″ , (conu′u″ , conv′v″))
+  rewrite (⊔-assoc {u = U} conUU′ conU′U″)
+  rewrite (⊔-assoc {u = u} conuu′ conu′u″)
+  rewrite (⊔-assoc {u = v} convv′ conv′v″)
+  = refl
 ⊔-assoc {u = Π _ _} {⊥} _ _ = refl
 ⊔-assoc {u = Π _ _} {Π _ _} {⊥} _ _ = refl
 ⊔-assoc {u = Π u f} {Π _ g} {Π _ h} (conuv , _) (convw , _)
@@ -101,6 +108,10 @@ Con-⊔ {u = F f} {F g} {F h} (⊑-F conf conh p₁) (⊑-F cong _ p₂)
 Con-⊔ (⊑-rfl u⊑w) (⊑-bot _) with (orderOnlyCon u⊑w)
 ... | conu , _ = conu
 Con-⊔ (⊑-rfl u⊑w) (⊑-rfl v⊑w) = Con-⊔ u⊑w v⊑w
+Con-⊔ (⊑-I U⊑U″ u⊑u″ v⊑v″) (⊑-bot _) with (orderOnlyCon U⊑U″) | orderOnlyCon u⊑u″ | orderOnlyCon v⊑v″
+... | (conU , _) | (conu , _) | (conv , _) = conU , (conu , conv)
+Con-⊔ (⊑-I U⊑U″ u⊑u″ v⊑v″) (⊑-I U′⊑U″ u′⊑u″ v′⊑v″)
+  = Con-⊔ U⊑U″ U′⊑U″ , (Con-⊔ u⊑u″ u′⊑u″ , Con-⊔ v⊑v″ v′⊑v″)
 Con-⊔ (⊑-Π u⊑w f⊑h) (⊑-bot _) with (orderOnlyCon u⊑w) | orderOnlyCon f⊑h
 ... | (conu , _) | (conf , _) = conu , conf
 Con-⊔ {u = Π _ f} {Π _ g} {Π _ h} (⊑-Π u⊑w (⊑-F conf conh p₁)) (⊑-Π v⊑w (⊑-F cong _ p₂))
