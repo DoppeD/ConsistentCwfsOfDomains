@@ -7,6 +7,8 @@ open import Cwf.DomainCwf.UniType.FinFun
 open import Cwf.DomainCwf.UniType.Definition
 open import Cwf.DomainCwf.UniType.Relation
 
+open import Agda.Builtin.Sigma
+
 data _Type : Nbh → Set
 data _⦂_ : Nbh → Nbh → Set
 
@@ -23,7 +25,7 @@ data _⦂_ where
   s:N : ∀ {u} → u ⦂ ℕ → s u ⦂ ℕ
   F:Π : ∀ {U g f} →
         (∀ {u v} → (u , v) ∈ f → u ⦂ U) →
-        (∀ {u v} → (u , v) ∈ f → (uv⊑g : ⊑-proof g u v) → v ⦂ post (⊑-proof.sub uv⊑g)) →
+        (∀ {u v} → (u , v) ∈ f → Σ (⊑-proof g u ⊥) λ uv⊑g → v ⦂ post (⊑-proof.sub uv⊑g)) →
         (F f) ⦂ (Π U g)
   Π:𝒰 : ∀ {U f} → U ⦂ 𝒰 →
         (∀ {u V} → (u , V) ∈ f → (u ⦂ U) ∧ (V ⦂ 𝒰)) →
@@ -31,8 +33,8 @@ data _⦂_ where
   ℕ:𝒰 : ℕ ⦂ 𝒰
 
 -- We want v ⦂ F (u).
--- ⊑-proof g u v gives us ONE preable (and postable) subset of g, but we want the largest possible such subset.
+-- ⊑-proof g u ⊥ gives us ONE preable (and postable) subset of g, but we want the largest possible such subset.
 -- Is what we have here equivalent?
--- First, does the fact that v ⦂ post sub for all such sub ⊆ g imply that v ⦂ post Ω for the largest such Ω ⊆ g?
+-- First, does the fact that v ⦂ post sub for some sub ⊆ g imply that v ⦂ post Ω for the largest such Ω ⊆ g?
 -- If not, we should be able to define this set Ω.
 -- Second, does the converse hold? Does it have to?

@@ -30,6 +30,10 @@ open import Agda.Builtin.Equality
 ⊔-assoc {u = F _} {F _} {⊥} _ _ = refl
 ⊔-assoc {u = F f} {F g} {F h} _ _
   rewrite (∪-assoc {f = f} {g} {h}) = refl
+⊔-assoc {u = refl _} {⊥} _ _ = refl
+⊔-assoc {u = refl _} {refl _} {⊥} _ _ = refl
+⊔-assoc {u = refl u} {refl _} {refl _} conuv convw
+  rewrite (⊔-assoc {u = u} conuv convw) = refl
 ⊔-assoc {u = Π _ _} {⊥} _ _ = refl
 ⊔-assoc {u = Π _ _} {Π _ _} {⊥} _ _ = refl
 ⊔-assoc {u = Π u f} {Π _ g} {Π _ h} (conuv , _) (convw , _)
@@ -94,6 +98,9 @@ Con-⊔ {u = F f} {F g} {F h} (⊑-F conf conh p₁) (⊑-F cong _ p₂)
         lemma₂ uv∈∪ with (∪-lemma₂ {𝑓 = f} uv∈∪)
         ... | inl uv∈f = ⊠-snd conf uv∈f
         ... | inr uv∈g = ⊠-snd cong uv∈g
+Con-⊔ (⊑-rfl u⊑w) (⊑-bot _) with (orderOnlyCon u⊑w)
+... | conu , _ = conu
+Con-⊔ (⊑-rfl u⊑w) (⊑-rfl v⊑w) = Con-⊔ u⊑w v⊑w
 Con-⊔ (⊑-Π u⊑w f⊑h) (⊑-bot _) with (orderOnlyCon u⊑w) | orderOnlyCon f⊑h
 ... | (conu , _) | (conf , _) = conu , conf
 Con-⊔ {u = Π _ f} {Π _ g} {Π _ h} (⊑-Π u⊑w (⊑-F conf conh p₁)) (⊑-Π v⊑w (⊑-F cong _ p₂))

@@ -53,6 +53,9 @@ coherence' {u = F _} {F _} {⊥} conuv _ _ = conuv
 coherence' {u = F f} {F _} {F _} (conPairsfg , conElemsfg) (conPairsfh , conElemsfh) (conPairsgh , conElemsgh)
   = (coherence'' {f = f} conPairsfg conPairsfh conPairsgh) ,
     (coherence''' {f = f} conElemsfg conElemsfh conElemsgh)
+coherence' {u = refl _} {⊥} _ conuw _ = conuw
+coherence' {u = refl _} {refl _} {⊥} conuv _ _ = conuv
+coherence' {u = refl u} {refl _} {refl _} = coherence' {u = u}
 coherence' {u = Π _ _} {⊥} _ conuw _ = conuw
 coherence' {u = Π _ _} {Π _ _} {⊥} conuv _ _ = conuv
 coherence' {u = Π u f} {Π _ _} {Π _ _}

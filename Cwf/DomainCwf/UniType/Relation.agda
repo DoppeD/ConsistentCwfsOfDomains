@@ -29,6 +29,7 @@ data _⊑_ where
   ⊑-F : ∀ {i} → {f g : FinFun {i}} → (conf : conFinFun f) → (cong : conFinFun g) →
         (∀ {u v} → (u , v) ∈ f → ⊑-proof g u v) →
         F f ⊑ F g
+  ⊑-rfl : ∀ {i} → {u v : Nbh {i}} → u ⊑ v → refl u ⊑ refl v
   ⊑-Π : ∀ {i} → {u v : Nbh {i}} → {f g : FinFun {i}} → u ⊑ v → F f ⊑ F g → Π u f ⊑ Π v g
   ⊑-𝒰 : 𝒰 ⊑ 𝒰
 
@@ -39,6 +40,7 @@ orderOnlyCon ⊑-0 = * , *
 orderOnlyCon (⊑-s u⊑v) = orderOnlyCon u⊑v
 orderOnlyCon ⊑-ℕ = * , *
 orderOnlyCon (⊑-F conf cong f) = conf , cong
+orderOnlyCon (⊑-rfl u⊑v) = orderOnlyCon u⊑v
 orderOnlyCon (⊑-Π u⊑v f⊑g) with (orderOnlyCon u⊑v) | orderOnlyCon f⊑g
 ... | conu , conv | conf , cong = ( conu , conf ) , ( conv , cong )
 orderOnlyCon ⊑-𝒰 = * , *

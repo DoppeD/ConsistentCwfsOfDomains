@@ -12,19 +12,21 @@ open import Cwf.DomainCwf.UniType.Relation
 ⊑-reflLemma₁ : ∀ {i} → {u v : Nbh {i}} → u ⊑ v → (u ⊔ ⊥) ⊑ v
 ⊑-reflLemma₁ (⊑-bot conv) = ⊑-bot conv
 ⊑-reflLemma₁ ⊑-0 = ⊑-0
-⊑-reflLemma₁ (⊑-s u⊑u) = ⊑-s u⊑u
+⊑-reflLemma₁ (⊑-s u⊑v) = ⊑-s u⊑v
 ⊑-reflLemma₁ ⊑-ℕ = ⊑-ℕ
-⊑-reflLemma₁ (⊑-F conf cong f⊑f) = ⊑-F conf cong f⊑f
-⊑-reflLemma₁ (⊑-Π u⊑u f⊑f) = ⊑-Π u⊑u f⊑f
+⊑-reflLemma₁ (⊑-F conf cong f⊑g) = ⊑-F conf cong f⊑g
+⊑-reflLemma₁ (⊑-rfl u⊑v) = ⊑-rfl u⊑v
+⊑-reflLemma₁ (⊑-Π u⊑v f⊑g) = ⊑-Π u⊑v f⊑g
 ⊑-reflLemma₁ ⊑-𝒰 = ⊑-𝒰
 
 ⊑-reflLemma₂ : ∀ {u v} → u ⊑ v → u ⊑ (v ⊔ ⊥)
 ⊑-reflLemma₂ {v = v} (⊑-bot conv) = ⊑-bot (conAssoc' {u = v} conv)
 ⊑-reflLemma₂ ⊑-0 = ⊑-0
-⊑-reflLemma₂ (⊑-s u⊑u) = ⊑-s u⊑u
+⊑-reflLemma₂ (⊑-s u⊑v) = ⊑-s u⊑v
 ⊑-reflLemma₂ ⊑-ℕ = ⊑-ℕ
-⊑-reflLemma₂ (⊑-F conf cong f⊑f) = ⊑-F conf cong f⊑f
-⊑-reflLemma₂ (⊑-Π u⊑u f⊑f) = ⊑-Π u⊑u f⊑f
+⊑-reflLemma₂ (⊑-F conf cong f⊑g) = ⊑-F conf cong f⊑g
+⊑-reflLemma₂ (⊑-rfl u⊑v) = ⊑-rfl u⊑v
+⊑-reflLemma₂ (⊑-Π u⊑v f⊑g) = ⊑-Π u⊑v f⊑g
 ⊑-reflLemma₂ ⊑-𝒰 = ⊑-𝒰
 
 ⊑-refl : ∀ {u} → con u → u ⊑ u
@@ -35,6 +37,7 @@ open import Cwf.DomainCwf.UniType.Relation
 ⊑-refl {s u} conu = ⊑-s (⊑-refl conu)
 ⊑-refl {ℕ} conu = ⊑-ℕ
 ⊑-refl {F f} conu = ⊑-F conu conu (⊑-refl' conu)
+⊑-refl {refl u} conu = ⊑-rfl (⊑-refl conu)
 ⊑-refl {Π u f} (conu , conf)
   = ⊑-Π (⊑-refl conu) (⊑-F conf conf (⊑-refl' conf))
 ⊑-refl {𝒰} conu = ⊑-𝒰
@@ -60,15 +63,17 @@ open import Cwf.DomainCwf.UniType.Relation
 
 ⊑-⊔ : ∀ {i} → {u v w : Nbh {i}} → u ⊑ w → v ⊑ w → con (u ⊔ v) → (u ⊔ v) ⊑ w
 ⊑-⊔ u⊑w (⊑-bot _) _ = ⊑-reflLemma₁ u⊑w
-⊑-⊔ (⊑-bot x) ⊑-0 _ = ⊑-0
+⊑-⊔ (⊑-bot _) ⊑-0 _ = ⊑-0
 ⊑-⊔ ⊑-0 ⊑-0 _ = ⊑-0
-⊑-⊔ (⊑-bot x) (⊑-s v⊑w) _ = ⊑-s v⊑w
+⊑-⊔ (⊑-bot _) (⊑-s v⊑w) _ = ⊑-s v⊑w
 ⊑-⊔ (⊑-s u⊑w) (⊑-s v⊑w) conuv = ⊑-s (⊑-⊔ u⊑w v⊑w conuv)
 ⊑-⊔ (⊑-bot _) ⊑-ℕ _ = ⊑-ℕ
 ⊑-⊔ ⊑-ℕ ⊑-ℕ _ = ⊑-ℕ
 ⊑-⊔ (⊑-bot _) (⊑-F cong conh p) _ = ⊑-F cong conh p
 ⊑-⊔ (⊑-F conf conh p₁) (⊑-F cong _ p₂) conuv
   = ⊑-F conuv conh (⊑-⊔' (⊑-F conf conh p₁) (⊑-F cong conh p₂))
+⊑-⊔ (⊑-bot _) (⊑-rfl v⊑w) _ = ⊑-rfl v⊑w
+⊑-⊔ (⊑-rfl u⊑w) (⊑-rfl v⊑w) conuv = ⊑-rfl (⊑-⊔ u⊑w v⊑w conuv)
 ⊑-⊔ (⊑-bot _) (⊑-Π v⊑w g⊑h) conuv = ⊑-Π v⊑w g⊑h
 ⊑-⊔ (⊑-Π u⊑w f⊑h) (⊑-Π v⊑w g⊑h) (conuv , confg)
   = ⊑-Π (⊑-⊔ u⊑w v⊑w conuv) (⊑-⊔ f⊑h g⊑h confg)
@@ -89,6 +94,8 @@ open import Cwf.DomainCwf.UniType.Relation
 ⊑-⊔-fst {F _} {⊥} conuv = ⊑-refl conuv
 ⊑-⊔-fst {F _} {F _} conuv =
   ⊑-F (subsetIsCon ∪-lemma₃ conuv) conuv (⊑-⊔-fst' conuv)
+⊑-⊔-fst {refl _} {⊥} conuv = ⊑-refl conuv
+⊑-⊔-fst {refl _} {refl _} conuv = ⊑-rfl (⊑-⊔-fst conuv)
 ⊑-⊔-fst {Π _ _} {⊥} conuv = ⊑-refl conuv
 ⊑-⊔-fst {Π _ _} {Π _ _} (conuv , confg)
   = ⊑-Π (⊑-⊔-fst conuv) (⊑-F (subsetIsCon ∪-lemma₃ confg) confg (⊑-⊔-fst' confg))
@@ -109,6 +116,8 @@ open import Cwf.DomainCwf.UniType.Relation
 ⊑-⊔-snd {F _} {⊥} conuv = ⊑-bot conuv
 ⊑-⊔-snd {F _} {F _} conuv
   = ⊑-F (subsetIsCon ∪-lemma₄ conuv) conuv (⊑-⊔-snd' conuv)
+⊑-⊔-snd {refl _} {⊥} conuv = ⊑-bot conuv
+⊑-⊔-snd {refl _} {refl _} conuv = ⊑-rfl (⊑-⊔-snd conuv)
 ⊑-⊔-snd {Π _ _} {⊥} conuv = ⊑-bot conuv
 ⊑-⊔-snd {Π _ _} {Π _ _} (conuv , confg)
   = ⊑-Π (⊑-⊔-snd conuv) (⊑-F (subsetIsCon ∪-lemma₄ confg) confg (⊑-⊔-snd' confg))

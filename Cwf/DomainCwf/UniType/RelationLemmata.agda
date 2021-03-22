@@ -36,6 +36,8 @@ shrink-⊑ f′⊆f (⊑-F conf cong p) uv∈f′ = p (f′⊆f uv∈f′)
 ⊑-⊔-lemma₁ {w = ℕ} ⊑-ℕ _ = ⊑-ℕ
 ⊑-⊔-lemma₁ {w = ⊥} (⊑-F conf cong p) _ = ⊑-F conf cong p
 ⊑-⊔-lemma₁ {w = F h} (⊑-F conf cong p) conuw = ⊑-F conf conuw (grow-⊑ ∪-lemma₃ p)
+⊑-⊔-lemma₁ {w = ⊥} (⊑-rfl u⊑v) _ = ⊑-rfl u⊑v
+⊑-⊔-lemma₁ {w = refl _} (⊑-rfl u⊑v) convw = ⊑-rfl (⊑-⊔-lemma₁ u⊑v convw)
 ⊑-⊔-lemma₁ {w = ⊥} (⊑-Π u⊑v f⊑g) _ = ⊑-Π u⊑v f⊑g
 ⊑-⊔-lemma₁ {w = Π _ _} (⊑-Π u⊑v f⊑g) _ with (orderOnlyCon f⊑g)
 ⊑-⊔-lemma₁ {w = Π _ _} (⊑-Π u⊑v (⊑-F _ _ p)) (convw , congh) | (conf , _) =
@@ -53,6 +55,8 @@ shrink-⊑ f′⊆f (⊑-F conf cong p) uv∈f′ = p (f′⊆f uv∈f′)
 ⊑-⊔-lemma₂ {v = ℕ} ⊑-ℕ _ = ⊑-ℕ
 ⊑-⊔-lemma₂ {v = ⊥} (⊑-F conf cong p) conuw = ⊑-F conf cong p
 ⊑-⊔-lemma₂ {v = F _} (⊑-F conf cong p) conuw = ⊑-F conf conuw (grow-⊑ ∪-lemma₄ p)
+⊑-⊔-lemma₂ {v = ⊥} (⊑-rfl u⊑w) _ = ⊑-rfl u⊑w
+⊑-⊔-lemma₂ {v = refl _} (⊑-rfl u⊑w) conuw = ⊑-rfl (⊑-⊔-lemma₂ u⊑w conuw)
 ⊑-⊔-lemma₂ {v = ⊥} (⊑-Π u⊑w f⊑h) conuw = ⊑-Π u⊑w f⊑h
 ⊑-⊔-lemma₂ {v = Π _ _} (⊑-Π u⊑w f⊑h) conuw with (orderOnlyCon f⊑h)
 ⊑-⊔-lemma₂ {v = Π _ _} (⊑-Π u⊑w (⊑-F _ _ p)) (conuw , confh) | (conf , _)

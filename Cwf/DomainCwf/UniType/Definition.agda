@@ -15,6 +15,7 @@ data Nbh where
   s : ∀ {i} → Nbh {i} → Nbh {i}
   ℕ : ∀ {i} → Nbh {i}
   F : ∀ {i} → FinFun {i} -> Nbh {↑ i}
+  refl : ∀ {i} → Nbh {i} → Nbh {i}
   Π : ∀ {i} → Nbh {i} → FinFun {i} → Nbh {↑ i}
   𝒰 : ∀ {i} → Nbh {i}
   incons : ∀ {i} → Nbh {i}
@@ -34,6 +35,7 @@ _⊔_ : ∀ {i} → Nbh {i} -> Nbh {i} -> Nbh {i}
 0ᵤ ⊔ (s _) = incons
 0ᵤ ⊔ ℕ = incons
 0ᵤ ⊔ (F _) = incons
+0ᵤ ⊔ (refl _) = incons
 0ᵤ ⊔ (Π _ _) = incons
 0ᵤ ⊔ 𝒰 = incons
 0ᵤ ⊔ incons = incons
@@ -42,6 +44,7 @@ _⊔_ : ∀ {i} → Nbh {i} -> Nbh {i} -> Nbh {i}
 (s u) ⊔ (s v) = s (u ⊔ v)
 (s _) ⊔ ℕ = incons
 (s _) ⊔ (F _) = incons
+(s _) ⊔ (refl _) = incons
 (s _) ⊔ (Π _ _) = incons
 (s _) ⊔ 𝒰 = incons
 (s _) ⊔ incons = incons
@@ -50,6 +53,7 @@ _⊔_ : ∀ {i} → Nbh {i} -> Nbh {i} -> Nbh {i}
 ℕ ⊔ (s _) = incons
 ℕ ⊔ ℕ = ℕ
 ℕ ⊔ (F _) = incons
+ℕ ⊔ (refl _) = incons
 ℕ ⊔ (Π _ _) = incons
 ℕ ⊔ 𝒰 = incons
 ℕ ⊔ incons = incons
@@ -58,9 +62,19 @@ _⊔_ : ∀ {i} → Nbh {i} -> Nbh {i} -> Nbh {i}
 (F _) ⊔ (s _) = incons
 (F _) ⊔ ℕ = incons
 (F f) ⊔ (F g) = F (f ∪ g)
+(F _) ⊔ (refl _) = incons
 (F _) ⊔ (Π _ _) = incons
 (F _) ⊔ 𝒰 = incons
 (F _) ⊔ incons = incons
+(refl u) ⊔ ⊥ = refl u
+(refl u) ⊔ 0ᵤ = incons
+(refl u) ⊔ (s _) = incons
+(refl u) ⊔ ℕ = incons
+(refl u) ⊔ (F _) = incons
+(refl u) ⊔ (refl v) = refl (u ⊔ v)
+(refl u) ⊔ (Π _ _) = incons
+(refl u) ⊔ 𝒰 = incons
+(refl u) ⊔ incons = incons
 (Π u f) ⊔ ⊥ = Π u f
 (Π _ _) ⊔ 0ᵤ = incons
 (Π _ _) ⊔ (s _) = incons
@@ -68,12 +82,14 @@ _⊔_ : ∀ {i} → Nbh {i} -> Nbh {i} -> Nbh {i}
 (Π _ _) ⊔ (F _) = incons
 (Π u f) ⊔ (Π v g) = Π (u ⊔ v) (f ∪ g)
 (Π _ _) ⊔ 𝒰 = incons
+(Π _ _) ⊔ (refl _) = incons
 (Π _ _) ⊔ incons = incons
 𝒰 ⊔ ⊥ = 𝒰
 𝒰 ⊔ 0ᵤ = incons
 𝒰 ⊔ (s _) = incons
 𝒰 ⊔ ℕ = incons
 𝒰 ⊔ (F _) = incons
+𝒰 ⊔ (refl _) = incons
 𝒰 ⊔ (Π _ _) = incons
 𝒰 ⊔ 𝒰 = 𝒰
 𝒰 ⊔ incons = incons

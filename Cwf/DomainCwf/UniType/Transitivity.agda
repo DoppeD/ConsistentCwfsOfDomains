@@ -54,6 +54,7 @@ open import Agda.Builtin.Equality
 ⊑-trans ⊑-ℕ v⊑w = v⊑w
 ⊑-trans (⊑-F conf cong p₁) (⊑-F _ conh p₂)
   = ⊑-F conf conh (λ uv∈f → ⊑-trans' uv∈f (p₁ uv∈f) (⊑-F cong conh p₂))
+⊑-trans (⊑-rfl u⊑v) (⊑-rfl v⊑w) = ⊑-rfl (⊑-trans u⊑v v⊑w)
 ⊑-trans (⊑-Π u⊑v f⊑g) (⊑-Π v⊑w g⊑h) = ⊑-Π (⊑-trans u⊑v v⊑w) (⊑-trans f⊑g g⊑h)
 ⊑-trans ⊑-𝒰 v⊑w = v⊑w
 
