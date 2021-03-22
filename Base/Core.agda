@@ -48,6 +48,9 @@ data _∨_ (A B : Set) : Set where
 
 data 𝟘 : Set where
 
+¬ : Set → Set
+¬ P = P → 𝟘
+
 data 𝟙 : Set where
   * : 𝟙
 
