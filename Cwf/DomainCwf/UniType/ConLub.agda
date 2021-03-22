@@ -129,27 +129,27 @@ Con-⊔ ⊑-𝒰 (⊑-bot _) = *
 Con-⊔ ⊑-𝒰 ⊑-𝒰 = *
 
 Con-⊔' {u = u} {v} {u′} {v′} _ _ conh
-  record { sub = sub ; preable = preable ; sub⊆g = sub⊆g ; pre⊑u = pre⊑u ; v⊑post = v⊑post }
-  record { sub = sub′ ; preable = preable′ ; sub⊆g = sub⊆g′ ; pre⊑u = pre⊑u′ ; v⊑post = v⊑post′ }
+  record { sub = sub ; sub⊆g = sub⊆g ; pre⊑u = pre⊑u ; v⊑post = v⊑post }
+  record { sub = sub′ ; sub⊆g = sub⊆g′ ; pre⊑u = pre⊑u′ ; v⊑post = v⊑post′ }
   (inl uv∈f) (inr u′v′∈g) conuu′
   = Con-⊔ {u = v} {v′} (⊑-⊔-lemma₁ v⊑post conpostsubs) (⊑-⊔-lemma₂ v⊑post′ conpostsubs)
   where conpresubs : con (pre sub ⊔ pre sub′)
         conpresubs = Con-⊔ (⊑-⊔-lemma₁ pre⊑u conuu′) (⊑-⊔-lemma₂ pre⊑u′ conuu′)
         conpostsub : con (post sub)
-        conpostsub = coherence {f = sub} (subsetIsCon sub⊆g conh) preable
+        conpostsub = coherence {f = sub} (subsetIsCon sub⊆g conh) (⊠-fst (orderOnlyCon pre⊑u))
         conpost∪ : con (post (sub ∪ sub′))
         conpost∪ = (coherence (subsetIsCon (∪-lemma₁ sub⊆g sub⊆g′) conh) (preUnionLemma  {f = sub} conpresubs))
         conpostsubs : con (post sub ⊔ post sub′)
         conpostsubs = postUnionLemma {f = sub} conpostsub conpost∪
 Con-⊔' {u = u} {v} {u′} {v′} _ _ conh
-  record { sub = sub ; preable = preable ; sub⊆g = sub⊆g ; pre⊑u = pre⊑u ; v⊑post = v⊑post }
-  record { sub = sub′ ; preable = preable′ ; sub⊆g = sub⊆g′ ; pre⊑u = pre⊑u′ ; v⊑post = v⊑post′ }
+  record { sub = sub ; sub⊆g = sub⊆g ; pre⊑u = pre⊑u ; v⊑post = v⊑post }
+  record { sub = sub′ ; sub⊆g = sub⊆g′ ; pre⊑u = pre⊑u′ ; v⊑post = v⊑post′ }
   (inr uv∈g) (inl uv∈f) conuu′
   = Con-⊔ {u = v} {v′} (⊑-⊔-lemma₁ v⊑post conpostsubs) (⊑-⊔-lemma₂ v⊑post′ conpostsubs)
   where conpresubs : con (pre sub ⊔ pre sub′)
         conpresubs = Con-⊔ (⊑-⊔-lemma₁ pre⊑u conuu′) (⊑-⊔-lemma₂ pre⊑u′ conuu′)
         conpostsub : con (post sub)
-        conpostsub = coherence {f = sub} (subsetIsCon sub⊆g conh) preable
+        conpostsub = coherence {f = sub} (subsetIsCon sub⊆g conh) (⊠-fst (orderOnlyCon pre⊑u))
         conpost∪ : con (post (sub ∪ sub′))
         conpost∪ = (coherence (subsetIsCon (∪-lemma₁ sub⊆g sub⊆g′) conh) (preUnionLemma  {f = sub} conpresubs))
         conpostsubs : con (post sub ⊔ post sub′)

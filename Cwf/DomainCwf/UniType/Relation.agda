@@ -16,7 +16,6 @@ record ⊑-proof {i} g u v where
   inductive
   field
     sub : FinFun {i}
-    preable : con (pre sub)
     sub⊆g : sub ⊆ g
     pre⊑u : pre sub ⊑ u
     v⊑post : v ⊑ post sub

@@ -19,18 +19,16 @@ open import Agda.Builtin.Equality
 Ω {f = ∅} _ _
   = record
       { sub = ∅
-      ; preable = *
       ; sub⊆g = ∅-isSubset
       ; pre⊑u = ⊑-bot *
       ; v⊑post = ⊑-bot *
       }
 Ω {f = (u , v) ∷ f′} {g} (⊑-F conf cong p) conpref
   with (p here) | Ω {f = f′} (⊑-F (subsetIsCon ⊆-lemma₃ conf) cong (λ u′v′∈f′ → p (there u′v′∈f′))) (conLemma₂ {u = u} conpref)
-... | record { sub = sub ; preable = preable ; sub⊆g = sub⊆g ; pre⊑u = pre⊑u ; v⊑post = v⊑post }
-    | record { sub = rsub ; preable = rpreable ; sub⊆g = rsub⊆g ; pre⊑u = rpre⊑u ; v⊑post = rv⊑post }
+... | record { sub = sub ; sub⊆g = sub⊆g ; pre⊑u = pre⊑u ; v⊑post = v⊑post }
+    | record { sub = rsub ; sub⊆g = rsub⊆g ; pre⊑u = rpre⊑u ; v⊑post = rv⊑post }
   = record
       { sub = sub ∪ rsub
-      ; preable = conpre∪
       ; sub⊆g = ∪-lemma₁ sub⊆g rsub⊆g
       ; pre⊑u = lemma₁ (preUnionLemma' {f = sub} conpresubs) (⊑-⊔-lemma₃ pre⊑u rpre⊑u conpresubs conpref)
       ; v⊑post = lemma₂ (postUnionLemma' {f = sub} conpostsub conpost∪) (⊑-⊔-lemma₃ v⊑post rv⊑post (coherence conf conpref) conpostsubs)
@@ -41,7 +39,7 @@ open import Agda.Builtin.Equality
         lemma₂ refl u⊑v = u⊑v
         conpresubs = (Con-⊔ (⊑-⊔-lemma₁ pre⊑u conpref) (⊑-⊔-lemma₂ rpre⊑u conpref))
         conpre∪ = preUnionLemma {f = sub} conpresubs
-        conpostsub = coherence {f = sub} (subsetIsCon sub⊆g cong) preable
+        conpostsub = coherence {f = sub} (subsetIsCon sub⊆g cong) (⊠-fst (orderOnlyCon pre⊑u))
         conpost∪ = coherence {f = sub ∪ rsub} (subsetIsCon (∪-lemma₁ sub⊆g rsub⊆g) cong) conpre∪
         conpostsubs = postUnionLemma {f = sub} conpostsub conpost∪
 
@@ -61,12 +59,11 @@ open import Agda.Builtin.Equality
 ⊑-trans ⊑-𝒰 v⊑w = v⊑w
 
 ⊑-trans' {h = h} here
-  record { sub = sub ; preable = preable ; sub⊆g = sub⊆g ; pre⊑u = pre⊑u ; v⊑post = v⊑post }
-  (⊑-F cong conh p) with (Ω (⊑-F (subsetIsCon sub⊆g cong) conh (shrink-⊑ sub⊆g (⊑-F cong conh p))) preable)
-... | record { sub = sub′ ; preable = preable′ ; sub⊆g = sub⊆g′ ; pre⊑u = pre⊑u′ ; v⊑post = v⊑post′ }
+  record { sub = sub ; sub⊆g = sub⊆g ; pre⊑u = pre⊑u ; v⊑post = v⊑post } (⊑-F cong conh p)
+  with (Ω (⊑-F (subsetIsCon sub⊆g cong) conh (shrink-⊑ sub⊆g (⊑-F cong conh p))) (⊠-fst (orderOnlyCon pre⊑u)))
+... | record { sub = sub′ ; sub⊆g = sub⊆g′ ; pre⊑u = pre⊑u′ ; v⊑post = v⊑post′ }
   = record
       { sub = sub′
-      ; preable = preable′
       ; sub⊆g = sub⊆g′
       ; pre⊑u = ⊑-trans pre⊑u′ pre⊑u
       ; v⊑post = ⊑-trans v⊑post v⊑post′

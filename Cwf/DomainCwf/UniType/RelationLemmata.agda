@@ -13,10 +13,9 @@ grow-⊑ : ∀ {i} → {f g h : FinFun {i}} → g ⊆ h →
         (∀ {u v} → (u , v) ∈ f → ⊑-proof g u v) →
         ∀ {u v} → (u , v) ∈ f → ⊑-proof h u v
 grow-⊑ g⊆h p uv∈f with (p uv∈f)
-... | record { sub = sub ; preable = preable ; sub⊆g = sub⊆g ; pre⊑u = pre⊑u ; v⊑post = v⊑post }
+... | record { sub = sub ; sub⊆g = sub⊆g ; pre⊑u = pre⊑u ; v⊑post = v⊑post }
   = record
       { sub = sub
-      ; preable = preable
       ; sub⊆g = ⊆-trans sub⊆g g⊆h
       ; pre⊑u = pre⊑u
       ; v⊑post = v⊑post

@@ -50,7 +50,6 @@ open import Cwf.DomainCwf.UniType.Relation
 ⊑-refl' {u = u} {v} _ uv∈f | (conu , conv)
   = record
       { sub = (u , v) ∷ ∅
-      ; preable = conAssoc' {u = u} conu
       ; sub⊆g = ⊆-lemma₅ uv∈f
       ; pre⊑u = ⊑-reflLemma₁ (⊑-refl conu)
       ; v⊑post = ⊑-reflLemma₂ (⊑-refl conv)
