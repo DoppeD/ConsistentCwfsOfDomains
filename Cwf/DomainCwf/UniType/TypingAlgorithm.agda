@@ -37,7 +37,8 @@ data _˸_ where
         (∀ {u v} → (u , v) ∈ f → (apset : apSet g u) → v ˸ post (⊑-proof.sub (apSet.⊑proof apset))) →
         (F f) ˸ (Π U g)
   refl:I : ∀ {i} → {U u : Nbh {i}} → U Type → u ˸ U → refl u ˸ I U u u
-  Π:𝒰 : ∀ {U f} → U ˸ 𝒰 →
-        (∀ {u V} → (u , V) ∈ f → (u ˸ U) ∧ (V ˸ 𝒰)) →
+  I:𝒰 : ∀ {i} → {U u v : Nbh {i}} → U ˸ 𝒰 → u ˸ U → v ˸ U → I U u v ˸ 𝒰
+  Π:𝒰 : ∀ {i} → {U : Nbh {i}} → {f : FinFun {i}} →  U ˸ 𝒰 →
+        (∀ {u V} → (u , V) ∈ f → (u ˸ U) ⊠ (V ˸ 𝒰)) →
         (Π U f) ˸ 𝒰
   ℕ:𝒰 : ∀ {i} → ℕ {i} ˸ 𝒰

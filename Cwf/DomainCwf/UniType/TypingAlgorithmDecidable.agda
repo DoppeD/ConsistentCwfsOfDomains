@@ -1,9 +1,14 @@
+{-# OPTIONS --safe --sized-types #-}
+
 module Cwf.DomainCwf.UniType.TypingAlgorithmDecidable where
 
 open import Base.Core
+open import Cwf.DomainCwf.UniType.DecidableEquality
 open import Cwf.DomainCwf.UniType.Definition
 open import Cwf.DomainCwf.UniType.FinFun
 open import Cwf.DomainCwf.UniType.TypingAlgorithm
+
+open import Agda.Builtin.Equality
 
 0OfTypeIsDecidable : ∀ {i} → {U : Nbh {i}} → (0ᵤ ˸ U) ∨ ¬ (0ᵤ ˸ U)
 0OfTypeIsDecidable {U = ⊥} = inr lemma
@@ -98,41 +103,55 @@ sOfTypeIsDecidable {u = u} {incons} _ = inr lemma
   where lemma : ¬ (ℕ ˸ incons)
         lemma ()
 
-reflOfTypeIsDecidable : ∀ {i} → {u U : Nbh {i}} → (u ˸ U) ∨ ¬ (u ˸ U) → (refl u ˸ U) ∨ ¬ (refl u ˸ U)
-reflOfTypeIsDecidable {u = u} {⊥} _ = inr lemma
-  where lemma : ¬ (refl u ˸ ⊥)
+IOfTypeIsDecidable : ∀ {i} → {U u v U′ : Nbh {i}} →
+                     (U ˸ 𝒰) ∨ ¬ (U ˸ 𝒰) → (u ˸ U) ∨ ¬ (u ˸ U) →
+                     (v ˸ U) ∨ ¬ (v ˸ U) → (I U u v ˸ U′) ∨ ¬ (I U u v ˸ U′)
+IOfTypeIsDecidable {U = U} {u} {v} {⊥} _ _ _ = inr lemma
+  where lemma : ¬ (I U u v  ˸ ⊥)
         lemma ()
-reflOfTypeIsDecidable {u = u} {0ᵤ} _ = inr lemma
-  where lemma : ¬ (refl u ˸ 0ᵤ)
+IOfTypeIsDecidable {U = U} {u} {v} {0ᵤ} _ _ _ = inr lemma
+  where lemma : ¬ (I U u v  ˸ 0ᵤ)
         lemma ()
-reflOfTypeIsDecidable {u = u} {s U} _ = inr lemma
-  where lemma : ¬ (refl u ˸ s U)
+IOfTypeIsDecidable {U = U} {u} {v} {ℕ} _ _ _ = inr lemma
+  where lemma : ¬ (I U u v  ˸ ℕ)
         lemma ()
-reflOfTypeIsDecidable {u = u} {ℕ} _ = inr lemma
-  where lemma : ¬ (refl u ˸ ℕ)
+IOfTypeIsDecidable {U = U} {u} {v} {s U′} _ _ _ = inr lemma
+  where lemma : ¬ (I U u v  ˸ s U′)
         lemma ()
-reflOfTypeIsDecidable {u = u} {F f} _ = inr lemma
-  where lemma : ¬ (refl u ˸ F f)
+IOfTypeIsDecidable {U = U} {u} {v} {F f} _ _ _ = inr lemma
+  where lemma : ¬ (I U u v  ˸ F f)
         lemma ()
-reflOfTypeIsDecidable {u = u} {refl U} _ = inr lemma
-  where lemma : ¬ (refl u ˸ refl U)
+IOfTypeIsDecidable {U = U} {u} {v} {refl U′} _ _ _ = inr lemma
+  where lemma : ¬ (I U u v  ˸ refl U′)
         lemma ()
-reflOfTypeIsDecidable {u = u} {I U v v′} (inl u:IUvv′) = inl {!!}
-reflOfTypeIsDecidable {u = u} {I U v v′} (inr ¬u:IUvv′) = {!!}
-reflOfTypeIsDecidable {u = u} {Π U f} _ = inr lemma
-  where lemma : ¬ (refl u ˸ Π U f)
+IOfTypeIsDecidable {U = U} {u} {v} {I U′ u′ v′} _ _ _ = inr lemma
+  where lemma : ¬ (I U u v  ˸ I U′ u′ v′)
         lemma ()
-reflOfTypeIsDecidable {u = u} {𝒰} _ = inr lemma
-  where lemma : ¬ (refl u ˸ 𝒰)
+IOfTypeIsDecidable {U = U} {u} {v} {Π U′ f} _ _ _ = inr lemma
+  where lemma : ¬ (I U u v  ˸ Π U′ f)
         lemma ()
-reflOfTypeIsDecidable {u = u} {incons} _ = inr lemma
-  where lemma : ¬ (refl u ˸ incons)
+IOfTypeIsDecidable {U′ = 𝒰} (inl U:𝒰) (inl u:U) (inl v:U) = inl (I:𝒰 U:𝒰 u:U v:U)
+IOfTypeIsDecidable {U = U} {u} {v} {𝒰} (inl U:𝒰) (inl u:U) (inr ¬v:U) = inr lemma
+  where lemma : ¬ (I U u v ˸ 𝒰)
+        lemma (I:𝒰 _ _ v:U) = ¬v:U v:U
+IOfTypeIsDecidable {U = U} {u} {v} {𝒰} (inl ¬U:𝒰) (inr ¬u:U) _ = inr lemma
+  where lemma : ¬ (I U u v ˸ 𝒰)
+        lemma (I:𝒰 _ u:U _) = ¬u:U u:U
+IOfTypeIsDecidable {U = U} {u} {v} {𝒰} (inr ¬U:𝒰) _ _ = inr lemma
+  where lemma : ¬ (I U u v ˸ 𝒰)
+        lemma (I:𝒰 U:𝒰 _ _) = ¬U:𝒰 U:𝒰
+IOfTypeIsDecidable {U = U} {u} {v} {incons} _ _ _ = inr lemma
+  where lemma : ¬ (I U u v  ˸ incons)
         lemma ()
 
 IsTypeIsDecidable : ∀ {i} → {U : Nbh {i}} → (U Type) ∨ ¬ (U Type)
 IsTypeIsDecidable' : ∀ {i} → {U : Nbh {i}} → {f : FinFun {i}} →
-                     (∀ {u V} → (u , V) ∈ f → (u ˸ U) ⊠ (V Type)) ∨ ¬ (∀ {u V} → (u , V) ∈ f → (u ˸ U) ⊠ (V Type))
+                     (∀ {u V} → (u , V) ∈ f → (u ˸ U) ⊠ (V Type)) ∨
+                     ¬ (∀ {u V} → (u , V) ∈ f → (u ˸ U) ⊠ (V Type))
 OfTypeIsDecidable : ∀ {i} → {u U : Nbh {i}} → (u ˸ U) ∨ ¬ (u ˸ U)
+OfTypeIsDecidable' : ∀ {i} → {U : Nbh {i}} → {f : FinFun {i}} →
+                     (∀ {u V} → (u , V) ∈ f → (u ˸ U) ⊠ (V ˸ 𝒰)) ∨
+                     ¬ (∀ {u V} → (u , V) ∈ f → (u ˸ U) ⊠ (V ˸ 𝒰))
 
 IsTypeIsDecidable {U = ⊥} = inr lemma
   where lemma : ¬ (⊥ Type)
@@ -202,12 +221,108 @@ OfTypeIsDecidable {u = 0ᵤ} {U} = 0OfTypeIsDecidable
 OfTypeIsDecidable {u = s u} {U} = sOfTypeIsDecidable (OfTypeIsDecidable {u = u} {U})
 OfTypeIsDecidable {u = ℕ} {U} = ℕOfTypeIsDecidable
 OfTypeIsDecidable {u = F f} {U} = {!!}
-OfTypeIsDecidable {u = refl u} {U} = reflOfTypeIsDecidable (OfTypeIsDecidable {u = u} {U})
-OfTypeIsDecidable {u = I U u v} {U′} = {!!}
-OfTypeIsDecidable {u = Π u f} {U} = {!!}
+OfTypeIsDecidable {u = refl u} {⊥} = inr lemma
+  where lemma : ¬ (refl u ˸ ⊥)
+        lemma ()
+OfTypeIsDecidable {u = refl u} {0ᵤ} = inr lemma
+  where lemma : ¬ (refl u ˸ 0ᵤ)
+        lemma ()
+OfTypeIsDecidable {u = refl u} {s U} = inr lemma
+  where lemma : ¬ (refl u ˸ s U)
+        lemma ()
+OfTypeIsDecidable {u = refl u} {ℕ} = inr lemma
+  where lemma : ¬ (refl u ˸ ℕ)
+        lemma ()
+OfTypeIsDecidable {u = refl u} {F f} = inr lemma
+  where lemma : ¬ (refl u ˸ F f)
+        lemma ()
+OfTypeIsDecidable {u = refl u} {refl U} = inr lemma
+  where lemma : ¬ (refl u ˸ refl U)
+        lemma ()
+OfTypeIsDecidable {u = refl u} {I U v v′}
+  with (IsTypeIsDecidable {U = U}) | OfTypeIsDecidable {u = u} {U} |
+        decidableEquality {u = u} {v} | decidableEquality {u = u} {v′}
+... | inl UType | inl u:U | inl refl | inl refl = inl (refl:I UType u:U)
+... | inl _ | inl _ | inl refl | inr ¬u≡v′ = inr lemma
+  where lemma : ¬ (refl u ˸ I U v v′)
+        lemma (refl:I UType u:U) = ¬u≡v′ refl
+... | inl UType | inl u:U | inr ¬u≡v | _ = inr lemma
+  where lemma : ¬ (refl u ˸ I U v v′)
+        lemma (refl:I UType u:U) = ¬u≡v refl
+... | inl UType | inr ¬u:U | _ | _ = inr lemma
+  where lemma : ¬ (refl u ˸ I U v v′)
+        lemma (refl:I UType u:U) = ¬u:U u:U
+... | inr ¬UType | _ | _ | _ = inr lemma
+  where lemma : ¬ (refl u ˸ I U v v′)
+        lemma (refl:I UType u:U) = ¬UType UType
+OfTypeIsDecidable {u = refl u} {Π U f} = inr lemma
+  where lemma : ¬ (refl u ˸ Π U f)
+        lemma ()
+OfTypeIsDecidable {u = refl u} {𝒰} = inr lemma
+  where lemma : ¬ (refl u ˸ 𝒰)
+        lemma ()
+OfTypeIsDecidable {u = refl u} {incons} = inr lemma
+  where lemma : ¬ (refl u ˸ incons)
+        lemma ()
+OfTypeIsDecidable {u = I U u v} {U′}
+  = IOfTypeIsDecidable (OfTypeIsDecidable {u = U} {𝒰}) (OfTypeIsDecidable {u = u} {U}) (OfTypeIsDecidable {u = v} {U})
+OfTypeIsDecidable {u = Π U f} {⊥} = inr lemma
+  where lemma : ¬ (Π U f ˸ ⊥)
+        lemma ()
+OfTypeIsDecidable {u = Π U f} {0ᵤ} = inr lemma
+  where lemma : ¬ (Π U f ˸ 0ᵤ)
+        lemma ()
+OfTypeIsDecidable {u = Π U f} {s U′} = inr lemma
+  where lemma : ¬ (Π U f ˸ s U′)
+        lemma ()
+OfTypeIsDecidable {u = Π U f} {ℕ} = inr lemma
+  where lemma : ¬ (Π U f ˸ ℕ)
+        lemma ()
+OfTypeIsDecidable {u = Π U f} {F g} = inr lemma
+  where lemma : ¬ (Π U f ˸ F g)
+        lemma ()
+OfTypeIsDecidable {u = Π U f} {refl U′} = inr lemma
+  where lemma : ¬ (Π U f ˸ refl U′)
+        lemma ()
+OfTypeIsDecidable {u = Π U f} {I U′ u v} = inr lemma
+  where lemma : ¬ (Π U f ˸ I U′ u v)
+        lemma ()
+OfTypeIsDecidable {u = Π U f} {Π U′ g} = inr lemma
+  where lemma : ¬ (Π U f ˸ Π U′ g)
+        lemma ()
+OfTypeIsDecidable {u = Π U f} {𝒰}
+  with (OfTypeIsDecidable {u = U} {𝒰}) | OfTypeIsDecidable' {U = U} {f}
+... | inl U:𝒰 | inl p = inl (Π:𝒰 U:𝒰 p)
+... | inl U:𝒰 | inr ¬p = inr lemma
+  where lemma : ¬ (Π U f ˸ 𝒰)
+        lemma (Π:𝒰 _ p) = ¬p p
+... | inr ¬U:𝒰 | _ = inr lemma
+  where lemma : ¬ (Π U f ˸ 𝒰)
+        lemma (Π:𝒰 U:𝒰 _) = ¬U:𝒰 U:𝒰
+OfTypeIsDecidable {u = Π U f} {incons} = inr lemma
+  where lemma : ¬ (Π U f ˸ incons)
+        lemma ()
 OfTypeIsDecidable {u = 𝒰} {U} = inr lemma
   where lemma : ¬ (𝒰 ˸ U)
         lemma ()
 OfTypeIsDecidable {u = incons} {U} = inr lemma
   where lemma : ¬ (incons ˸ U)
         lemma ()
+
+OfTypeIsDecidable' {U = U} {∅} = inl xy∈∅-abs
+OfTypeIsDecidable' {U = U} {(u , V) ∷ f′}
+  with (OfTypeIsDecidable {u = u} {U}) | OfTypeIsDecidable {u = V} {𝒰} | OfTypeIsDecidable' {U = U} {f′}
+... | inl u:U | inl V:𝒰 | inl p = inl (lemma u:U V:𝒰 p)
+  where lemma : u ˸ U → V ˸ 𝒰 → (∀ {u′ V′} → (u′ , V′) ∈ f′ → (u′ ˸ U) ⊠ (V′ ˸ 𝒰)) →
+                ∀ {u′ V′} → (u′ , V′) ∈ ((u , V) ∷ f′) → (u′ ˸ U) ⊠ (V′ ˸ 𝒰)
+        lemma u:U V:𝒰 _ here = u:U , V:𝒰
+        lemma _ _ p (there u′V′∈f′) = p u′V′∈f′
+... | inl u:U | inl V:𝒰 | inr ¬p = inr lemma
+  where lemma : ¬ (∀ {u′ V′} → (u′ , V′) ∈ ((u , V) ∷ f′) → (u′ ˸ U) ⊠ (V′ ˸ 𝒰))
+        lemma p = ¬p (λ u′V′∈f′ → p (there u′V′∈f′))
+... | inl u:U | inr ¬V:𝒰 | _ = inr lemma
+  where lemma : ¬ (∀ {u′ V′} → (u′ , V′) ∈ ((u , V) ∷ f′) → (u′ ˸ U) ⊠ (V′ ˸ 𝒰))
+        lemma p = ¬V:𝒰 (⊠-snd (p here))
+... | inr ¬u:U | _ | _ = inr lemma
+  where lemma : ¬ (∀ {u′ V′} → (u′ , V′) ∈ ((u , V) ∷ f′) → (u′ ˸ U) ⊠ (V′ ˸ 𝒰))
+        lemma p = ¬u:U (⊠-fst (p here))
