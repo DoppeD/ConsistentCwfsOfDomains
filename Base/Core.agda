@@ -51,6 +51,12 @@ data 𝟘 : Set where
 ¬ : Set → Set
 ¬ P = P → 𝟘
 
+¬-elim : {P : Set} → 𝟘 → P
+¬-elim ()
+
+Decidable : Set → Set
+Decidable P = P ∨ ¬ P
+
 data 𝟙 : Set where
   * : 𝟙
 

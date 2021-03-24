@@ -36,6 +36,10 @@ _⊆_ : ∀ {i} → (𝑓 𝑓′ : FinFun {i}) → Set
 ⊆-lemma₅ : ∀ {i} → {𝑓 : FinFun {i}} → ∀ {x} → x ∈ 𝑓 → (x ∷ ∅) ⊆ 𝑓
 ⊆-lemma₅ x∈𝑓 here = x∈𝑓
 
+⊆-lemma₆ : ∀ {i} → {𝑓 : FinFun {i}} → ∀ {x y} → (x ∷ 𝑓) ⊆ (x ∷ (y ∷ 𝑓))
+⊆-lemma₆ here = here
+⊆-lemma₆ (there x∈𝑓) = there (there x∈𝑓)
+
 -- The empty set is a subset of any set.
 ∅-isSubset : ∀ {i} → {𝑓 : FinFun {i}} → ∅ ⊆ 𝑓
 ∅-isSubset ()

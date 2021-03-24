@@ -11,7 +11,7 @@ open import Cwf.DomainCwf.UniType.TypingAlgorithm
 
 open import Agda.Builtin.Equality
 
-0OfTypeIsDecidable : ∀ {i} → {U : Nbh {i}} → (0ᵤ ˸ U) ∨ ¬ (0ᵤ ˸ U)
+0OfTypeIsDecidable : ∀ {i} → {U : Nbh {i}} → Decidable (0ᵤ ˸ U)
 0OfTypeIsDecidable {U = ⊥} = inr lemma
   where lemma : ¬ (0ᵤ ˸ ⊥)
         lemma ()
@@ -41,7 +41,7 @@ open import Agda.Builtin.Equality
   where lemma : ¬ (0ᵤ ˸ incons)
         lemma ()
 
-sOfTypeIsDecidable : ∀ {i} → {u U : Nbh {i}} → (u ˸ U) ∨ ¬ (u ˸ U) → (s u ˸ U) ∨ ¬ (s u ˸ U)
+sOfTypeIsDecidable : ∀ {i} → {u U : Nbh {i}} → Decidable (u ˸ U) → Decidable (s u ˸ U)
 sOfTypeIsDecidable {u = u} {⊥} _ = inr lemma
   where lemma : ¬ (s u ˸ ⊥)
         lemma ()
@@ -74,7 +74,7 @@ sOfTypeIsDecidable {u = u} {incons} _ = inr lemma
   where lemma : ¬ (s u ˸ incons)
         lemma ()
 
-ℕOfTypeIsDecidable : ∀ {i} → {U : Nbh {i}} → (ℕ ˸ U) ∨ ¬ (ℕ ˸ U)
+ℕOfTypeIsDecidable : ∀ {i} → {U : Nbh {i}} → Decidable (ℕ ˸ U)
 ℕOfTypeIsDecidable {U = ⊥} = inr lemma
   where lemma : ¬ (ℕ ˸ ⊥)
         lemma ()
@@ -105,8 +105,8 @@ sOfTypeIsDecidable {u = u} {incons} _ = inr lemma
         lemma ()
 
 IOfTypeIsDecidable : ∀ {i} → {U u v U′ : Nbh {i}} →
-                     (U ˸ 𝒰) ∨ ¬ (U ˸ 𝒰) → (u ˸ U) ∨ ¬ (u ˸ U) →
-                     (v ˸ U) ∨ ¬ (v ˸ U) → (I U u v ˸ U′) ∨ ¬ (I U u v ˸ U′)
+                     Decidable (U ˸ 𝒰) → Decidable (u ˸ U) → Decidable (v ˸ U) →
+                     Decidable (I U u v ˸ U′)
 IOfTypeIsDecidable {U = U} {u} {v} {⊥} _ _ _ = inr lemma
   where lemma : ¬ (I U u v  ˸ ⊥)
         lemma ()
@@ -147,15 +147,10 @@ IOfTypeIsDecidable {U = U} {u} {v} {incons} _ _ _ = inr lemma
 
 IsTypeIsDecidable : ∀ {i} → {U : Nbh {i}} → (U Type) ∨ ¬ (U Type)
 IsTypeIsDecidable' : ∀ {i} → {U : Nbh {i}} → {f : FinFun {i}} →
-                     (∀ {u V} → (u , V) ∈ f → (u ˸ U) ⊠ (V Type)) ∨
-                     ¬ (∀ {u V} → (u , V) ∈ f → (u ˸ U) ⊠ (V Type))
+                     Decidable (∀ {u V} → (u , V) ∈ f → (u ˸ U) ⊠ (V Type))
 OfTypeIsDecidable : ∀ {i} → {u U : Nbh {i}} → (u ˸ U) ∨ ¬ (u ˸ U)
 OfTypeIsDecidable' : ∀ {i} → {U : Nbh {i}} → {f : FinFun {i}} →
-                     (∀ {u V} → (u , V) ∈ f → (u ˸ U) ⊠ (V ˸ 𝒰)) ∨
-                     ¬ (∀ {u V} → (u , V) ∈ f → (u ˸ U) ⊠ (V ˸ 𝒰))
-OfTypeIsDecidable'' : ∀ {i} → {f : FinFun {i}} → {U : Nbh {i}} → {g : FinFun {i}} →
-                      (∀ {u v} → (u , v) ∈ f → (apset : apSet g u) → (v ˸ post (⊑-proof.sub (apSet.⊑proof apset)))) ∨
-                      ¬ (∀ {u v} → (u , v) ∈ f → (apset : apSet g u) → (v ˸ post (⊑-proof.sub (apSet.⊑proof apset))))
+                     Decidable (∀ {u V} → (u , V) ∈ f → (u ˸ U) ⊠ (V ˸ 𝒰))
 
 IsTypeIsDecidable {U = ⊥} = inr lemma
   where lemma : ¬ (⊥ Type)
@@ -246,14 +241,13 @@ OfTypeIsDecidable {u = F f} {refl U} = inr lemma
 OfTypeIsDecidable {u = F f} {I U u v} = inr lemma
   where lemma : ¬ (F f ˸ I U u v)
         lemma ()
-OfTypeIsDecidable {u = F f} {Π U g} = {!!}
+OfTypeIsDecidable {u = F f} {Π U g} = inl (F:Π {!!} {!!})
 OfTypeIsDecidable {u = F f} {𝒰} = inr lemma
   where lemma : ¬ (F f ˸ 𝒰)
         lemma ()
 OfTypeIsDecidable {u = F f} {incons} = inr lemma
   where lemma : ¬ (F f ˸ incons)
         lemma ()
-
 OfTypeIsDecidable {u = refl u} {⊥} = inr lemma
   where lemma : ¬ (refl u ˸ ⊥)
         lemma ()
@@ -359,7 +353,3 @@ OfTypeIsDecidable' {U = U} {(u , V) ∷ f′}
 ... | inr ¬u:U | _ | _ = inr lemma
   where lemma : ¬ (∀ {u′ V′} → (u′ , V′) ∈ ((u , V) ∷ f′) → (u′ ˸ U) ⊠ (V′ ˸ 𝒰))
         lemma p = ¬u:U (⊠-fst (p here))
-
-OfTypeIsDecidable'' {f = ∅} = inl xy∈∅-abs
-OfTypeIsDecidable'' {f = (u , v) ∷ f′} {U} {g} = {!!}
-  where lemma : 

@@ -12,13 +12,9 @@ open import Cwf.DomainCwf.UniType.Relation
 open import Agda.Builtin.Sigma
 open import Agda.Builtin.Size
 
-record apSet {i : Size} (f : FinFun {i}) (u : Nbh {i}) : Set where
-  field
-    ⊑proof : ⊑-proof f u ⊥
-    isLargest : {⊑proof′ : ⊑-proof f u ⊥} → pre (⊑-proof.sub ⊑proof′) ⊑ pre (⊑-proof.sub ⊑proof)
-
 data _Type : ∀ {i} → Nbh {i} → Set
 data _˸_ : ∀ {i} → Nbh {i} → Nbh {i} → Set
+record apSet {i : Size} (f : FinFun {i}) (u v : Nbh {i}) : Set
 
 data _Type where
   isType-I : ∀ {i} → {U u u′ : Nbh {i}} → U Type → u ˸ U → u′ ˸ U → (I U u u′) Type
@@ -32,9 +28,9 @@ data _˸_ where
   ⊥:U : ∀ {i} → {U : Nbh {i}} → U Type → ⊥ ˸ U
   0:ℕ : ∀ {i} → 0ᵤ {i} ˸ ℕ
   s:N : ∀ {i} → {u : Nbh {i}} → u ˸ ℕ → s u ˸ ℕ
-  F:Π : ∀ {U g f} →
+  F:Π : ∀ {i} → {U : Nbh {i}} → {g f : FinFun {i}} →
         (∀ {u v} → (u , v) ∈ f → u ˸ U) →
-        (∀ {u v} → (u , v) ∈ f → (apset : apSet g u) → v ˸ post (⊑-proof.sub (apSet.⊑proof apset))) →
+        (∀ {u v} → (u , v) ∈ f → apSet g u v) →
         (F f) ˸ (Π U g)
   refl:I : ∀ {i} → {U u : Nbh {i}} → U Type → u ˸ U → refl u ˸ I U u u
   I:𝒰 : ∀ {i} → {U u v : Nbh {i}} → U ˸ 𝒰 → u ˸ U → v ˸ U → I U u v ˸ 𝒰
@@ -42,3 +38,10 @@ data _˸_ where
         (∀ {u V} → (u , V) ∈ f → (u ˸ U) ⊠ (V ˸ 𝒰)) →
         (Π U f) ˸ 𝒰
   ℕ:𝒰 : ∀ {i} → ℕ {i} ˸ 𝒰
+
+record apSet {i} f u v where
+  inductive
+  field
+    ⊑proof : ⊑-proof f u ⊥
+    isLargest : {⊑proof′ : ⊑-proof f u ⊥} → pre (⊑-proof.sub ⊑proof′) ⊑ pre (⊑-proof.sub ⊑proof)
+    v:post : v ˸ post (⊑-proof.sub ⊑proof)

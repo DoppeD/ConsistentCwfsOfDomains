@@ -62,6 +62,32 @@ conLemma₂ {u = Π u conuv₁} {incons} conuv = conuv
 conLemma₂ {u = 𝒰} {incons} conuv = conuv
 conLemma₂ {u = incons} {incons} conuv = conuv
 
+conLemma₃' : ∀ {i} → {f : FinFun {i}} → conFinFun f → conFinFun (f ∪ f)
+conLemma₃' {f = f} (conPairs , conElems) = lemma₁ , lemma₂
+  where lemma₁ : ∀ {u v u′ v′} → (u , v) ∈ (f ∪ f) → (u′ , v′) ∈ (f ∪ f) → con (u ⊔ u′) → con (v ⊔ v′)
+        lemma₁ uv∈∪ u′v′∈∪ with (∪-lemma₂ {𝑓 = f} uv∈∪) | ∪-lemma₂ {𝑓 = f} u′v′∈∪
+        ... | inl uv∈f | inl u′v′∈f = conPairs uv∈f u′v′∈f
+        ... | inl uv∈f | inr u′v′∈f = conPairs uv∈f u′v′∈f
+        ... | inr uv∈f | inl u′v′∈f = conPairs uv∈f u′v′∈f
+        ... | inr uv∈f | inr u′v′∈f = conPairs uv∈f u′v′∈f
+        lemma₂ : ∀ {u v} → (u , v) ∈ (f ∪ f) → con u ⊠ con v
+        lemma₂ uv∈∪ with (∪-lemma₂ {𝑓 = f} uv∈∪)
+        ... | inl uv∈f = conElems uv∈f
+        ... | inr uv∈f = conElems uv∈f
+
+conLemma₃ : ∀ {i} → {u : Nbh {i}} → con u → con (u ⊔ u)
+conLemma₃ {u = ⊥} conu = *
+conLemma₃ {u = 0ᵤ} conu = *
+conLemma₃ {u = s u} conu = conLemma₃ {u = u} conu
+conLemma₃ {u = ℕ} conu = *
+conLemma₃ {u = F f} conu = conLemma₃' conu
+conLemma₃ {u = refl u} conu = conLemma₃ {u = u} conu
+conLemma₃ {u = I U u v} (conU , (conu , conv))
+  = (conLemma₃ {u = U} conU) , (conLemma₃ {u = u} conu , conLemma₃ {u = v} conv)
+conLemma₃ {u = Π U f} (conU , conf) = conLemma₃ {u = U} conU , conLemma₃' {f = f} conf
+conLemma₃ {u = 𝒰} conu = *
+conLemma₃ {u = incons} conu = conu
+
 conFinFunSym : ∀ {i} → {f g : FinFun {i}} → conFinFun (f ∪ g) → conFinFun (g ∪ f)
 conFinFunSym {f = f} (conPairsfg , conElemsfg)
   = (λ uv∈∪ u′v′∈∪ conuu′ → conPairsfg (∪-lemma₆ {𝑓′ = f} uv∈∪) (∪-lemma₆ {𝑓′ = f} u′v′∈∪) conuu′) ,

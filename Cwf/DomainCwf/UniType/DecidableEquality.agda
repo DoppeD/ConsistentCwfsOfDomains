@@ -146,7 +146,7 @@ open import Agda.Builtin.Size
 ¬𝒰≡incons : ∀ {i} → ¬ (𝒰 {i} ≡ incons)
 ¬𝒰≡incons ()
 
-⊥decidableEquality : ∀ {i} → {v : Nbh {i}} → (⊥ ≡ v) ∨ ¬ (⊥ ≡ v)
+⊥decidableEquality : ∀ {i} → {v : Nbh {i}} → Decidable (⊥ ≡ v)
 ⊥decidableEquality {v = ⊥} = inl refl
 ⊥decidableEquality {v = 0ᵤ} = inr ¬⊥≡0
 ⊥decidableEquality {v = s _} = inr ¬⊥≡s
@@ -158,7 +158,7 @@ open import Agda.Builtin.Size
 ⊥decidableEquality {v = 𝒰} = inr ¬⊥≡𝒰
 ⊥decidableEquality {v = incons} = inr ¬⊥≡incons
 
-0decidableEquality : ∀ {i} → {v : Nbh {i}} → (0ᵤ ≡ v) ∨ ¬ (0ᵤ ≡ v)
+0decidableEquality : ∀ {i} → {v : Nbh {i}} → Decidable (0ᵤ ≡ v)
 0decidableEquality {v = ⊥} = inr (¬eqSym ¬⊥≡0)
 0decidableEquality {v = 0ᵤ} = inl refl
 0decidableEquality {v = s _} = inr ¬0≡s
@@ -170,7 +170,7 @@ open import Agda.Builtin.Size
 0decidableEquality {v = 𝒰} = inr ¬0≡𝒰
 0decidableEquality {v = incons} = inr ¬0≡incons
 
-ℕdecidableEquality : ∀ {i} → {v : Nbh {i}} → (ℕ ≡ v) ∨ ¬ (ℕ ≡ v)
+ℕdecidableEquality : ∀ {i} → {v : Nbh {i}} → Decidable (ℕ ≡ v)
 ℕdecidableEquality {v = ⊥} = inr (¬eqSym ¬⊥≡ℕ)
 ℕdecidableEquality {v = 0ᵤ} = inr (¬eqSym ¬0≡ℕ)
 ℕdecidableEquality {v = s _} = inr (¬eqSym ¬s≡ℕ)
@@ -182,7 +182,7 @@ open import Agda.Builtin.Size
 ℕdecidableEquality {v = 𝒰} = inr ¬ℕ≡𝒰
 ℕdecidableEquality {v = incons} = inr ¬ℕ≡incons
 
-𝒰decidableEquality : ∀ {i} → {v : Nbh {i}} → (𝒰 ≡ v) ∨ ¬ (𝒰 ≡ v)
+𝒰decidableEquality : ∀ {i} → {v : Nbh {i}} → Decidable (𝒰 ≡ v)
 𝒰decidableEquality {v = ⊥} = inr (¬eqSym ¬⊥≡𝒰)
 𝒰decidableEquality {v = 0ᵤ} = inr (¬eqSym ¬0≡𝒰)
 𝒰decidableEquality {v = s _} = inr (¬eqSym ¬s≡𝒰)
@@ -194,7 +194,7 @@ open import Agda.Builtin.Size
 𝒰decidableEquality {v = 𝒰} = inl refl
 𝒰decidableEquality {v = incons} = inr ¬𝒰≡incons
 
-inconsDecidableEquality : ∀ {i} → {v : Nbh {i}} → (incons ≡ v) ∨ ¬ (incons ≡ v)
+inconsDecidableEquality : ∀ {i} → {v : Nbh {i}} → Decidable (incons ≡ v)
 inconsDecidableEquality {v = ⊥} = inr (¬eqSym ¬⊥≡incons)
 inconsDecidableEquality {v = 0ᵤ} = inr (¬eqSym ¬0≡incons)
 inconsDecidableEquality {v = s _} = inr (¬eqSym ¬s≡incons)
@@ -206,8 +206,8 @@ inconsDecidableEquality {v = Π _ _} = inr (¬eqSym ¬Π≡incons)
 inconsDecidableEquality {v = 𝒰} = inr (¬eqSym ¬𝒰≡incons)
 inconsDecidableEquality {v = incons} = inl refl
 
-decidableEquality : ∀ {i} → {u v : Nbh {i}} → (u ≡ v) ∨ ¬ (u ≡ v)
-decidableEqualityFinFun : ∀ {i} → {f g : FinFun {i}} → (f ≡ g) ∨ ¬ (f ≡ g)
+decidableEquality : ∀ {i} → {u v : Nbh {i}} → Decidable (u ≡ v)
+decidableEqualityFinFun : ∀ {i} → {f g : FinFun {i}} → Decidable (f ≡ g)
 
 decidableEquality {u = ⊥} = ⊥decidableEquality
 decidableEquality {u = 0ᵤ} = 0decidableEquality
