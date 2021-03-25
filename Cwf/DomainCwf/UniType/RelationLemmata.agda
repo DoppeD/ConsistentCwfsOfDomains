@@ -46,7 +46,6 @@ shrink-⊑ f′⊆f (⊑-F conf cong p) uv∈f′ = p (f′⊆f uv∈f′)
   ⊑-Π (⊑-⊔-lemma₁ u⊑v convw) (⊑-F conf congh (grow-⊑ ∪-lemma₃ p))
 ⊑-⊔-lemma₁ {w = ⊥} ⊑-𝒰 _ = ⊑-𝒰
 ⊑-⊔-lemma₁ {w = 𝒰} ⊑-𝒰 _ = ⊑-𝒰
-
 ⊑-⊔-lemma₂ : ∀ {i} → {u v w : Nbh {i}} → u ⊑ w → con (v ⊔ w) → u ⊑ (v ⊔ w)
 ⊑-⊔-lemma₂ (⊑-bot _) conuw = ⊑-bot conuw
 ⊑-⊔-lemma₂ {v = ⊥} ⊑-0 _ = ⊑-0
@@ -62,7 +61,6 @@ shrink-⊑ f′⊆f (⊑-F conf cong p) uv∈f′ = p (f′⊆f uv∈f′)
 ⊑-⊔-lemma₂ {v = ⊥} (⊑-I U⊑U″ u⊑u″ v⊑v″) _ = ⊑-I U⊑U″ u⊑u″ v⊑v″
 ⊑-⊔-lemma₂ {v = I _ _ _} (⊑-I U⊑U″ u⊑u″ v⊑v″) (conU′U″ , (conu′u″ , conv′v″))
   = ⊑-I (⊑-⊔-lemma₂ U⊑U″ conU′U″) (⊑-⊔-lemma₂ u⊑u″ conu′u″) (⊑-⊔-lemma₂ v⊑v″ conv′v″)
-
 ⊑-⊔-lemma₂ {v = ⊥} (⊑-Π u⊑w f⊑h) conuw = ⊑-Π u⊑w f⊑h
 ⊑-⊔-lemma₂ {v = Π _ _} (⊑-Π u⊑w f⊑h) conuw with (orderOnlyCon f⊑h)
 ⊑-⊔-lemma₂ {v = Π _ _} (⊑-Π u⊑w (⊑-F _ _ p)) (conuw , confh) | (conf , _)
@@ -70,6 +68,7 @@ shrink-⊑ f′⊆f (⊑-F conf cong p) uv∈f′ = p (f′⊆f uv∈f′)
 ⊑-⊔-lemma₂ {v = ⊥} ⊑-𝒰 _ = ⊑-𝒰
 ⊑-⊔-lemma₂ {v = 𝒰} ⊑-𝒰 _ = ⊑-𝒰
 
-⊑-⊔-lemma₃ : ∀ {i} → {u v u′ v′ : Nbh {i}} → u ⊑ u′ → v ⊑ v′ → con (u ⊔ v) → con (u′ ⊔ v′) → (u ⊔ v) ⊑ (u′ ⊔ v′)
+⊑-⊔-lemma₃ : ∀ {i} → {u v u′ v′ : Nbh {i}} → u ⊑ u′ → v ⊑ v′ → con (u ⊔ v) →
+             con (u′ ⊔ v′) → (u ⊔ v) ⊑ (u′ ⊔ v′)
 ⊑-⊔-lemma₃ u⊑u′ v⊑v′ conuv conu′v′
   = ⊑-⊔ (⊑-⊔-lemma₁ u⊑u′ conu′v′) (⊑-⊔-lemma₂ v⊑v′ conu′v′) conuv

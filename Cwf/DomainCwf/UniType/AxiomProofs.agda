@@ -112,27 +112,28 @@ open import Cwf.DomainCwf.UniType.Relation
 ⊑-⊔-fst {u = 𝒰} {⊥} _ = ⊑-refl *
 ⊑-⊔-fst {u = 𝒰} {𝒰} _ = ⊑-refl *
 
-⊑-⊔-snd' : ∀ {f g u v} → conFinFun (f ∪ g) → (u , v) ∈ g → ⊑-proof (f ∪ g) u v
+⊑-⊔-snd' : ∀ {i} → {f g : FinFun {i}} → {u v : Nbh {i}} →
+           conFinFun (f ∪ g) → (u , v) ∈ g → ⊑-proof (f ∪ g) u v
 ⊑-⊔-snd' confg uv∈g = ⊑-refl' confg (∪-lemma₄ uv∈g)
 
-⊑-⊔-snd : ∀ {u v} → con (u ⊔ v) → v ⊑ (u ⊔ v)
-⊑-⊔-snd {⊥} conuv = ⊑-refl conuv
-⊑-⊔-snd {0ᵤ} {⊥} _ = ⊑-bot *
-⊑-⊔-snd {0ᵤ} {0ᵤ} _ = ⊑-refl *
-⊑-⊔-snd {s _} {⊥} conuv = ⊑-bot conuv
-⊑-⊔-snd {s _} {s _} conuv = ⊑-s (⊑-⊔-snd conuv)
-⊑-⊔-snd {ℕ} {⊥} conuv = ⊑-bot *
-⊑-⊔-snd {ℕ} {ℕ} conuv = ⊑-refl *
-⊑-⊔-snd {F _} {⊥} conuv = ⊑-bot conuv
-⊑-⊔-snd {F _} {F _} conuv
+⊑-⊔-snd : ∀ {i} → {u v : Nbh {i}} → con (u ⊔ v) → v ⊑ (u ⊔ v)
+⊑-⊔-snd {u = ⊥} conuv = ⊑-refl conuv
+⊑-⊔-snd {u = 0ᵤ} {⊥} _ = ⊑-bot *
+⊑-⊔-snd {u = 0ᵤ} {0ᵤ} _ = ⊑-refl *
+⊑-⊔-snd {u = s _} {⊥} conuv = ⊑-bot conuv
+⊑-⊔-snd {u = s _} {s _} conuv = ⊑-s (⊑-⊔-snd conuv)
+⊑-⊔-snd {u = ℕ} {⊥} conuv = ⊑-bot *
+⊑-⊔-snd {u = ℕ} {ℕ} conuv = ⊑-refl *
+⊑-⊔-snd {u = F _} {⊥} conuv = ⊑-bot conuv
+⊑-⊔-snd {u = F _} {F _} conuv
   = ⊑-F (subsetIsCon ∪-lemma₄ conuv) conuv (⊑-⊔-snd' conuv)
-⊑-⊔-snd {refl _} {⊥} conuv = ⊑-bot conuv
-⊑-⊔-snd {refl _} {refl _} conuv = ⊑-rfl (⊑-⊔-snd conuv)
-⊑-⊔-snd {I _ _ _} {⊥} conuv = ⊑-bot conuv
-⊑-⊔-snd {I _ _ _} {I _ _ _} (conUU′ , (conuu′ , convv′))
+⊑-⊔-snd {u = refl _} {⊥} conuv = ⊑-bot conuv
+⊑-⊔-snd {u = refl _} {refl _} conuv = ⊑-rfl (⊑-⊔-snd conuv)
+⊑-⊔-snd {u = I _ _ _} {⊥} conuv = ⊑-bot conuv
+⊑-⊔-snd {u = I _ _ _} {I _ _ _} (conUU′ , (conuu′ , convv′))
   = ⊑-I (⊑-⊔-snd conUU′) (⊑-⊔-snd conuu′) (⊑-⊔-snd convv′)
-⊑-⊔-snd {Π _ _} {⊥} conuv = ⊑-bot conuv
-⊑-⊔-snd {Π _ _} {Π _ _} (conuv , confg)
+⊑-⊔-snd {u = Π _ _} {⊥} conuv = ⊑-bot conuv
+⊑-⊔-snd {u = Π _ _} {Π _ _} (conuv , confg)
   = ⊑-Π (⊑-⊔-snd conuv) (⊑-F (subsetIsCon ∪-lemma₄ confg) confg (⊑-⊔-snd' confg))
-⊑-⊔-snd {𝒰} {⊥} _ = ⊑-bot *
-⊑-⊔-snd {𝒰} {𝒰} _ = ⊑-refl *
+⊑-⊔-snd {u = 𝒰} {⊥} _ = ⊑-bot *
+⊑-⊔-snd {u = 𝒰} {𝒰} _ = ⊑-refl *
