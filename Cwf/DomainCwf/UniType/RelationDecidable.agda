@@ -4,6 +4,7 @@ module Cwf.DomainCwf.UniType.RelationDecidable where
 
 open import Base.Core
 open import Cwf.DomainCwf.UniType.AxiomProofs
+open import Cwf.DomainCwf.UniType.Coherence
 open import Cwf.DomainCwf.UniType.ConLub
 open import Cwf.DomainCwf.UniType.Consistency
 open import Cwf.DomainCwf.UniType.ConsistencyDecidable
@@ -11,24 +12,16 @@ open import Cwf.DomainCwf.UniType.ConsistencyLemmata
 open import Cwf.DomainCwf.UniType.Definition
 open import Cwf.DomainCwf.UniType.FinFun
 open import Cwf.DomainCwf.UniType.Relation
+open import Cwf.DomainCwf.UniType.RelationLemmata
 
 open import Agda.Builtin.Size
-
--- Prove:
--- ∀ {u v} → (u , v) ∈ f → u ⊑ w → (u , v) ∈ largest f w conw p
--- ∀ {u v} → (u , v) ∈ f → (u , v) ∈ largest f w conw p → u ⊑ w (this just follows from pre sub ⊑ w)
--- So largest f w conw p contains exactly the pairs (u , v) such that u ⊑ w.
--- Also need ∀ {f u v) → Decidable ((u , v) ∈ f)
--- And ∀ {u v} → (u , v) ∈ f → ¬ ((u , v) ∈ largest f w conw p) → ¬ (u ⊑ w) (shouldn't be needed)
--- Then show that any sub ⊆ f such that pre sub ⊑ u satisifes sub ⊆ largest f w conw p.
--- Then post (sub) ⊑ post (largest f w conw p) by Ω (since F sub ⊑ F (largest f w conw p))
 
 record Largest {i : Size} (f : FinFun {i}) (w : Nbh {i}) : Set where
   field
     sub : FinFun {i}
     sub⊆f : sub ⊆ f
     pre⊑w : pre sub ⊑ w
-    isLargest : {u v : Nbh {i}} → (u , v) ∈ f → u ⊑ w → (u , v) ∈ sub
+    allSmalleru : {u v : Nbh {i}} → (u , v) ∈ f → u ⊑ w → (u , v) ∈ sub
 
 largest : ∀ {i} → (f : FinFun {i}) → (w : Nbh {i}) → con w →
           (∀ {u v} → (u , v) ∈ f → Decidable (u ⊑ w)) →
@@ -38,24 +31,50 @@ largest {i} ∅ w conw _ =
     { sub = ∅
     ; sub⊆f = ∅-isSubset
     ; pre⊑w = ⊑-bot conw
-    ; isLargest = {!!}
+    ; allSmalleru = xy∈∅-abs
     }
 largest ((u , v) ∷ f′) w conw p
   with (p here) | largest f′ w conw λ u′v′∈f′ → p (there u′v′∈f′)
-... | inl u⊑w | record { sub = sub ; sub⊆f = sub⊆f ; pre⊑w = pre⊑w }
+... | inl u⊑w | record { sub = sub ; sub⊆f = sub⊆f ; pre⊑w = pre⊑w ; allSmalleru = allSmalleru }
   = record
       { sub = (u , v) ∷ sub
       ; sub⊆f = ⊆-lemma₄ here (λ u′v′∈sub → there (sub⊆f u′v′∈sub))
       ; pre⊑w = ⊑-⊔ u⊑w pre⊑w (Con-⊔ u⊑w pre⊑w)
-      ; isLargest = {!!}
+      ; allSmalleru = lemma
       }
-... | inr ¬u⊑w | record { sub = sub ; sub⊆f = sub⊆f ; pre⊑w = pre⊑w }
+      where lemma : ∀ {u′ v′} → (u′ , v′) ∈ ((u , v) ∷ f′) → u′ ⊑ w → (u′ , v′) ∈ ((u , v) ∷ sub)
+            lemma here _ = here
+            lemma (there u′v′∈f′) u′⊑w = there (allSmalleru u′v′∈f′ u′⊑w)
+... | inr ¬u⊑w | record { sub = sub ; sub⊆f = sub⊆f ; pre⊑w = pre⊑w ; allSmalleru = allSmalleru }
   = record
       { sub = sub
       ; sub⊆f = λ u′v′∈sub → there (sub⊆f u′v′∈sub)
       ; pre⊑w = pre⊑w
-      ; isLargest = {!!}
+      ; allSmalleru = lemma
       }
+      where lemma : ∀ {u′ v′} → (u′ , v′) ∈ ((u , v) ∷ f′) → u′ ⊑ w → (u′ , v′) ∈ sub
+            lemma here u′⊑w = ¬-elim (¬u⊑w u′⊑w)
+            lemma (there u′v′∈f′) u′⊑w = allSmalleru u′v′∈f′ u′⊑w
+
+isLargest' : ∀ {i} → {f : FinFun {i}} → conFinFun f → {w : Nbh {i}} → (lrg : Largest f w) →
+             {g : FinFun {i}} → g ⊆ f → (∀ {u v} → (u , v) ∈ g → u ⊑ w) →
+             ∀ {u v} → (u , v) ∈ g → v ⊑ post (Largest.sub lrg)
+isLargest' conf record { sub = sub ; sub⊆f = sub⊆f ; pre⊑w = pre⊑w ; allSmalleru = allSmalleru } g⊆f p uv∈g
+  = lemma (allSmalleru (g⊆f uv∈g) (p uv∈g)) (coherence (subsetIsCon sub⊆f conf) (⊠-fst (orderOnlyCon pre⊑w)))
+  where lemma : ∀ {i} → {f : FinFun {i}} → {u v : Nbh {i}} → (u , v) ∈ f → con (post f) → v ⊑ post f
+        lemma here conpostf = ⊑-⊔-fst conpostf
+        lemma {f = (u′ , v′) ∷ f′} (there uv∈f′) conpostf
+          = ⊑-⊔-lemma₂ (lemma uv∈f′ (conLemma₂ {u = v′} conpostf)) conpostf
+
+isLargest : ∀ {i} → {f : FinFun {i}} → conFinFun f → {w : Nbh {i}} → {con w} → (lrg : Largest f w) →
+            {g : FinFun {i}} → g ⊆ f → (∀ {u v} → (u , v) ∈ g → u ⊑ w) →
+            post g ⊑ post (Largest.sub lrg)
+isLargest conf record { sub = sub ; sub⊆f = sub⊆f ; pre⊑w = pre⊑w ; allSmalleru = allSmalleru } {g = ∅} _ _
+  = ⊑-bot (coherence (subsetIsCon sub⊆f conf) (⊠-fst (orderOnlyCon pre⊑w)))
+isLargest conf {w} {conw} lrg {g = (u , v) ∷ g′} g⊆f p
+  = ⊑-⊔ (isLargest' conf lrg g⊆f p here)
+        (isLargest conf {w} {conw} lrg (⊆-lemma₂ g⊆f) (λ u′v′∈g′ → p (there u′v′∈g′)))
+        (coherence (subsetIsCon g⊆f conf) (Con-⊔ {u = u} {pre g′} {w} {!!} {!!}))
 
 test : ∀ {i} → {f g : FinFun {i}} → (∀ {u v u′ v′} → (u , v) ∈ f → (u′ , v′) ∈ f → Decidable (u ⊑ u′)) →
        Decidable ((F f) ⊑ (F g))

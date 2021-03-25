@@ -20,7 +20,7 @@ open import Cwf.DomainCwf.UniType.Relation
 ⊑-reflLemma₁ (⊑-Π u⊑v f⊑g) = ⊑-Π u⊑v f⊑g
 ⊑-reflLemma₁ ⊑-𝒰 = ⊑-𝒰
 
-⊑-reflLemma₂ : ∀ {u v} → u ⊑ v → u ⊑ (v ⊔ ⊥)
+⊑-reflLemma₂ : ∀ {i} → {u v : Nbh {i}} → u ⊑ v → u ⊑ (v ⊔ ⊥)
 ⊑-reflLemma₂ {v = v} (⊑-bot conv) = ⊑-bot (conAssoc' {u = v} conv)
 ⊑-reflLemma₂ ⊑-0 = ⊑-0
 ⊑-reflLemma₂ (⊑-s u⊑v) = ⊑-s u⊑v
@@ -31,20 +31,20 @@ open import Cwf.DomainCwf.UniType.Relation
 ⊑-reflLemma₂ (⊑-Π u⊑v f⊑g) = ⊑-Π u⊑v f⊑g
 ⊑-reflLemma₂ ⊑-𝒰 = ⊑-𝒰
 
-⊑-refl : ∀ {u} → con u → u ⊑ u
-⊑-refl' : ∀ {f u v} → conFinFun f → (u , v) ∈ f → ⊑-proof f u v
+⊑-refl : ∀ {i} → {u : Nbh {i}} → con u → u ⊑ u
+⊑-refl' : ∀ {i} → {f : FinFun {i}} → {u v : Nbh {i}} → conFinFun f → (u , v) ∈ f → ⊑-proof f u v
 
-⊑-refl {⊥} conu = ⊑-bot *
-⊑-refl {0ᵤ} conu = ⊑-0
-⊑-refl {s u} conu = ⊑-s (⊑-refl conu)
-⊑-refl {ℕ} conu = ⊑-ℕ
-⊑-refl {F f} conu = ⊑-F conu conu (⊑-refl' conu)
-⊑-refl {refl u} conu = ⊑-rfl (⊑-refl conu)
-⊑-refl {I U u v} (conU , (conu , conv))
+⊑-refl {u = ⊥} conu = ⊑-bot *
+⊑-refl {u = 0ᵤ} conu = ⊑-0
+⊑-refl {u = s u} conu = ⊑-s (⊑-refl conu)
+⊑-refl {u = ℕ} conu = ⊑-ℕ
+⊑-refl {u = F f} conu = ⊑-F conu conu (⊑-refl' conu)
+⊑-refl {u = refl u} conu = ⊑-rfl (⊑-refl conu)
+⊑-refl {u = I U u v} (conU , (conu , conv))
   = ⊑-I (⊑-refl conU) (⊑-refl conu) (⊑-refl conv)
-⊑-refl {Π u f} (conu , conf)
+⊑-refl {u = Π u f} (conu , conf)
   = ⊑-Π (⊑-refl conu) (⊑-F conf conf (⊑-refl' conf))
-⊑-refl {𝒰} conu = ⊑-𝒰
+⊑-refl {u = 𝒰} conu = ⊑-𝒰
 
 ⊑-refl' (_ , conElemsf) uv∈f with (conElemsf uv∈f)
 ⊑-refl' {u = u} {v} _ uv∈f | (conu , conv)
@@ -86,30 +86,31 @@ open import Cwf.DomainCwf.UniType.Relation
 ⊑-⊔ (⊑-bot _) ⊑-𝒰 conuv = ⊑-𝒰
 ⊑-⊔ ⊑-𝒰 ⊑-𝒰 conuv = ⊑-𝒰
 
-⊑-⊔-fst' : ∀ {f g u v} → conFinFun (f ∪ g) → (u , v) ∈ f → ⊑-proof (f ∪ g) u v
+⊑-⊔-fst' : ∀ {i} → {f g : FinFun {i}} → {u v : Nbh {i}} →
+           conFinFun (f ∪ g) → (u , v) ∈ f → ⊑-proof (f ∪ g) u v
 ⊑-⊔-fst' confg uv∈f = ⊑-refl' confg (∪-lemma₃ uv∈f)
 
-⊑-⊔-fst : ∀ {u v} → con (u ⊔ v) → u ⊑ (u ⊔ v)
-⊑-⊔-fst {⊥} conuv = ⊑-bot conuv
-⊑-⊔-fst {0ᵤ} {⊥} _ = ⊑-refl *
-⊑-⊔-fst {0ᵤ} {0ᵤ} _ = ⊑-refl *
-⊑-⊔-fst {s _} {⊥} conuv = ⊑-refl conuv
-⊑-⊔-fst {s _} {s _} conuv = ⊑-s (⊑-⊔-fst conuv)
-⊑-⊔-fst {ℕ} {⊥} _ = ⊑-refl *
-⊑-⊔-fst {ℕ} {ℕ} _ = ⊑-refl *
-⊑-⊔-fst {F _} {⊥} conuv = ⊑-refl conuv
-⊑-⊔-fst {F _} {F _} conuv =
+⊑-⊔-fst : ∀ {i} → {u v : Nbh {i}} → con (u ⊔ v) → u ⊑ (u ⊔ v)
+⊑-⊔-fst {u = ⊥} conuv = ⊑-bot conuv
+⊑-⊔-fst {u = 0ᵤ} {⊥} _ = ⊑-refl *
+⊑-⊔-fst {u = 0ᵤ} {0ᵤ} _ = ⊑-refl *
+⊑-⊔-fst {u = s _} {⊥} conuv = ⊑-refl conuv
+⊑-⊔-fst {u = s _} {s _} conuv = ⊑-s (⊑-⊔-fst conuv)
+⊑-⊔-fst {u = ℕ} {⊥} _ = ⊑-refl *
+⊑-⊔-fst {u = ℕ} {ℕ} _ = ⊑-refl *
+⊑-⊔-fst {u = F _} {⊥} conuv = ⊑-refl conuv
+⊑-⊔-fst {u = F _} {F _} conuv =
   ⊑-F (subsetIsCon ∪-lemma₃ conuv) conuv (⊑-⊔-fst' conuv)
-⊑-⊔-fst {refl _} {⊥} conuv = ⊑-refl conuv
-⊑-⊔-fst {refl _} {refl _} conuv = ⊑-rfl (⊑-⊔-fst conuv)
-⊑-⊔-fst {I _ _ _} {⊥} conuv = ⊑-refl conuv
-⊑-⊔-fst {I _ _ _} {I _ _ _} (conUU′ , (conuu′ , convv′))
+⊑-⊔-fst {u = refl _} {⊥} conuv = ⊑-refl conuv
+⊑-⊔-fst {u = refl _} {refl _} conuv = ⊑-rfl (⊑-⊔-fst conuv)
+⊑-⊔-fst {u = I _ _ _} {⊥} conuv = ⊑-refl conuv
+⊑-⊔-fst {u = I _ _ _} {I _ _ _} (conUU′ , (conuu′ , convv′))
   = ⊑-I (⊑-⊔-fst conUU′) (⊑-⊔-fst conuu′) (⊑-⊔-fst convv′)
-⊑-⊔-fst {Π _ _} {⊥} conuv = ⊑-refl conuv
-⊑-⊔-fst {Π _ _} {Π _ _} (conuv , confg)
+⊑-⊔-fst {u = Π _ _} {⊥} conuv = ⊑-refl conuv
+⊑-⊔-fst {u = Π _ _} {Π _ _} (conuv , confg)
   = ⊑-Π (⊑-⊔-fst conuv) (⊑-F (subsetIsCon ∪-lemma₃ confg) confg (⊑-⊔-fst' confg))
-⊑-⊔-fst {𝒰} {⊥} _ = ⊑-refl *
-⊑-⊔-fst {𝒰} {𝒰} _ = ⊑-refl *
+⊑-⊔-fst {u = 𝒰} {⊥} _ = ⊑-refl *
+⊑-⊔-fst {u = 𝒰} {𝒰} _ = ⊑-refl *
 
 ⊑-⊔-snd' : ∀ {f g u v} → conFinFun (f ∪ g) → (u , v) ∈ g → ⊑-proof (f ∪ g) u v
 ⊑-⊔-snd' confg uv∈g = ⊑-refl' confg (∪-lemma₄ uv∈g)

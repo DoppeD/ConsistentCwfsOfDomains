@@ -22,16 +22,16 @@ record ⊑-proof {i} g u v where
 
 data _⊑_ where
   ⊑-bot : ∀ {i} → {u : Nbh {i}} → con u → ⊥ ⊑ u
-  ⊑-0 : 0ᵤ ⊑ 0ᵤ
+  ⊑-0 : ∀ {i} → 0ᵤ {i} ⊑ 0ᵤ
   ⊑-s : ∀ {i} → {u v : Nbh {i}} → u ⊑ v → s u ⊑ s v
-  ⊑-ℕ : ℕ ⊑ ℕ
+  ⊑-ℕ : ∀ {i} → ℕ {i} ⊑ ℕ
   ⊑-F : ∀ {i} → {f g : FinFun {i}} → (conf : conFinFun f) → (cong : conFinFun g) →
         (∀ {u v} → (u , v) ∈ f → ⊑-proof g u v) →
         F f ⊑ F g
   ⊑-rfl : ∀ {i} → {u v : Nbh {i}} → u ⊑ v → refl u ⊑ refl v
   ⊑-I : ∀ {i} → {U u v U′ u′ v′ : Nbh {i}} → U ⊑ U′ → u ⊑ u′ → v ⊑ v′ → I U u v ⊑ I U′ u′ v′
   ⊑-Π : ∀ {i} → {u v : Nbh {i}} → {f g : FinFun {i}} → u ⊑ v → F f ⊑ F g → Π u f ⊑ Π v g
-  ⊑-𝒰 : 𝒰 ⊑ 𝒰
+  ⊑-𝒰 : ∀ {i} → 𝒰 {i} ⊑ 𝒰
 
 -- Ordering is only defined for consistent neighborhoods
 orderOnlyCon : ∀ {i} → {u v : Nbh {i}} → u ⊑ v → con u ⊠ con v
