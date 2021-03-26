@@ -86,17 +86,17 @@ isLargest conf {w} {conw} lrg {g = (u , v) ∷ g′} g⊆f preg⊑w
         (isLargest conf {w} {conw} lrg (⊆-lemma₂ g⊆f) (⊑-trans (⊑-⊔-snd (⊠-fst (orderOnlyCon preg⊑w))) preg⊑w))
         (coherence (subsetIsCon g⊆f conf) (⊠-fst (orderOnlyCon preg⊑w)))
 
-FRelationDecidable' : ∀ {i} → {f g : FinFun {i}} → conFinFun f → conFinFun g →
+FrelationDecidable' : ∀ {i} → {f g : FinFun {i}} → conFinFun f → conFinFun g →
                       ({u v : Nbh {i}} → Decidable (u ⊑ v)) →
                       {u v : Nbh {i}} → (u , v) ∈ f → Decidable (⊑-proof g u v)
-FRelationDecidable' {g = g} (_ , conElemsf) _ dec {u} uv∈f
+FrelationDecidable' {g = g} (_ , conElemsf) _ dec {u} uv∈f
   with (largest g u (⊠-fst (conElemsf uv∈f)) dec)
-FRelationDecidable' _ _ dec {u} {v} _ | record { sub = sub }
+FrelationDecidable' _ _ dec {u} {v} _ | record { sub = sub }
   with (dec {v} {post sub})
-FRelationDecidable' {g = _} _ _ _ _
+FrelationDecidable' {g = _} _ _ _ _
   | record { sub = sub ; sub⊆f = sub⊆g ; pre⊑w = pre⊑u ; allSmallerw = allSmallerw } | inl v⊑postsub
   = inl (record { sub = sub ; sub⊆g = sub⊆g ; pre⊑u = pre⊑u ; v⊑post = v⊑postsub })
-FRelationDecidable' {f = f} {g} (_ , conElemsf) cong _ {u} {v} uv∈f
+FrelationDecidable' {f = f} {g} (_ , conElemsf) cong _ {u} {v} uv∈f
   | record { sub = sub ; sub⊆f = sub⊆g ; pre⊑w = pre⊑u ; allSmallerw = allSmallerw } | inr ¬v⊑postsub
   = inr lemma
   where lrg : Largest g u
@@ -107,7 +107,29 @@ FRelationDecidable' {f = f} {g} (_ , conElemsf) cong _ {u} {v} uv∈f
 
 FrelationDecidable : ∀ {i} → {f g : FinFun {i}} → ({u v : Nbh {i}} → Decidable (u ⊑ v)) →
                      Decidable ((F f) ⊑ (F g))
-FrelationDecidable p = {!!}
+FrelationDecidable {f = f} {g} _ with
+  (consistencyDecidable {u = F f}) | consistencyDecidable {u = F g}
+FrelationDecidable {f = f} {g} p | inl conf | inr ¬cong = inr lemma
+  where lemma : ¬ (F f ⊑ F g)
+        lemma (⊑-F _ cong _) = ¬cong cong
+FrelationDecidable {f = f} {g} p | inr ¬conf | _ = inr lemma
+  where lemma : ¬ (F f ⊑ F g)
+        lemma (⊑-F conf _ _) = ¬conf conf
+FrelationDecidable {f = ∅} {g} p | inl conf | inl cong
+  = inl (⊑-F ((λ uv∈∅ _ _ → xy∈∅-abs uv∈∅) , xy∈∅-abs) cong xy∈∅-abs)
+FrelationDecidable {f = (u , v) ∷ f′} {g} p | inl conf | inl cong
+  with (FrelationDecidable' {f = (u , v) ∷ f′} {g} conf cong p here) | FrelationDecidable {f = f′} {g} p
+FrelationDecidable {f = (u , v) ∷ f′} {g} _ | inl conf | inl cong | inl ⊑-p₁ | inl (⊑-F _ _ ⊑-p₂)
+  = inl (⊑-F conf cong lemma)
+  where lemma : ∀ {u′ v′} → (u′ , v′) ∈ ((u , v) ∷ f′) → ⊑-proof g u′ v′
+        lemma here = ⊑-p₁
+        lemma (there u′v′∈f′) = ⊑-p₂ u′v′∈f′
+FrelationDecidable {f = (u , v) ∷ f′} {g} _ | inl conf | inl cong | inl ⊑-p₁ | inr ¬⊑-p₂ = inr lemma
+  where lemma : ¬ (F ((u , v) ∷ f′) ⊑ F g)
+        lemma (⊑-F _ _ ⊑-p₂) = ¬⊑-p₂ (⊑-F (subsetIsCon ⊆-lemma₃ conf) cong λ u′v′∈f′ → ⊑-p₂ (there u′v′∈f′))
+FrelationDecidable {f = (u , v) ∷ f′} {g} _ | inl conf | inl cong | inr ¬⊑-p₁ | _ = inr lemma
+  where lemma : ¬ (F ((u , v) ∷ f′) ⊑ F g)
+        lemma (⊑-F _ _ ⊑-p₂) = ¬⊑-p₁ (⊑-p₂ here)
 
 relationDecidable : ∀ {i} → {u v : Nbh {i}} → Decidable (u ⊑ v)
 relationDecidable {u = ⊥} {v} with (consistencyDecidable {u = v})
@@ -118,17 +140,35 @@ relationDecidable {u = ⊥} {v} with (consistencyDecidable {u = v})
 relationDecidable {u = 0ᵤ} {v} = {!!}
 relationDecidable {u = s u} {v} = {!!}
 relationDecidable {u = ℕ} {v} = {!!}
-relationDecidable {u = F f} {⊥} = {!!}
-relationDecidable {u = F f} {0ᵤ} = {!!}
-relationDecidable {u = F f} {s v} = {!!}
-relationDecidable {u = F f} {ℕ} = {!!}
+relationDecidable {u = F f} {⊥} = inr lemma
+  where lemma : ¬ (F f ⊑ ⊥)
+        lemma ()
+relationDecidable {u = F f} {0ᵤ} = inr lemma
+  where lemma : ¬ (F f ⊑ 0ᵤ)
+        lemma ()
+relationDecidable {u = F f} {s v} = inr lemma
+  where lemma : ¬ (F f ⊑ s v)
+        lemma ()
+relationDecidable {u = F f} {ℕ} = inr lemma
+  where lemma : ¬ (F f ⊑ ℕ)
+        lemma ()
 relationDecidable {u = F f} {F g}
   = FrelationDecidable {f = f} {g} (\{u} {v} → relationDecidable {u = u} {v})
-relationDecidable {u = F f} {refl v} = {!!}
-relationDecidable {u = F f} {I v v₁ v₂} = {!!}
-relationDecidable {u = F f} {Π v x₁} = {!!}
-relationDecidable {u = F f} {𝒰} = {!!}
-relationDecidable {u = F f} {incons} = {!!}
+relationDecidable {u = F f} {refl v} = inr lemma
+  where lemma : ¬ (F f ⊑ refl v)
+        lemma ()
+relationDecidable {u = F f} {I U u v} = inr lemma
+  where lemma : ¬ (F f ⊑ I U u v)
+        lemma ()
+relationDecidable {u = F f} {Π U g} = inr lemma
+  where lemma : ¬ (F f ⊑ Π U g)
+        lemma ()
+relationDecidable {u = F f} {𝒰} = inr lemma
+  where lemma : ¬ (F f ⊑ 𝒰)
+        lemma ()
+relationDecidable {u = F f} {incons} = inr lemma
+  where lemma : ¬ (F f ⊑ incons)
+        lemma ()
 relationDecidable {u = refl u} {v} = {!!}
 relationDecidable {u = I U u u′} {v} = {!!}
 relationDecidable {u = Π u f} {v} = {!!}
