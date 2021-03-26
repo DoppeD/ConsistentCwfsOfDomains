@@ -131,15 +131,137 @@ FrelationDecidable {f = (u , v) ∷ f′} {g} _ | inl conf | inl cong | inr ¬�
   where lemma : ¬ (F ((u , v) ∷ f′) ⊑ F g)
         lemma (⊑-F _ _ ⊑-p₂) = ¬⊑-p₁ (⊑-p₂ here)
 
+0relationDecidable : ∀ {i} → {v : Nbh {i}} → Decidable (0ᵤ ⊑ v)
+0relationDecidable {v = ⊥} = inr lemma
+  where lemma : ¬ (0ᵤ ⊑ ⊥)
+        lemma ()
+0relationDecidable {v = 0ᵤ} = inl ⊑-0
+0relationDecidable {v = s v} = inr lemma
+  where lemma : ¬ (0ᵤ ⊑ s v)
+        lemma ()
+0relationDecidable {v = ℕ} = inr lemma
+  where lemma : ¬ (0ᵤ ⊑ ℕ)
+        lemma ()
+0relationDecidable {v = F f} = inr lemma
+  where lemma : ¬ (0ᵤ ⊑ F f)
+        lemma ()
+0relationDecidable {v = refl v} = inr lemma
+  where lemma : ¬ (0ᵤ ⊑ refl v)
+        lemma ()
+0relationDecidable {v = I U u v} = inr lemma
+  where lemma : ¬ (0ᵤ ⊑ I U u v)
+        lemma ()
+0relationDecidable {v = Π U f} = inr lemma
+  where lemma : ¬ (0ᵤ ⊑ Π U f)
+        lemma ()
+0relationDecidable {v = 𝒰} = inr lemma
+  where lemma : ¬ (0ᵤ ⊑ 𝒰)
+        lemma ()
+0relationDecidable {v = incons} = inr lemma
+  where lemma : ¬ (0ᵤ ⊑ incons)
+        lemma ()
+
+ℕrelationDecidable : ∀ {i} → {v : Nbh {i}} → Decidable (ℕ ⊑ v)
+ℕrelationDecidable {v = ⊥} = inr lemma
+  where lemma : ¬ (ℕ ⊑ ⊥)
+        lemma ()
+ℕrelationDecidable {v = 0ᵤ} = inr lemma
+  where lemma : ¬ (ℕ ⊑ 0ᵤ)
+        lemma ()
+ℕrelationDecidable {v = s v} = inr lemma
+  where lemma : ¬ (ℕ ⊑ s v)
+        lemma ()
+ℕrelationDecidable {v = ℕ} = inl ⊑-ℕ
+ℕrelationDecidable {v = F f} = inr lemma
+  where lemma : ¬ (ℕ ⊑ F f)
+        lemma ()
+ℕrelationDecidable {v = refl v} = inr lemma
+  where lemma : ¬ (ℕ ⊑ refl v)
+        lemma ()
+ℕrelationDecidable {v = I U u v} = inr lemma
+  where lemma : ¬ (ℕ ⊑ I U u v)
+        lemma ()
+ℕrelationDecidable {v = Π U f} = inr lemma
+  where lemma : ¬ (ℕ ⊑ Π U f)
+        lemma ()
+ℕrelationDecidable {v = 𝒰} = inr lemma
+  where lemma : ¬ (ℕ ⊑ 𝒰)
+        lemma ()
+ℕrelationDecidable {v = incons} = inr lemma
+  where lemma : ¬ (ℕ ⊑ incons)
+        lemma ()
+
+𝒰relationDecidable : ∀ {i} → {v : Nbh {i}} → Decidable (𝒰 ⊑ v)
+𝒰relationDecidable {v = ⊥} = inr lemma
+  where lemma : ¬ (𝒰 ⊑ ⊥)
+        lemma ()
+𝒰relationDecidable {v = 0ᵤ} = inr lemma
+  where lemma : ¬ (𝒰 ⊑ 0ᵤ)
+        lemma ()
+𝒰relationDecidable {v = s v} = inr lemma
+  where lemma : ¬ (𝒰 ⊑ s v)
+        lemma ()
+𝒰relationDecidable {v = ℕ} = inr lemma
+  where lemma : ¬ (𝒰 ⊑ ℕ)
+        lemma ()
+𝒰relationDecidable {v = F f} = inr lemma
+  where lemma : ¬ (𝒰 ⊑ F f)
+        lemma ()
+𝒰relationDecidable {v = refl v} = inr lemma
+  where lemma : ¬ (𝒰 ⊑ refl v)
+        lemma ()
+𝒰relationDecidable {v = I U u v} = inr lemma
+  where lemma : ¬ (𝒰 ⊑ I U u v)
+        lemma ()
+𝒰relationDecidable {v = Π U f} = inr lemma
+  where lemma : ¬ (𝒰 ⊑ Π U f)
+        lemma ()
+𝒰relationDecidable {v = 𝒰} = inl ⊑-𝒰
+𝒰relationDecidable {v = incons} = inr lemma
+  where lemma : ¬ (𝒰 ⊑ incons)
+        lemma ()
+
 relationDecidable : ∀ {i} → {u v : Nbh {i}} → Decidable (u ⊑ v)
 relationDecidable {u = ⊥} {v} with (consistencyDecidable {u = v})
 ... | inl conv = inl (⊑-bot conv)
 ... | inr ¬conv = inr lemma
   where lemma : ¬ (⊥ ⊑ v)
         lemma (⊑-bot conv) = ¬conv conv
-relationDecidable {u = 0ᵤ} {v} = {!!}
-relationDecidable {u = s u} {v} = {!!}
-relationDecidable {u = ℕ} {v} = {!!}
+relationDecidable {u = 0ᵤ} {v} = 0relationDecidable
+relationDecidable {u = s u} {⊥} = inr lemma
+  where lemma : ¬ (s u ⊑ ⊥)
+        lemma ()
+relationDecidable {u = s u} {0ᵤ} = inr lemma
+  where lemma : ¬ (s u ⊑ 0ᵤ)
+        lemma ()
+relationDecidable {u = s u} {s v}
+  with (relationDecidable {u = u} {v})
+... | inl u⊑v = inl (⊑-s u⊑v)
+... | inr ¬u⊑v = inr lemma
+  where lemma : ¬ (s u ⊑ s v)
+        lemma (⊑-s u⊑v) = ¬u⊑v u⊑v
+relationDecidable {u = s u} {ℕ} = inr lemma
+  where lemma : ¬ (s u ⊑ ℕ)
+        lemma ()
+relationDecidable {u = s u} {F f} = inr lemma
+  where lemma : ¬ (s u ⊑ F f)
+        lemma ()
+relationDecidable {u = s u} {refl v} = inr lemma
+  where lemma : ¬ (s u ⊑ refl v)
+        lemma ()
+relationDecidable {u = s u} {I U v v′} = inr lemma
+  where lemma : ¬ (s u ⊑ I U v v′)
+        lemma ()
+relationDecidable {u = s u} {Π U f} = inr lemma
+  where lemma : ¬ (s u ⊑ Π U f)
+        lemma ()
+relationDecidable {u = s u} {𝒰} = inr lemma
+  where lemma : ¬ (s u ⊑ 𝒰)
+        lemma ()
+relationDecidable {u = s u} {incons} = inr lemma
+  where lemma : ¬ (s u ⊑ incons)
+        lemma ()
+relationDecidable {u = ℕ} {v} = ℕrelationDecidable
 relationDecidable {u = F f} {⊥} = inr lemma
   where lemma : ¬ (F f ⊑ ⊥)
         lemma ()
@@ -169,8 +291,115 @@ relationDecidable {u = F f} {𝒰} = inr lemma
 relationDecidable {u = F f} {incons} = inr lemma
   where lemma : ¬ (F f ⊑ incons)
         lemma ()
-relationDecidable {u = refl u} {v} = {!!}
-relationDecidable {u = I U u u′} {v} = {!!}
-relationDecidable {u = Π u f} {v} = {!!}
-relationDecidable {u = 𝒰} {v} = {!!}
-relationDecidable {u = incons} {v} = {!!}
+relationDecidable {u = refl u} {⊥} = inr lemma
+  where lemma : ¬ (refl u ⊑ ⊥)
+        lemma ()
+relationDecidable {u = refl u} {0ᵤ} = inr lemma
+  where lemma : ¬ (refl u ⊑ 0ᵤ)
+        lemma ()
+relationDecidable {u = refl u} {s v} = inr lemma
+  where lemma : ¬ (refl u ⊑ s v)
+        lemma ()
+relationDecidable {u = refl u} {ℕ} = inr lemma
+  where lemma : ¬ (refl u ⊑ ℕ)
+        lemma ()
+relationDecidable {u = refl u} {F f} = inr lemma
+  where lemma : ¬ (refl u ⊑ F f)
+        lemma ()
+relationDecidable {u = refl u} {refl v}
+  with (relationDecidable {u = u} {v})
+... | inl u⊑v = inl (⊑-rfl u⊑v)
+... | inr ¬u⊑v = inr lemma
+  where lemma : ¬ (refl u ⊑ refl v)
+        lemma (⊑-rfl u⊑v) = ¬u⊑v u⊑v
+relationDecidable {u = refl u} {I U v v′} = inr lemma
+  where lemma : ¬ (refl u ⊑ I U v v′)
+        lemma ()
+relationDecidable {u = refl u} {Π U f} = inr lemma
+  where lemma : ¬ (refl u ⊑ Π U f)
+        lemma ()
+relationDecidable {u = refl u} {𝒰} = inr lemma
+  where lemma : ¬ (refl u ⊑ 𝒰)
+        lemma ()
+relationDecidable {u = refl u} {incons} = inr lemma
+  where lemma : ¬ (refl u ⊑ incons)
+        lemma ()
+relationDecidable {u = I U u u′} {⊥} = inr lemma
+  where lemma : ¬ (I U u u′ ⊑ ⊥)
+        lemma ()
+relationDecidable {u = I U u u′} {0ᵤ} = inr lemma
+  where lemma : ¬ (I U u u′ ⊑ 0ᵤ)
+        lemma ()
+relationDecidable {u = I U u u′} {s v} = inr lemma
+  where lemma : ¬ (I U u u′ ⊑ s v)
+        lemma ()
+relationDecidable {u = I U u u′} {ℕ} = inr lemma
+  where lemma : ¬ (I U u u′ ⊑ ℕ)
+        lemma ()
+relationDecidable {u = I U u u′} {F f} = inr lemma
+  where lemma : ¬ (I U u u′ ⊑ F f)
+        lemma ()
+relationDecidable {u = I U u u′} {refl v} = inr lemma
+  where lemma : ¬ (I U u u′ ⊑ refl v)
+        lemma ()
+relationDecidable {u = I U u u′} {I V v v′}
+  with (relationDecidable {u = U} {V}) | relationDecidable {u = u} {v} | relationDecidable {u = u′} {v′}
+... | inl U⊑V | inl u⊑v | inl u′⊑v′ = inl (⊑-I U⊑V u⊑v u′⊑v′)
+... | inl U⊑V | inl u⊑v | inr ¬u′⊑v′ = inr lemma
+  where lemma : ¬ (I U u u′ ⊑ I V v v′)
+        lemma (⊑-I _ _ u′⊑v′) = ¬u′⊑v′ u′⊑v′
+... | inl U⊑V | inr ¬u⊑v | _ = inr lemma
+  where lemma : ¬ (I U u u′ ⊑ I V v v′)
+        lemma (⊑-I _ u⊑v _) = ¬u⊑v u⊑v
+... | inr ¬U⊑V | _ | _ = inr lemma
+  where lemma : ¬ (I U u u′ ⊑ I V v v′)
+        lemma (⊑-I U⊑V _ _) = ¬U⊑V U⊑V
+relationDecidable {u = I U u u′} {Π V f} = inr lemma
+  where lemma : ¬ (I U u u′ ⊑ Π V f)
+        lemma ()
+relationDecidable {u = I U u u′} {𝒰} = inr lemma
+  where lemma : ¬ (I U u u′ ⊑ 𝒰)
+        lemma ()
+relationDecidable {u = I U u u′} {incons} = inr lemma
+  where lemma : ¬ (I U u u′ ⊑ incons)
+        lemma ()
+relationDecidable {u = Π U f} {⊥} = inr lemma
+  where lemma : ¬ (Π U f ⊑ ⊥)
+        lemma ()
+relationDecidable {u = Π U f} {0ᵤ} = inr lemma
+  where lemma : ¬ (Π U f ⊑ 0ᵤ)
+        lemma ()
+relationDecidable {u = Π U f} {s v} = inr lemma
+  where lemma : ¬ (Π U f ⊑ s v)
+        lemma ()
+relationDecidable {u = Π U f} {ℕ} = inr lemma
+  where lemma : ¬ (Π U f ⊑ ℕ)
+        lemma ()
+relationDecidable {u = Π U f} {F g} = inr lemma
+  where lemma : ¬ (Π U f ⊑ F g)
+        lemma ()
+relationDecidable {u = Π U f} {refl v} = inr lemma
+  where lemma : ¬ (Π U f ⊑ refl v)
+        lemma ()
+relationDecidable {u = Π U f} {I V u v} = inr lemma
+  where lemma : ¬ (Π U f ⊑ I V u v)
+        lemma ()
+relationDecidable {u = Π U f} {Π V g}
+  with (relationDecidable {u = U} {V}) | FrelationDecidable {f = f} {g} (\{u} {v} → relationDecidable {u = u} {v})
+... | inl U⊑V | inl f⊑g = inl (⊑-Π U⊑V f⊑g)
+... | inl U⊑V | inr ¬f⊑g = inr lemma
+  where lemma : ¬ (Π U f ⊑ Π V g)
+        lemma (⊑-Π _ f⊑g) = ¬f⊑g f⊑g
+... | inr ¬U⊑V | _ = inr lemma
+  where lemma : ¬ (Π U f ⊑ Π V g)
+        lemma (⊑-Π U⊑V _) = ¬U⊑V U⊑V
+relationDecidable {u = Π U f} {𝒰} = inr lemma
+  where lemma : ¬ (Π U f ⊑ 𝒰)
+        lemma ()
+relationDecidable {u = Π U f} {incons} = inr lemma
+  where lemma : ¬ (Π U f ⊑ incons)
+        lemma ()
+relationDecidable {u = 𝒰} {v} = 𝒰relationDecidable
+relationDecidable {u = incons} {v} = inr lemma
+  where lemma : ¬ (incons ⊑ v)
+        lemma ()
