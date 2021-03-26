@@ -1,6 +1,6 @@
 {-# OPTIONS --safe --sized-types #-}
 
-module Cwf.DomainCwf.UniType.ConsistencyDecidable where
+module Cwf.DomainCwf.UniType.Decidable.ConsistencyDecidable where
 
 open import Base.Core
 open import Cwf.DomainCwf.UniType.Consistency

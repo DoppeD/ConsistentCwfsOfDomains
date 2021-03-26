@@ -1,9 +1,9 @@
 {-# OPTIONS --safe --sized-types #-}
 
-module Cwf.DomainCwf.UniType.TypingAlgorithmDecidable where
+module Cwf.DomainCwf.UniType.Decidable.TypingAlgorithmDecidable where
 
 open import Base.Core
-open import Cwf.DomainCwf.UniType.DecidableEquality
+open import Cwf.DomainCwf.UniType.Decidable.EqualityDecidable
 open import Cwf.DomainCwf.UniType.Definition
 open import Cwf.DomainCwf.UniType.FinFun
 open import Cwf.DomainCwf.UniType.Relation
@@ -303,7 +303,7 @@ OfTypeIsDecidable {u = refl u} {refl U} = inr lemma
         lemma ()
 OfTypeIsDecidable {u = refl u} {I U v v′}
   with (IsTypeIsDecidable {U = U}) | OfTypeIsDecidable {u = u} {U} |
-        decidableEquality {u = u} {v} | decidableEquality {u = u} {v′}
+        equalityDecidable {u = u} {v} | equalityDecidable {u = u} {v′}
 ... | inl UType | inl u:U | inl refl | inl refl = inl (refl:I UType u:U)
 ... | inl _ | inl _ | inl refl | inr ¬u≡v′ = inr lemma
   where lemma : ¬ (refl u ˸ I U v v′)
