@@ -104,6 +104,32 @@ sOfTypeIsDecidable {u = u} {incons} _ = inr lemma
   where lemma : ¬ (ℕ ˸ incons)
         lemma ()
 
+FOfTypeIsDecidable₁ : ∀ {i} → {f : FinFun {i}} → {U : Nbh {i}} →
+                      ({u v : Nbh {i}} → Decidable (u ˸ v)) →
+                      Decidable (∀ {u v} → (u , v) ∈ f → u ˸ U)
+FOfTypeIsDecidable₁ {f = ∅} _ = inl xy∈∅-abs
+FOfTypeIsDecidable₁ {f = (u , v) ∷ f′} {U} p
+  with (p {u = u} {U}) | FOfTypeIsDecidable₁ {f = f′} {U} p
+... | inl u:U | inl rest:U = inl lemma
+  where lemma : ∀ {u′ v′} → (u′ , v′) ∈ ((u , v) ∷ f′) → u′ ˸ U
+        lemma here = u:U
+        lemma (there u′v′∈f′) = rest:U u′v′∈f′
+... | inl u:U | inr ¬rest:U = inr λ allu:U → ¬rest:U (λ u′v′∈f′ → allu:U (there u′v′∈f′))
+... | inr ¬u:U | _ = inr λ allu:U → ¬u:U (allu:U here)
+
+FOfTypeIsDecidable₂ : ∀ {i} → {f : FinFun {i}} → {U : Nbh {i}} → {g : FinFun {i}} →
+                      ({u v : Nbh {i}} → Decidable (u ˸ v)) →
+                      Decidable (∀ {u v} → (u , v) ∈ f → v ˸ ap g u)
+FOfTypeIsDecidable₂ {f = ∅} _ = inl xy∈∅-abs
+FOfTypeIsDecidable₂ {f = (u , v) ∷ f′} {U} {g} p
+  with (p {u = v} {ap g u}) | FOfTypeIsDecidable₂ {f = f′} {U} {g} p
+... | inl v:apgu | inl rest:apgu = inl lemma
+  where lemma : ∀ {u′ v′} → (u′ , v′) ∈ ((u , v) ∷ f′) → v′ ˸ ap g u′
+        lemma here = v:apgu
+        lemma (there u′v′∈f′) = rest:apgu u′v′∈f′
+... | inl v:apgu | inr ¬rest:apgu = inr λ allv:apgu → ¬rest:apgu (λ u′v′∈f′ → allv:apgu (there u′v′∈f′))
+... | inr ¬v:apgu | _ = inr λ allv:apgu → ¬v:apgu (allv:apgu here)
+
 IOfTypeIsDecidable : ∀ {i} → {U u v U′ : Nbh {i}} →
                      Decidable (U ˸ 𝒰) → Decidable (u ˸ U) → Decidable (v ˸ U) →
                      Decidable (I U u v ˸ U′)
@@ -241,7 +267,16 @@ OfTypeIsDecidable {u = F f} {refl U} = inr lemma
 OfTypeIsDecidable {u = F f} {I U u v} = inr lemma
   where lemma : ¬ (F f ˸ I U u v)
         lemma ()
-OfTypeIsDecidable {u = F f} {Π U g} = inl (F:Π {!!} {!!})
+OfTypeIsDecidable {u = F f} {Π U g}
+  with (FOfTypeIsDecidable₁ {f = f} {U} λ {u} {v} → OfTypeIsDecidable {u = u} {v}) |
+       (FOfTypeIsDecidable₂ {f = f} {U} {g} λ {u} {v} → OfTypeIsDecidable {u = u} {v})
+... | inl allu:U | inl allv:apgu = inl (F:Π (λ uv∈f → (allu:U uv∈f) , allv:apgu uv∈f))
+... | inl allu:U | inr ¬allv:apgu = inr lemma
+  where lemma : ¬ (F f ˸ Π U g)
+        lemma (F:Π p) = ¬allv:apgu (λ uv∈f → ⊠-snd (p uv∈f))
+... | inr ¬allu:U | _ = inr lemma
+  where lemma : ¬ (F f ˸ Π U g)
+        lemma (F:Π p) = ¬allu:U (λ uv∈f → ⊠-fst (p uv∈f))
 OfTypeIsDecidable {u = F f} {𝒰} = inr lemma
   where lemma : ¬ (F f ˸ 𝒰)
         lemma ()

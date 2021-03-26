@@ -275,7 +275,7 @@ relationDecidable {u = F f} {ℕ} = inr lemma
   where lemma : ¬ (F f ⊑ ℕ)
         lemma ()
 relationDecidable {u = F f} {F g}
-  = FrelationDecidable {f = f} {g} (\{u} {v} → relationDecidable {u = u} {v})
+  = FrelationDecidable {f = f} {g} (λ {u} {v} → relationDecidable {u = u} {v})
 relationDecidable {u = F f} {refl v} = inr lemma
   where lemma : ¬ (F f ⊑ refl v)
         lemma ()
@@ -385,7 +385,7 @@ relationDecidable {u = Π U f} {I V u v} = inr lemma
   where lemma : ¬ (Π U f ⊑ I V u v)
         lemma ()
 relationDecidable {u = Π U f} {Π V g}
-  with (relationDecidable {u = U} {V}) | FrelationDecidable {f = f} {g} (\{u} {v} → relationDecidable {u = u} {v})
+  with (relationDecidable {u = U} {V}) | FrelationDecidable {f = f} {g} (λ {u} {v} → relationDecidable {u = u} {v})
 ... | inl U⊑V | inl f⊑g = inl (⊑-Π U⊑V f⊑g)
 ... | inl U⊑V | inr ¬f⊑g = inr lemma
   where lemma : ¬ (Π U f ⊑ Π V g)
