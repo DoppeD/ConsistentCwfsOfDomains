@@ -1,4 +1,4 @@
-{-# OPTIONS --safe --sized-types #-}
+{-# OPTIONS --safe #-}
 
 module Cwf.DomainCwf.UniType.ConsistencyLemmata where
 

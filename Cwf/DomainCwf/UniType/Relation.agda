@@ -1,4 +1,4 @@
-{-# OPTIONS --safe --sized-types #-}
+{-# OPTIONS --safe #-}
 
 module Cwf.DomainCwf.UniType.Relation where
 
@@ -7,9 +7,9 @@ open import Cwf.DomainCwf.UniType.Consistency
 open import Cwf.DomainCwf.UniType.Definition
 open import Cwf.DomainCwf.UniType.FinFun
 
-open import Agda.Builtin.Size
+open import Agda.Builtin.Nat
 
-record ⊑-proof {i : Size} (g : FinFun {i}) (u v : Nbh {i}) : Set
+record ⊑-proof {i : Nat} (g : FinFun {i}) (u v : Nbh {i}) : Set
 data _⊑_ : ∀ {i} → (u v : Nbh {i}) → Set
 
 record ⊑-proof {i} g u v where

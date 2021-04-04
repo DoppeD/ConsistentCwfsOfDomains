@@ -1,23 +1,23 @@
-{-# OPTIONS --safe --sized-types #-}
+{-# OPTIONS --safe #-}
 
 module Cwf.DomainCwf.UniType.Definition where
 
 open import Base.Core
 
-open import Agda.Builtin.Size
+open import Agda.Builtin.Nat
 
-data Nbh : {Size} → Set
-data FinFun : {Size} → Set
+data Nbh : {Nat} → Set
+data FinFun : {Nat} → Set
 
 data Nbh where
   ⊥ : ∀ {i} → Nbh {i}
   0ᵤ : ∀ {i} → Nbh {i}
   s : ∀ {i} → Nbh {i} → Nbh {i}
   ℕ : ∀ {i} → Nbh {i}
-  F : ∀ {i} → FinFun {i} -> Nbh {↑ i}
+  F : ∀ {i} → FinFun {i} -> Nbh {suc i}
   refl : ∀ {i} → Nbh {i} → Nbh {i}
   I : ∀ {i} → Nbh {i} → Nbh {i} → Nbh {i} → Nbh {i}
-  Π : ∀ {i} → Nbh {i} → FinFun {i} → Nbh {↑ i}
+  Π : ∀ {i} → Nbh {i} → FinFun {i} → Nbh {suc i}
   𝒰 : ∀ {i} → Nbh {i}
   incons : ∀ {i} → Nbh {i}
 

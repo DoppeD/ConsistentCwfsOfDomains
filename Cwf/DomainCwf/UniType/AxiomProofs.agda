@@ -1,4 +1,4 @@
-{-# OPTIONS --safe --sized-types #-}
+{-# OPTIONS --safe #-}
 
 module Cwf.DomainCwf.UniType.AxiomProofs where
 
@@ -55,7 +55,7 @@ open import Cwf.DomainCwf.UniType.Relation
       ; v⊑post = ⊑-reflLemma₂ (⊑-refl conv)
       }
 
-⊑-⊥ : ∀ {u} → con u → ⊥ ⊑ u
+⊑-⊥ : ∀ {i} → {u : Nbh {i}} → con u → ⊥ ⊑ u
 ⊑-⊥ conu = ⊑-bot conu
 
 ⊑-⊔' : ∀ {i} → {f g h : FinFun {i}} → (F f) ⊑ (F h) → (F g) ⊑ (F h) →
