@@ -1,40 +1,38 @@
-{-# OPTIONS --safe #-}
+--{-# OPTIONS --safe #-}
 
 module Cwf.DomainCwf.UniType.Relation where
 
 open import Base.Core
+open import Base.FinFun
 open import Cwf.DomainCwf.UniType.Consistency
 open import Cwf.DomainCwf.UniType.Definition
-open import Cwf.DomainCwf.UniType.FinFun
 
-open import Agda.Builtin.Nat
+record ⊑-proof (g : FinFun) (u v : Nbh) : Set
+data _⊑_ : (u v : Nbh) → Set
 
-record ⊑-proof {i : Nat} (g : FinFun {i}) (u v : Nbh {i}) : Set
-data _⊑_ : ∀ {i} → (u v : Nbh {i}) → Set
-
-record ⊑-proof {i} g u v where
+record ⊑-proof g u v where
   inductive
   field
-    sub : FinFun {i}
+    sub : FinFun
     sub⊆g : sub ⊆ g
     pre⊑u : pre sub ⊑ u
     v⊑post : v ⊑ post sub
 
 data _⊑_ where
-  ⊑-bot : ∀ {i} → {u : Nbh {i}} → con u → ⊥ ⊑ u
-  ⊑-0 : ∀ {i} → 0ᵤ {i} ⊑ 0ᵤ
-  ⊑-s : ∀ {i} → {u v : Nbh {i}} → u ⊑ v → s u ⊑ s v
-  ⊑-ℕ : ∀ {i} → ℕ {i} ⊑ ℕ
-  ⊑-F : ∀ {i} → {f g : FinFun {i}} → (conf : conFinFun f) → (cong : conFinFun g) →
+  ⊑-bot : ∀ {u} → con u → ⊥ ⊑ u
+  ⊑-0 : 0ᵤ ⊑ 0ᵤ
+  ⊑-s : ∀ {u v} → u ⊑ v → s u ⊑ s v
+  ⊑-ℕ : ℕ ⊑ ℕ
+  ⊑-F : ∀ {f g} → (conf : conFinFun f) → (cong : conFinFun g) →
         (∀ {u v} → (u , v) ∈ f → ⊑-proof g u v) →
         F f ⊑ F g
-  ⊑-rfl : ∀ {i} → {u v : Nbh {i}} → u ⊑ v → refl u ⊑ refl v
-  ⊑-I : ∀ {i} → {U u v U′ u′ v′ : Nbh {i}} → U ⊑ U′ → u ⊑ u′ → v ⊑ v′ → I U u v ⊑ I U′ u′ v′
-  ⊑-Π : ∀ {i} → {u v : Nbh {i}} → {f g : FinFun {i}} → u ⊑ v → F f ⊑ F g → Π u f ⊑ Π v g
-  ⊑-𝒰 : ∀ {i} → 𝒰 {i} ⊑ 𝒰
+  ⊑-rfl : ∀ {u v} → u ⊑ v → refl u ⊑ refl v
+  ⊑-I : ∀ {U u v U′ u′ v′} → U ⊑ U′ → u ⊑ u′ → v ⊑ v′ → I U u v ⊑ I U′ u′ v′
+  ⊑-Π : ∀ {u v f g} → u ⊑ v → F f ⊑ F g → Π u f ⊑ Π v g
+  ⊑-𝒰 : 𝒰 ⊑ 𝒰
 
 -- Ordering is only defined for consistent neighborhoods
-orderOnlyCon : ∀ {i} → {u v : Nbh {i}} → u ⊑ v → con u ⊠ con v
+orderOnlyCon : ∀ {u v} → u ⊑ v → con u ⊠ con v
 orderOnlyCon (⊑-bot conu) = * , conu
 orderOnlyCon ⊑-0 = * , *
 orderOnlyCon (⊑-s u⊑v) = orderOnlyCon u⊑v

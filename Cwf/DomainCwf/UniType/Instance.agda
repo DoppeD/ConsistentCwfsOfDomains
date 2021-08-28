@@ -39,30 +39,6 @@ liftNbh _ incons = incons
 liftFinFun i≤j ∅ = ∅
 liftFinFun i≤j ((u , v) ∷ f′) = (liftNbh i≤j u , liftNbh i≤j v) ∷ (liftFinFun i≤j f′)
 
-data _≈_ : ConNbh → ConNbh → Set where
-  ≈-⊥ : ∀ {i j} → (conNbh {i} ⊥ *) ≈ (conNbh {j} ⊥ *)
-  ≈-0 : ∀ {i j} → (conNbh {i} 0ᵤ *) ≈ (conNbh {j} 0ᵤ *)
-
-donk : ∀ {i j} → {i≤j : i ≤ j} → {u v : Nbh {i}} → u ⊑ v →
-       (liftNbh {j = j} i≤j u) ⊑ (liftNbh {j = j} i≤j v)
-dank : ∀ {i j} → {i≤j : i ≤ j} → {f g : FinFun {i}} → (F f) ⊑ (F g) →
-       ∀ {u v} → (u , v) ∈ (liftFinFun i≤j f) → ⊑-proof (liftFinFun i≤j g) u v
-donk (⊑-bot conv) = ⊑-bot {!!}
-donk ⊑-0 = ⊑-0
-donk (⊑-s u⊑v) = ⊑-s (donk u⊑v)
-donk ⊑-ℕ = ⊑-ℕ
-donk {i≤j = ≤-suc _} (⊑-F conf cong p) = ⊑-F {!!} {!!} (dank (⊑-F conf cong p))
-donk (⊑-rfl u⊑v) = ⊑-rfl (donk u⊑v)
-donk (⊑-I U⊑U′ u⊑u′ v⊑v′) = ⊑-I (donk U⊑U′) (donk u⊑u′) (donk v⊑v′)
-donk (⊑-Π U f) = {!!}
-donk ⊑-𝒰 = ⊑-𝒰
-
-dank {f = (u , v) ∷ f′} (⊑-F _ _ p) u′v′∈↑f = {!!}
-
--- Say that (conNbh {i} u _) ⊑ (conNbh {j} v _) is defined by lifting both u and v to i + j taking u ⊑ v.
--- We can then define equivalence classes, so that u {i} ≈ u′ {j} if they only differ by the "sizes" i and j.
--- Then prove that if u ≈ u' and v ≈ v', then u ⊑ v iff u' ⊑ v'
-
 asd : ∀ {m n} → m ≤ (m + n)
 asd {zero} {n} = ≤-zero
 asd {suc m} {n} = ≤-suc asd
@@ -75,34 +51,22 @@ dsa {zero} {n} = n≤n
 dsa {suc m} {zero} = ≤-zero
 dsa {suc m} {suc n} = ≤-suc {!!}
 
+data _⊑*_ : ConNbh → ConNbh → Set where
+  ⊑*-intro : ∀ {i} → {u v : Nbh {i}} → ∀ {conu conv} → u ⊑ v → (conNbh {i} u conu) ⊑* (conNbh {i} v conv)
+
 UniType : NbhSys
 NbhSys.Nbh UniType = ConNbh
-NbhSys._⊑_ UniType (conNbh {i} u _) (conNbh {j} v _)
-  = (liftNbh {j = i + j} asd u) ⊑ (liftNbh dsa v)
+NbhSys._⊑_ UniType
+  = _⊑*_
 NbhSys.Con UniType (conNbh {i} u _) (conNbh {j} v _)
   = con ((liftNbh {j = i + j} asd u) ⊔ (liftNbh dsa v))
 NbhSys._⊔_[_] UniType (conNbh u _) (conNbh v _) conuv = {!!}
 NbhSys.⊥ UniType = conNbh {0} ⊥ *
 NbhSys.Con-⊔ UniType {conNbh _ _} {conNbh _ _} {conNbh _ _} = {!!}
-NbhSys.⊑-refl UniType {conNbh _ conu} = {!!}
-NbhSys.⊑-trans UniType {conNbh {i} u _} {conNbh {j} v _} {conNbh {k} w _} u⊑v v⊑w = {!!}
+NbhSys.⊑-refl UniType {conNbh _ conu} = ⊑*-intro (⊑-refl conu)
+NbhSys.⊑-trans UniType {conNbh {i} u _} {conNbh {.i} v _} {conNbh {.i} w _} (⊑*-intro x) (⊑*-intro x₁)
+  = ⊑*-intro (⊑-trans x x₁)
 NbhSys.⊑-⊥ UniType {conNbh _ conu} = {!!}
 NbhSys.⊑-⊔ UniType {conNbh _ _} {conNbh _ _} {conNbh _ _} = {!!}
 NbhSys.⊑-⊔-fst UniType {conNbh _ _} {conNbh _ _} = {!!}
 NbhSys.⊑-⊔-snd UniType {conNbh _ _} {conNbh _ _} = {!!}
-
-{-
-UniType : NbhSys
-NbhSys.Nbh UniType = ConNbh
-NbhSys._⊑_ UniType (conNbh u _) (conNbh v _) = u ⊑ v
-NbhSys.Con UniType (conNbh u _) (conNbh v _) = con (u ⊔ v)
-NbhSys._⊔_[_] UniType (conNbh u _) (conNbh v _) conuv = conNbh (u ⊔ v) conuv
-NbhSys.⊥ UniType = conNbh ⊥ *
-NbhSys.Con-⊔ UniType {conNbh _ _} {conNbh _ _} {conNbh _ _} = Con-⊔
-NbhSys.⊑-refl UniType {conNbh _ conu} = ⊑-refl conu
-NbhSys.⊑-trans UniType {conNbh _ _} {conNbh _ _} {conNbh _ _} = ⊑-trans
-NbhSys.⊑-⊥ UniType {conNbh _ conu} = ⊑-⊥ conu
-NbhSys.⊑-⊔ UniType {conNbh _ _} {conNbh _ _} {conNbh _ _} = ⊑-⊔
-NbhSys.⊑-⊔-fst UniType {conNbh _ _} {conNbh _ _} = ⊑-⊔-fst
-NbhSys.⊑-⊔-snd UniType {conNbh _ _} {conNbh _ _} = ⊑-⊔-snd
--}

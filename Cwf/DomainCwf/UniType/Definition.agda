@@ -3,33 +3,21 @@
 module Cwf.DomainCwf.UniType.Definition where
 
 open import Base.Core
+open import Base.FinFun
 
-open import Agda.Builtin.Nat
+data Nbh : Set where
+  ⊥ : Nbh
+  0ᵤ : Nbh
+  s : Nbh → Nbh
+  ℕ : Nbh
+  F : FinFun Nbh Nbh → Nbh
+  refl : Nbh → Nbh
+  I : Nbh → Nbh → Nbh → Nbh
+  Π : Nbh → FinFun Nbh Nbh → Nbh
+  𝒰 : Nbh
+  incons : Nbh
 
-data Nbh : {Nat} → Set
-data FinFun : {Nat} → Set
-
-data Nbh where
-  ⊥ : ∀ {i} → Nbh {i}
-  0ᵤ : ∀ {i} → Nbh {i}
-  s : ∀ {i} → Nbh {i} → Nbh {i}
-  ℕ : ∀ {i} → Nbh {i}
-  F : ∀ {i} → FinFun {i} -> Nbh {suc i}
-  refl : ∀ {i} → Nbh {i} → Nbh {i}
-  I : ∀ {i} → Nbh {i} → Nbh {i} → Nbh {i} → Nbh {i}
-  Π : ∀ {i} → Nbh {i} → FinFun {i} → Nbh {suc i}
-  𝒰 : ∀ {i} → Nbh {i}
-  incons : ∀ {i} → Nbh {i}
-
-data FinFun where
-  ∅ : ∀ {i} → FinFun {i}
-  _∷_ : ∀ {i} → (Nbh {i}) ⊠ (Nbh {i}) → FinFun {i} → FinFun {i}
-
-_∪_ : ∀ {i} → FinFun {i} → FinFun {i} → FinFun {i}
-(x ∷ 𝑓) ∪ 𝑓′ = x ∷ (𝑓 ∪ 𝑓′)
-∅ ∪ 𝑓′ = 𝑓′
-
-_⊔_ : ∀ {i} → Nbh {i} -> Nbh {i} -> Nbh {i}
+_⊔_ : Nbh → Nbh → Nbh
 ⊥ ⊔ u = u
 0ᵤ ⊔ ⊥ = 0ᵤ
 0ᵤ ⊔ 0ᵤ = 0ᵤ
@@ -113,10 +101,10 @@ _⊔_ : ∀ {i} → Nbh {i} -> Nbh {i} -> Nbh {i}
 𝒰 ⊔ incons = incons
 incons ⊔ _ = incons
 
-pre : ∀ {i} → FinFun {i} → Nbh {i}
+pre : FinFun Nbh Nbh → Nbh
 pre ∅ = ⊥
 pre ((u , v) ∷ f) = u ⊔ pre f
 
-post : ∀ {i} → FinFun {i} → Nbh {i}
+post : FinFun Nbh Nbh → Nbh
 post ∅ = ⊥
 post ((u , v) ∷ f) = v ⊔ post f
