@@ -1,12 +1,12 @@
-{-# OPTIONS --safe #-}
+--{-# OPTIONS --safe #-}
 
 module Cwf.DomainCwf.UniType.AxiomProofs where
 
 open import Base.Core
+open import Base.FinFun
 open import Cwf.DomainCwf.UniType.Consistency
 open import Cwf.DomainCwf.UniType.ConsistencyLemmata
 open import Cwf.DomainCwf.UniType.Definition
-open import Cwf.DomainCwf.UniType.FinFun
 open import Cwf.DomainCwf.UniType.Relation
 
 ⊑-reflLemma₁ : ∀ {i} → {u v : Nbh {i}} → u ⊑ v → (u ⊔ ⊥) ⊑ v
@@ -54,7 +54,7 @@ open import Cwf.DomainCwf.UniType.Relation
       ; pre⊑u = ⊑-reflLemma₁ (⊑-refl conu)
       ; v⊑post = ⊑-reflLemma₂ (⊑-refl conv)
       }
-
+{-
 ⊑-⊥ : ∀ {i} → {u : Nbh {i}} → con u → ⊥ ⊑ u
 ⊑-⊥ conu = ⊑-bot conu
 
@@ -137,3 +137,4 @@ open import Cwf.DomainCwf.UniType.Relation
   = ⊑-Π (⊑-⊔-snd conuv) (⊑-F (subsetIsCon ∪-lemma₄ confg) confg (⊑-⊔-snd' confg))
 ⊑-⊔-snd {u = 𝒰} {⊥} _ = ⊑-bot *
 ⊑-⊔-snd {u = 𝒰} {𝒰} _ = ⊑-refl *
+-}
