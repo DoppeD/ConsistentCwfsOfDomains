@@ -6,7 +6,6 @@ open import Base.Core
 open import Base.FinFun
 open import Cwf.DomainCwf.UniType.Definition
 
-open import Agda.Builtin.Equality
 open import Data.Nat.Base renaming (_⊔_ to max ; ℕ to Nat)
 open import Data.Nat.Induction
 open import Data.Nat.Properties
@@ -114,7 +113,32 @@ u⊔v≤maxuv (I _ _ _) (s _) = z≤n
 u⊔v≤maxuv (I _ _ _) ℕ = z≤n
 u⊔v≤maxuv (I _ _ _) (F _) = z≤n
 u⊔v≤maxuv (I _ _ _) (refl _) = z≤n
-u⊔v≤maxuv (I U u u′) (I V v v′) = s≤s {!!}
+u⊔v≤maxuv (I U u u′) (I V v v′)
+  = s≤s (⊔-lub a b)
+  where asU : Nat
+        asU = assignSize U
+        asu : Nat
+        asu = assignSize u
+        asu′ : Nat
+        asu′ = assignSize u′
+        asV : Nat
+        asV = assignSize V
+        asv : Nat
+        asv = assignSize v
+        asv′ : Nat
+        asv′ = assignSize v′
+        uBound : Nat
+        uBound = max (max (max asU asu) asu′) (max (max asV asv) asv′)
+        c : max asU asV ≤ uBound
+        c = maxLemma {asU} (≤-trans (m≤m⊔n _ _) (m≤m⊔n _ _)) (≤-trans (m≤m⊔n _ _) (m≤m⊔n _ _))
+        d : max asu asv ≤ uBound
+        d = maxLemma (≤-trans {asu} {max asU asu} (m≤n⊔m _ _)
+            (m≤m⊔n (max asU asu) asu′)) (≤-trans {asv} {max asV asv}
+            (m≤n⊔m _ _) (m≤m⊔n _ _))
+        a : max (assignSize (U ⊔ V)) (assignSize (u ⊔ v)) ≤ uBound
+        a = ⊔-lub (≤-trans (u⊔v≤maxuv U V) c) (≤-trans (u⊔v≤maxuv u v) d)
+        b : assignSize (u′ ⊔ v′) ≤ uBound
+        b = ≤-trans (u⊔v≤maxuv u′ v′) (maxLemma {asu′} {asv′} {max (max asU asu) asu′} (m≤n⊔m _ _) (m≤n⊔m _ _))
 u⊔v≤maxuv (I _ _ _) (Π _ _) = z≤n
 u⊔v≤maxuv (I _ _ _) 𝒰 = z≤n
 u⊔v≤maxuv (I _ _ _) incons = z≤n
@@ -130,23 +154,8 @@ u⊔v≤maxuv (Π U f) (Π V g) = s≤s (⊔-lub a b)
         c = maxLemma (m≤m⊔n (assignSize U) _) (m≤m⊔n (assignSize V) _)
         a : ∀ {u v} → assignSize (U ⊔ V) ≤ max (max (assignSize U) u) (max (assignSize V) v)
         a = ≤-trans (u⊔v≤maxuv U V) c
-        d : ∀ {m n} → suc (max m n) ≤ max (suc m) (suc n)
-        d = {!!}
-        aa : ∀ {v} → (assignSizeFun (f ∪ g)) ≤ max (max (assignSize U) (assignSizeFun f)) (max v (assignSizeFun g)) →
-             suc (assignSizeFun (f ∪ g)) ≤ max (max (assignSize U) (suc (assignSizeFun f))) (max v (suc (assignSizeFun g)))
-        aa x = {!!}
-        -- (assignSizeFun (f ∪ g)) ≤ max (assignSizeFun f) (assignSizeFun g))
-        -- Also use that suc (max (assignSizeFun f) (assignSizeFun g)) ≤ max (suc (assignSize f)) (suc (assignSize g))
         b : ∀ {v} → suc (assignSizeFun (f ∪ g)) ≤ max (max (assignSize U) (suc (assignSizeFun f))) (max v (suc (assignSizeFun g)))
-        b = aa (≤-trans (f∪g≤maxfg f g) (maxLemma {assignSizeFun f} {assignSizeFun g} {max (assignSize U) (assignSizeFun f)} (m≤n⊔m _ _) (m≤n⊔m _ _)))
-  {-
-  s≤s (⊔-lub
-  (≤-trans (u⊔v≤maxuv U V) (⊔-lub (≤-trans (m≤m⊔n _ _) (m≤m⊔n _ _))
-  (≤-trans {assignSize V} (m≤m⊔n _ _) (m≤n⊔m (max (assignSize U) (assignSizeFun f)) _))))
-  (≤-trans (f∪g≤maxfg f g)
-  (⊔-lub (≤-trans {assignSizeFun f} {max (assignSize U) (assignSizeFun f)} (m≤n⊔m _ _) (m≤m⊔n _ _))
-  (≤-trans (m≤n⊔m _ _) (m≤n⊔m (max (assignSize U) (assignSizeFun f)) _)))))
-  -}
+        b = ≤-trans (s≤s (f∪g≤maxfg f g)) (maxLemma (m≤n⊔m (assignSize U) (suc (assignSizeFun f))) (m≤n⊔m _ (suc (assignSizeFun g))))
 u⊔v≤maxuv (Π _ _) 𝒰 = z≤n
 u⊔v≤maxuv (Π _ _) incons = z≤n
 u⊔v≤maxuv 𝒰 ⊥ = z≤n
