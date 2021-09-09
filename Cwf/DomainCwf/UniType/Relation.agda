@@ -37,22 +37,29 @@ data _⊑_ where
   ⊑-Π : ∀ {u v f g} → u ⊑ v → F f ⊑ F g → Π u f ⊑ Π v g
   ⊑-𝒰 : 𝒰 ⊑ 𝒰
 
-orderOnlyCon' : ∀ {u v p q} → u ⊑ v → con' u p ⊠ con' v q
-orderOnlyCon' {v = v} (⊑-bot conv) = * , wfIrrelevant {v} conv
-orderOnlyCon' ⊑-0 = * , *
-orderOnlyCon' {s u} {s v} {acc _} {acc _} (⊑-s u⊑v)
-  with (orderOnlyCon' {u} {v} {<-wellFounded _} {<-wellFounded _} u⊑v)
+orderOnlyCon : ∀ {u v p q} → u ⊑ v → con' u p ⊠ con' v q
+orderOnlyCon {v = v} (⊑-bot conv) = * , wfIrrelevant {v} conv
+orderOnlyCon ⊑-0 = * , *
+orderOnlyCon {s u} {s v} {acc _} {acc _} (⊑-s u⊑v)
+  with (orderOnlyCon {u} {v} {<-wellFounded _} {<-wellFounded _} u⊑v)
 ... | conu , conv = wfIrrelevant {u} conu , wfIrrelevant {v} conv
-orderOnlyCon' ⊑-ℕ = * , *
-orderOnlyCon' {F f} {F g} {acc _} {acc _} (⊑-F conf cong p)
-  = {!!} , {!!}
-orderOnlyCon' {refl u} {refl v} {acc _} {acc _} (⊑-rfl u⊑v)
-  with (orderOnlyCon' {u} {v} {<-wellFounded _} {<-wellFounded _} u⊑v)
+orderOnlyCon ⊑-ℕ = * , *
+orderOnlyCon {F f} {F g} {acc _} {acc _} (⊑-F (conPairsf , conElemsf) (conPairsg , conElemsg) p)
+  = ((λ {u} {v} {u′} {v′} uv∈f u′v′∈f conuu′ → wfIrrelevant {v ⊔ v′} (conPairsf uv∈f u′v′∈f (wfIrrelevant {u ⊔ u′} conuu′)))
+  , λ {u} {v} uv∈f → wfIrrelevant {u} (⊠-fst (conElemsf uv∈f)) , wfIrrelevant {v} (⊠-snd (conElemsf uv∈f)))
+  , ((λ {u} {v} {u′} {v′} uv∈f u′v′∈f conuu′ → wfIrrelevant {v ⊔ v′} (conPairsg uv∈f u′v′∈f (wfIrrelevant {u ⊔ u′} conuu′)))
+  , λ {u} {v} uv∈f → wfIrrelevant {u} (⊠-fst (conElemsg uv∈f)) , wfIrrelevant {v} (⊠-snd (conElemsg uv∈f)))
+orderOnlyCon {refl u} {refl v} {acc _} {acc _} (⊑-rfl u⊑v)
+  with (orderOnlyCon {u} {v} {<-wellFounded _} {<-wellFounded _} u⊑v)
 ... | conu , conv = wfIrrelevant {u} conu , wfIrrelevant {v} conv
-orderOnlyCon' (⊑-Π {u} {v} u⊑v f⊑g) = {!!}
-orderOnlyCon' (⊑-I U⊑U′ u⊑u′ v⊑v′) = {!!}
-orderOnlyCon' ⊑-𝒰 = * , *
-
--- Ordering is only defined for consistent neighborhoods
-orderOnlyCon : ∀ {u v} → u ⊑ v → con u ⊠ con v
-orderOnlyCon = orderOnlyCon'
+orderOnlyCon {p = acc _} {acc _} (⊑-Π {u} {v} u⊑v (⊑-F (conPairsf , conElemsf) (conPairsg , conElemsg) p))
+  with (orderOnlyCon {u} {v} {<-wellFounded _} {<-wellFounded _} u⊑v)
+... | conu , conv = (wfIrrelevant {u} conu , {!!}) , (wfIrrelevant {v} conv , {!!})
+orderOnlyCon {p = acc _} {acc _} (⊑-I {U} {u} {u′} {V} {v} {v′} U⊑V u⊑v u′⊑v′)
+  with (orderOnlyCon {U} {V} {<-wellFounded _} {<-wellFounded _} U⊑V)
+     | (orderOnlyCon {u} {v} {<-wellFounded _} {<-wellFounded _} u⊑v)
+     | (orderOnlyCon {u′} {v′} {<-wellFounded _} {<-wellFounded _} u′⊑v′)
+... | conU , conV | conu , conv | conu′ , conv′
+  = (wfIrrelevant {U} conU , (wfIrrelevant {u} conu , wfIrrelevant {u′} conu′))
+  , (wfIrrelevant {V} conV , (wfIrrelevant {v} conv , wfIrrelevant {v′} conv′))
+orderOnlyCon ⊑-𝒰 = * , *
