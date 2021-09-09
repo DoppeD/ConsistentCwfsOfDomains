@@ -1,4 +1,4 @@
---{-# OPTIONS --safe #-}
+{-# OPTIONS --safe #-}
 
 module Cwf.DomainCwf.UniType.Relation where
 
@@ -8,7 +8,7 @@ open import Cwf.DomainCwf.UniType.AssignSize
 open import Cwf.DomainCwf.UniType.Consistency
 open import Cwf.DomainCwf.UniType.Definition
 
-open import Data.Nat.Base renaming (ℕ to Nat)
+open import Data.Nat.Base hiding (ℕ ; _⊔_)
 open import Data.Nat.Induction
 open import Data.Nat.Properties
 open import Induction.WellFounded
@@ -29,7 +29,7 @@ data _⊑_ where
   ⊑-0 : 0ᵤ ⊑ 0ᵤ
   ⊑-s : ∀ {u v} → u ⊑ v → s u ⊑ s v
   ⊑-ℕ : ℕ ⊑ ℕ
-  ⊑-F : ∀ {f g} → (conf : con (F f)) → (cong : con (F g)) →
+  ⊑-F : ∀ {f g} → (conf : conFinFun f) → (cong : conFinFun g) →
         (∀ {u v} → (u , v) ∈ f → ⊑-proof g u v) →
         F f ⊑ F g
   ⊑-rfl : ∀ {u v} → u ⊑ v → refl u ⊑ refl v
@@ -37,20 +37,22 @@ data _⊑_ where
   ⊑-Π : ∀ {u v f g} → u ⊑ v → F f ⊑ F g → Π u f ⊑ Π v g
   ⊑-𝒰 : 𝒰 ⊑ 𝒰
 
-sdflsd : ∀ {u p q} → con' u p → con' u q
-sdflsd = {!!}
+orderOnlyCon' : ∀ {u v p q} → u ⊑ v → con' u p ⊠ con' v q
+orderOnlyCon' {v = v} (⊑-bot conv) = * , wfIrrelevant {v} conv
+orderOnlyCon' ⊑-0 = * , *
+orderOnlyCon' {s u} {s v} {acc _} {acc _} (⊑-s u⊑v)
+  with (orderOnlyCon' {u} {v} {<-wellFounded _} {<-wellFounded _} u⊑v)
+... | conu , conv = wfIrrelevant {u} conu , wfIrrelevant {v} conv
+orderOnlyCon' ⊑-ℕ = * , *
+orderOnlyCon' {F f} {F g} {acc _} {acc _} (⊑-F conf cong p)
+  = {!!} , {!!}
+orderOnlyCon' {refl u} {refl v} {acc _} {acc _} (⊑-rfl u⊑v)
+  with (orderOnlyCon' {u} {v} {<-wellFounded _} {<-wellFounded _} u⊑v)
+... | conu , conv = wfIrrelevant {u} conu , wfIrrelevant {v} conv
+orderOnlyCon' (⊑-Π {u} {v} u⊑v f⊑g) = {!!}
+orderOnlyCon' (⊑-I U⊑U′ u⊑u′ v⊑v′) = {!!}
+orderOnlyCon' ⊑-𝒰 = * , *
 
 -- Ordering is only defined for consistent neighborhoods
 orderOnlyCon : ∀ {u v} → u ⊑ v → con u ⊠ con v
-orderOnlyCon (⊑-bot conu) = * , conu
-orderOnlyCon ⊑-0 = * , *
-orderOnlyCon (⊑-s u⊑v) = orderOnlyCon u⊑v
-orderOnlyCon ⊑-ℕ = * , *
-orderOnlyCon (⊑-F conf cong f) = conf , cong
-orderOnlyCon (⊑-rfl u⊑v) = orderOnlyCon u⊑v
-orderOnlyCon (⊑-Π {u} {v} u⊑v f⊑g) with (orderOnlyCon u⊑v) | orderOnlyCon f⊑g
-... | conu , conv | conf , cong = (sdflsd {u} conu , {!!}) , (sdflsd {v} conv , {!!})
-orderOnlyCon (⊑-I U⊑U′ u⊑u′ v⊑v′)
-  with (orderOnlyCon U⊑U′) | orderOnlyCon u⊑u′ | orderOnlyCon v⊑v′
-... | conU , conU′ | conu , conu′ | conv , conv′ = ({!!} , {!!}) , ({!!} , ({!!} , {!!}))
-orderOnlyCon ⊑-𝒰 = * , *
+orderOnlyCon = orderOnlyCon'

@@ -43,6 +43,9 @@ conFinFun' f (acc rsf) =
 con : Nbh → Set
 con u = con' u (<-wellFounded (assignSize u))
 
+conFinFun : FinFun Nbh Nbh → Set
+conFinFun f = conFinFun' f (<-wellFounded (suc (assignSizeFun f)))
+
 wfIrrelevant : ∀ {u p q} → con' u p → con' u q
 wfIrrelevant' : {f : FinFun Nbh Nbh} → ∀ {p q} → conFinFun' f p → conFinFun' f q
 
