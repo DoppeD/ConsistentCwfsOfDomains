@@ -1,5 +1,4 @@
---{-# OPTIONS --safe #-}
-{-# OPTIONS --allow-unsolved-metas #-}
+{-# OPTIONS --safe #-}
 
 module Cwf.DomainCwf.UniType.AssignSize where
 
@@ -18,12 +17,12 @@ assignSizeFun : FinFun Nbh Nbh → Nat
 
 assignSize ⊥ = 0
 assignSize 0ᵤ = 0
-assignSize (s u) = assignSize u
+assignSize (s u) = suc (assignSize u)
 assignSize ℕ = 0
 assignSize (F f) = suc (assignSizeFun f)
-assignSize (refl u) = assignSize u
+assignSize (refl u) = suc (assignSize u)
 assignSize (I U u v) = suc (max (max (assignSize U) (assignSize u)) (assignSize v))
-assignSize (Π U f) = suc (max (assignSize U) (assignSizeFun f))
+assignSize (Π U f) = suc (max (assignSize U) (suc (assignSizeFun f)))
 assignSize 𝒰 = 0
 assignSize incons = 0
 
@@ -32,19 +31,19 @@ assignSizeFun ((u , v) ∷ f) =
   max (max (assignSize u) (assignSize v)) (assignSizeFun f)
 
 maxLemma : ∀ {m n o p} → m ≤ o → n ≤ p → (max m n) ≤ (max o p)
-maxLemma m≤o n≤p = ⊔-pres-≤m (m≤n⇒m≤n⊔o _ m≤o) (m≤n⇒m≤o⊔n _ n≤p)
+maxLemma m≤o n≤p = ⊔-lub (m≤n⇒m≤n⊔o _ m≤o) (m≤n⇒m≤o⊔n _ n≤p)
 
 uv∈f⇒u≤f : ∀ f u v → (u , v) ∈ f → assignSize u ≤ assignSizeFun f
 uv∈f⇒u≤f ((u , v) ∷ f) _ _ here
   = ≤-trans (m≤m⊔n (assignSize u) (assignSize v)) (m≤m⊔n (max (assignSize u) (assignSize v)) (assignSizeFun f))
 uv∈f⇒u≤f ((u , v) ∷ f) u′ v′ (there u′v′∈f)
-  = ≤-trans (uv∈f⇒u≤f f u′ v′ u′v′∈f) (n≤m⊔n (max (assignSize u) (assignSize v)) (assignSizeFun f))
+  = ≤-trans (uv∈f⇒u≤f f u′ v′ u′v′∈f) (m≤n⊔m (max (assignSize u) (assignSize v)) (assignSizeFun f))
 
 uv∈f⇒v≤f : ∀ f u v → (u , v) ∈ f → assignSize v ≤ assignSizeFun f
 uv∈f⇒v≤f ((u , v) ∷ f) _ _ here
-  = ≤-trans (n≤m⊔n (assignSize u) (assignSize v)) (m≤m⊔n (max (assignSize u) (assignSize v)) (assignSizeFun f))
+  = ≤-trans (m≤n⊔m (assignSize u) (assignSize v)) (m≤m⊔n (max (assignSize u) (assignSize v)) (assignSizeFun f))
 uv∈f⇒v≤f ((u , v) ∷ f) u′ v′ (there u′v′∈f)
-  = ≤-trans (uv∈f⇒v≤f f u′ v′ u′v′∈f) (n≤m⊔n (max (assignSize u) (assignSize v)) (assignSizeFun f))
+  = ≤-trans (uv∈f⇒v≤f f u′ v′ u′v′∈f) (m≤n⊔m (max (assignSize u) (assignSize v)) (assignSizeFun f))
 
 u⊔v≤maxuv : ∀ u v → assignSize (u ⊔ v) ≤ (max (assignSize u) (assignSize v))
 f∪g≤maxfg : ∀ f g → assignSizeFun (f ∪ g) ≤ max (assignSizeFun f) (assignSizeFun g)
@@ -69,9 +68,9 @@ u⊔v≤maxuv 0ᵤ (I _ _ _) = z≤n
 u⊔v≤maxuv 0ᵤ (Π _ _) = z≤n
 u⊔v≤maxuv 0ᵤ 𝒰 = z≤n
 u⊔v≤maxuv 0ᵤ incons = z≤n
-u⊔v≤maxuv (s _) ⊥ = m≤m⊔n _ _
+u⊔v≤maxuv (s _) ⊥ = ≤-refl
 u⊔v≤maxuv (s _) 0ᵤ = z≤n
-u⊔v≤maxuv (s u) (s v) = u⊔v≤maxuv u v
+u⊔v≤maxuv (s u) (s v) = s≤s (u⊔v≤maxuv u v)
 u⊔v≤maxuv (s _) ℕ = z≤n
 u⊔v≤maxuv (s _) (F _) = z≤n
 u⊔v≤maxuv (s _) (refl _) = z≤n
@@ -99,12 +98,12 @@ u⊔v≤maxuv (F _) (I _ _ _) = z≤n
 u⊔v≤maxuv (F _) (Π _ _) = z≤n
 u⊔v≤maxuv (F _) 𝒰 = z≤n
 u⊔v≤maxuv (F _) incons = z≤n
-u⊔v≤maxuv (refl _) ⊥ = m≤m⊔n _ _
+u⊔v≤maxuv (refl _) ⊥ = ≤-refl
 u⊔v≤maxuv (refl _) 0ᵤ = z≤n
 u⊔v≤maxuv (refl _) (s _) = z≤n
 u⊔v≤maxuv (refl _) ℕ = z≤n
 u⊔v≤maxuv (refl _) (F _) = z≤n
-u⊔v≤maxuv (refl u) (refl v) = u⊔v≤maxuv u v
+u⊔v≤maxuv (refl u) (refl v) = s≤s (u⊔v≤maxuv u v)
 u⊔v≤maxuv (refl _) (I _ _ _) = z≤n
 u⊔v≤maxuv (refl _) (Π _ _) = z≤n
 u⊔v≤maxuv (refl _) 𝒰 = z≤n
@@ -126,13 +125,28 @@ u⊔v≤maxuv (Π _ _) ℕ = z≤n
 u⊔v≤maxuv (Π _ _) (F _) = z≤n
 u⊔v≤maxuv (Π _ _) (refl _) = z≤n
 u⊔v≤maxuv (Π _ _) (I _ _ _) = z≤n
-u⊔v≤maxuv (Π U f) (Π V g) =
-  s≤s (⊔-pres-≤m
-  (≤-trans (u⊔v≤maxuv U V) (⊔-pres-≤m (≤-trans (m≤m⊔n _ _) (m≤m⊔n _ _))
-  (≤-trans {assignSize V} (m≤m⊔n _ _) (n≤m⊔n (max (assignSize U) (assignSizeFun f)) _))))
+u⊔v≤maxuv (Π U f) (Π V g) = s≤s (⊔-lub a b)
+  where c : ∀ {u v} → max (assignSize U) (assignSize V) ≤ max (max (assignSize U) u) (max (assignSize V) v)
+        c = maxLemma (m≤m⊔n (assignSize U) _) (m≤m⊔n (assignSize V) _)
+        a : ∀ {u v} → assignSize (U ⊔ V) ≤ max (max (assignSize U) u) (max (assignSize V) v)
+        a = ≤-trans (u⊔v≤maxuv U V) c
+        d : ∀ {m n} → suc (max m n) ≤ max (suc m) (suc n)
+        d = {!!}
+        aa : ∀ {v} → (assignSizeFun (f ∪ g)) ≤ max (max (assignSize U) (assignSizeFun f)) (max v (assignSizeFun g)) →
+             suc (assignSizeFun (f ∪ g)) ≤ max (max (assignSize U) (suc (assignSizeFun f))) (max v (suc (assignSizeFun g)))
+        aa x = {!!}
+        -- (assignSizeFun (f ∪ g)) ≤ max (assignSizeFun f) (assignSizeFun g))
+        -- Also use that suc (max (assignSizeFun f) (assignSizeFun g)) ≤ max (suc (assignSize f)) (suc (assignSize g))
+        b : ∀ {v} → suc (assignSizeFun (f ∪ g)) ≤ max (max (assignSize U) (suc (assignSizeFun f))) (max v (suc (assignSizeFun g)))
+        b = aa (≤-trans (f∪g≤maxfg f g) (maxLemma {assignSizeFun f} {assignSizeFun g} {max (assignSize U) (assignSizeFun f)} (m≤n⊔m _ _) (m≤n⊔m _ _)))
+  {-
+  s≤s (⊔-lub
+  (≤-trans (u⊔v≤maxuv U V) (⊔-lub (≤-trans (m≤m⊔n _ _) (m≤m⊔n _ _))
+  (≤-trans {assignSize V} (m≤m⊔n _ _) (m≤n⊔m (max (assignSize U) (assignSizeFun f)) _))))
   (≤-trans (f∪g≤maxfg f g)
-  (⊔-pres-≤m (≤-trans {assignSizeFun f} {max (assignSize U) (assignSizeFun f)} (n≤m⊔n _ _) (m≤m⊔n _ _))
-  (≤-trans (n≤m⊔n _ _) (n≤m⊔n (max (assignSize U) (assignSizeFun f)) _)))))
+  (⊔-lub (≤-trans {assignSizeFun f} {max (assignSize U) (assignSizeFun f)} (m≤n⊔m _ _) (m≤m⊔n _ _))
+  (≤-trans (m≤n⊔m _ _) (m≤n⊔m (max (assignSize U) (assignSizeFun f)) _)))))
+  -}
 u⊔v≤maxuv (Π _ _) 𝒰 = z≤n
 u⊔v≤maxuv (Π _ _) incons = z≤n
 u⊔v≤maxuv 𝒰 ⊥ = z≤n
@@ -156,22 +170,22 @@ pref≤f : ∀ f → assignSize (pre f) ≤ assignSizeFun f
 pref≤f ∅ = z≤n
 pref≤f ((u , v) ∷ f)
   = ≤-trans (u⊔v≤maxuv u (pre f)) (maxLemma (m≤m⊔n _ _) (pref≤f f))
-    
+
 pref<Ff : ∀ f → (assignSize (pre f) < assignSize (F f))
 pref<Ff f = <-transʳ (pref≤f f) (n<1+n (assignSizeFun f))
 
 f⊆g⇒f≤g : ∀ f g → f ⊆ g → assignSizeFun f ≤ assignSizeFun g
 f⊆g⇒f≤g ∅ _ _ = z≤n
 f⊆g⇒f≤g ((u , v) ∷ f) g f⊆g
-  = ⊔-pres-≤m (⊔-pres-≤m (uv∈f⇒u≤f g u v (f⊆g here)) (uv∈f⇒v≤f g u v (f⊆g here))) (f⊆g⇒f≤g f g (λ x∈f → f⊆g (there x∈f)))
+  = ⊔-lub (⊔-lub (uv∈f⇒u≤f g u v (f⊆g here)) (uv∈f⇒v≤f g u v (f⊆g here))) (f⊆g⇒f≤g f g (λ x∈f → f⊆g (there x∈f)))
 
 f⊆g⇒pref⇐g : ∀ f g → f ⊆ g → (assignSize (pre f) < assignSize (F g))
 f⊆g⇒pref⇐g f g f⊆g = <-transˡ (pref<Ff f) (s≤s (f⊆g⇒f≤g f g f⊆g))
 
 uvu′v′∈f⇒u⊔u′≤f : ∀ {u v u′ v′ f} → (u , v) ∈ f → (u′ , v′) ∈ f → assignSize (u ⊔ u′) ≤ assignSizeFun f
 uvu′v′∈f⇒u⊔u′≤f {u} {v} {u′} {v′} {f} uv∈f u′v′∈f
-  = ≤-trans (u⊔v≤maxuv u u′) (⊔-pres-≤m (uv∈f⇒u≤f f u v uv∈f) (uv∈f⇒u≤f f u′ v′ u′v′∈f))
+  = ≤-trans (u⊔v≤maxuv u u′) (⊔-lub (uv∈f⇒u≤f f u v uv∈f) (uv∈f⇒u≤f f u′ v′ u′v′∈f))
 
 uvu′v′∈f⇒v⊔v′≤f : ∀ {u v u′ v′ f} → (u , v) ∈ f → (u′ , v′) ∈ f → assignSize (v ⊔ v′) ≤ assignSizeFun f
 uvu′v′∈f⇒v⊔v′≤f {u} {v} {u′} {v′} {f} uv∈f u′v′∈f
-  = ≤-trans (u⊔v≤maxuv v v′) (⊔-pres-≤m (uv∈f⇒v≤f f u v uv∈f) (uv∈f⇒v≤f f u′ v′ u′v′∈f))
+  = ≤-trans (u⊔v≤maxuv v v′) (⊔-lub (uv∈f⇒v≤f f u v uv∈f) (uv∈f⇒v≤f f u′ v′ u′v′∈f))
