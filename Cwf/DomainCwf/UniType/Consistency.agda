@@ -28,7 +28,15 @@ con' (I U u u′) (acc rs) =
    con' u′ (rs _ (s≤s (m≤n⊔m _ _)))
   )
 con' (Π U f) (acc rs) =
-  con' U (rs _ (s≤s (m≤m⊔n _ _))) ⊠ conFinFun' f (rs _ (s≤s (m≤n⊔m _ _)))
+  con' U (rs _ (s≤s (m≤m⊔n _ _))) ⊠
+    ((∀ {u v u′ v′} → (uv∈f : (u , v) ∈ f) → (u′v′∈f : (u′ , v′) ∈ f) →
+     con' (u ⊔ u′) (rs _ (s≤s (≤-trans {assignSize (u ⊔ u′)} {suc (assignSizeFun f)} (≤-trans (uvu′v′∈f⇒u⊔u′≤f uv∈f u′v′∈f) (n≤1+n _)) (m≤n⊔m _ _)))) →
+     con' (v ⊔ v′) (rs _ (s≤s (≤-trans {assignSize (v ⊔ v′)} {suc (assignSizeFun f)} (≤-trans (uvu′v′∈f⇒v⊔v′≤f uv∈f u′v′∈f) (n≤1+n _)) (m≤n⊔m _ _))))
+    ) ⊠
+   (∀ {u v} → (uv∈f : (u , v) ∈ f) →
+     con' u (rs _ (s≤s (≤-trans (uv∈f⇒u≤f f u v uv∈f) (≤-trans {assignSizeFun f} {suc (assignSizeFun f)} (n≤1+n _) (m≤n⊔m _ _))))) ⊠
+     con' v (rs _ (s≤s (≤-trans (uv∈f⇒v≤f f u v uv∈f) (≤-trans {assignSizeFun f} {suc (assignSizeFun f)} (n≤1+n _) (m≤n⊔m _ _))))))
+   )
 con' 𝒰 _ = 𝟙
 con' incons _ = 𝟘
 
@@ -47,18 +55,17 @@ conFinFun : FinFun Nbh Nbh → Set
 conFinFun f = conFinFun' f (<-wellFounded (suc (assignSizeFun f)))
 
 wfIrrelevant : ∀ {u p q} → con' u p → con' u q
-wfIrrelevant' : {f : FinFun Nbh Nbh} → ∀ {p q} → conFinFun' f p → conFinFun' f q
-
 wfIrrelevant {⊥} x = *
 wfIrrelevant {0ᵤ} {acc rs} {acc rs₁} x = *
 wfIrrelevant {s u} {acc rs} {acc rs₁} x = wfIrrelevant {u} x
 wfIrrelevant {ℕ} {acc rs} {acc rs₁} x = *
-wfIrrelevant {F f} {acc rs} {acc rs₁} confp = wfIrrelevant' {f} {acc rs} {acc rs₁} confp
-wfIrrelevant {refl u} {acc rs} {acc rs₁} x = wfIrrelevant {u} x
-wfIrrelevant {I u u₁ u₂} {acc rs} {acc rs₁} (x , (x₁ , x₂)) = (wfIrrelevant {u} x) , ((wfIrrelevant {u₁} x₁) , (wfIrrelevant {u₂} x₂))
-wfIrrelevant {Π u f} {acc rs} {acc rs₁} (x , x₂) = wfIrrelevant {u} x , (wfIrrelevant' x₂)
-wfIrrelevant {𝒰} {acc rs} {acc rs₁} x = *
-
-wfIrrelevant' {f} {acc rs} {acc rs₁} (x , x₁)
+wfIrrelevant {F f} {acc rs} {acc rs₁} (x , x₁)
   = (λ {u} {v} {u′} {v′} uv∈f u′v′∈f conuu′ → wfIrrelevant {v ⊔ v′} (x uv∈f u′v′∈f (wfIrrelevant {u ⊔ u′} conuu′)))
   , (λ {u} {v} uv∈f → wfIrrelevant {u} (⊠-fst (x₁ uv∈f)) , wfIrrelevant {v} (⊠-snd (x₁ uv∈f)))
+wfIrrelevant {refl u} {acc rs} {acc rs₁} x = wfIrrelevant {u} x
+wfIrrelevant {I u u₁ u₂} {acc rs} {acc rs₁} (x , (x₁ , x₂)) = (wfIrrelevant {u} x) , ((wfIrrelevant {u₁} x₁) , (wfIrrelevant {u₂} x₂))
+wfIrrelevant {Π u f} {acc rs} {acc rs₁} (a , (x , x₁))
+  = (wfIrrelevant {u} a) ,
+    ((λ {u} {v} {u′} {v′} uv∈f u′v′∈f conuu′ → wfIrrelevant {v ⊔ v′} (x uv∈f u′v′∈f (wfIrrelevant {u ⊔ u′} conuu′)))
+  , (λ {u} {v} uv∈f → wfIrrelevant {u} (⊠-fst (x₁ uv∈f)) , wfIrrelevant {v} (⊠-snd (x₁ uv∈f))))
+wfIrrelevant {𝒰} {acc rs} {acc rs₁} x = *
