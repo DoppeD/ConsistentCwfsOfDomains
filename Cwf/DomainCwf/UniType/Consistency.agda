@@ -62,3 +62,14 @@ wfIrrelevant {Π u f} {acc rs} {acc rs₁} (a , (x , x₁))
     ((λ {u} {v} {u′} {v′} uv∈f u′v′∈f conuu′ → wfIrrelevant {v ⊔ v′} (x uv∈f u′v′∈f (wfIrrelevant {u ⊔ u′} conuu′)))
   , (λ {u} {v} uv∈f → wfIrrelevant {u} (⊠-fst (x₁ uv∈f)) , wfIrrelevant {v} (⊠-snd (x₁ uv∈f))))
 wfIrrelevant {𝒰} {acc rs} {acc rs₁} x = *
+
+wfIrrelevantPairs : ∀ {f u v u′ v′ p q r s} → (u , v) ∈ f → (u′ , v′) ∈ f →
+                    (con' (u ⊔ u′) p → con' (v ⊔ v′) q) →
+                    con' (u ⊔ u′) r → con' (v ⊔ v′) s
+wfIrrelevantPairs {u = u} {v} {u′} {v′} uv∈f u′v′∈f f conuu′
+  = wfIrrelevant {v ⊔ v′} (f (wfIrrelevant {u ⊔ u′} conuu′))
+
+wfIrrelevantElems : ∀ {f u v p q r s} → (u , v) ∈ f → con' u p ⊠ con' v q →
+                    con' u r ⊠ con' v s
+wfIrrelevantElems {u = u} {v} uv∈f (conu , conv)
+  = wfIrrelevant {u} conu , wfIrrelevant {v} conv

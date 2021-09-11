@@ -42,8 +42,9 @@ open import Induction.WellFounded
 ⊑-refl {s u} {acc rs} conu = ⊑-s (⊑-refl conu)
 ⊑-refl {ℕ} _ = ⊑-ℕ
 ⊑-refl {F f} {acc rs} (conPairsf , conElemsf) = ⊑-F cff cff f⊑f
-  where cff = (λ {u} {v} {u′} {v′} uv∈f u′v′∈f conuu′ → wfIrrelevant {u = v ⊔ v′} (conPairsf uv∈f u′v′∈f (wfIrrelevant {u = u ⊔ u′} conuu′)))
-            , λ {u} {v} uv∈f → (wfIrrelevant {u} (⊠-fst (conElemsf uv∈f))) , wfIrrelevant {v} (⊠-snd (conElemsf uv∈f))
+  where cff : conFinFun f
+        cff = (λ uv∈f u′v′∈f → wfIrrelevantPairs uv∈f u′v′∈f (conPairsf uv∈f u′v′∈f))
+            , λ uv∈f → wfIrrelevantElems uv∈f (conElemsf uv∈f)
         f⊑f : ∀ {u v} → (u , v) ∈ f → ⊑-proof f u v
         f⊑f {u} {v} uv∈f =
           record { sub = (u , v) ∷ ∅
@@ -57,10 +58,10 @@ open import Induction.WellFounded
         (⊑-refl {p = rs _ (u<IUuu′ {U})} (wfIrrelevant {u} conu))
         (⊑-refl {p = rs _ (u′<IUuu′ {U})} (wfIrrelevant {u′} conu′))
 ⊑-refl {Π U f} {acc rs} (conU , (conPairsf , conElemsf))
-  = ⊑-Π (⊑-refl {U} {p = rs _ (s≤s (m≤m⊔n _ _))} (wfIrrelevant {U} conU))
-        (⊑-F cff cff f⊑f)
-  where cff = (λ {u} {v} {u′} {v′} uv∈f u′v′∈f conuu′ → wfIrrelevant {u = v ⊔ v′} (conPairsf uv∈f u′v′∈f (wfIrrelevant {u = u ⊔ u′} conuu′)))
-            , λ {u} {v} uv∈f → (wfIrrelevant {u} (⊠-fst (conElemsf uv∈f))) , wfIrrelevant {v} (⊠-snd (conElemsf uv∈f))
+  = ⊑-Π (⊑-refl {U} {p = rs _ (s≤s (m≤m⊔n _ _))} (wfIrrelevant {U} conU)) (⊑-F cff cff f⊑f)
+  where cff : conFinFun f
+        cff = (λ uv∈f u′v′∈f → wfIrrelevantPairs uv∈f u′v′∈f (conPairsf uv∈f u′v′∈f))
+            , λ uv∈f → wfIrrelevantElems uv∈f (conElemsf uv∈f)
         f⊑f : ∀ {u v} → (u , v) ∈ f → ⊑-proof f u v
         f⊑f {u} {v} uv∈f =
           record { sub = (u , v) ∷ ∅
@@ -79,30 +80,37 @@ open import Induction.WellFounded
 ... | inl uv∈f = p₁ uv∈f
 ... | inr uv∈g = p₂ uv∈g
 
-{-
-
-⊑-⊔ : ∀ {i} → {u v w : Nbh {i}} → u ⊑ w → v ⊑ w → con (u ⊔ v) → (u ⊔ v) ⊑ w
+⊑-⊔ : ∀ {u v w p} → u ⊑ w → v ⊑ w → con' (u ⊔ v) p → (u ⊔ v) ⊑ w
 ⊑-⊔ u⊑w (⊑-bot _) _ = ⊑-reflLemma₁ u⊑w
 ⊑-⊔ (⊑-bot _) ⊑-0 _ = ⊑-0
 ⊑-⊔ ⊑-0 ⊑-0 _ = ⊑-0
 ⊑-⊔ (⊑-bot _) (⊑-s v⊑w) _ = ⊑-s v⊑w
-⊑-⊔ (⊑-s u⊑w) (⊑-s v⊑w) conuv = ⊑-s (⊑-⊔ u⊑w v⊑w conuv)
+⊑-⊔ {u} {v} {p = acc rs} (⊑-s u⊑w) (⊑-s v⊑w) conuv
+  = ⊑-s (⊑-⊔ {p = rs _ (s≤s ≤-refl)} u⊑w v⊑w conuv)
 ⊑-⊔ (⊑-bot _) ⊑-ℕ _ = ⊑-ℕ
 ⊑-⊔ ⊑-ℕ ⊑-ℕ _ = ⊑-ℕ
 ⊑-⊔ (⊑-bot _) (⊑-F cong conh p) _ = ⊑-F cong conh p
-⊑-⊔ (⊑-F conf conh p₁) (⊑-F cong _ p₂) conuv
-  = ⊑-F conuv conh (⊑-⊔' (⊑-F conf conh p₁) (⊑-F cong conh p₂))
+⊑-⊔ {F f} {F g} {p = acc rs} (⊑-F conf conh p₁) (⊑-F cong _ p₂) (conPairsf , conElemsf)
+  = ⊑-F cff conh (⊑-⊔' (⊑-F conf conh p₁) (⊑-F cong conh p₂))
+  where cff : conFinFun (f ∪ g)
+        cff = (λ uv∈f u′v′∈f → wfIrrelevantPairs uv∈f u′v′∈f (conPairsf uv∈f u′v′∈f))
+            , λ uv∈f → wfIrrelevantElems uv∈f (conElemsf uv∈f)
 ⊑-⊔ (⊑-bot _) (⊑-rfl v⊑w) _ = ⊑-rfl v⊑w
-⊑-⊔ (⊑-rfl u⊑w) (⊑-rfl v⊑w) conuv = ⊑-rfl (⊑-⊔ u⊑w v⊑w conuv)
+⊑-⊔  {p = acc rs} (⊑-rfl u⊑w) (⊑-rfl v⊑w) conuv
+  = ⊑-rfl (⊑-⊔ u⊑w v⊑w conuv)
 ⊑-⊔ (⊑-bot _) (⊑-I U′⊑U″ u′⊑u″ v′⊑v″) conuv = ⊑-I U′⊑U″ u′⊑u″ v′⊑v″
-⊑-⊔ (⊑-I U⊑U″ u⊑u″ v⊑v″) (⊑-I U′⊑U″ u′⊑u″ v′⊑v″) (conUU′ , (conuu′ , convv′))
+⊑-⊔ {p = acc rs} (⊑-I U⊑U″ u⊑u″ v⊑v″) (⊑-I U′⊑U″ u′⊑u″ v′⊑v″) (conUU′ , (conuu′ , convv′))
   = ⊑-I (⊑-⊔ U⊑U″ U′⊑U″ conUU′) (⊑-⊔ u⊑u″ u′⊑u″ conuu′) (⊑-⊔ v⊑v″ v′⊑v″ convv′)
 ⊑-⊔ (⊑-bot _) (⊑-Π v⊑w g⊑h) conuv = ⊑-Π v⊑w g⊑h
-⊑-⊔ (⊑-Π u⊑w f⊑h) (⊑-Π v⊑w g⊑h) (conuv , confg)
-  = ⊑-Π (⊑-⊔ u⊑w v⊑w conuv) (⊑-⊔ f⊑h g⊑h confg)
-⊑-⊔ (⊑-bot _) ⊑-𝒰 conuv = ⊑-𝒰
-⊑-⊔ ⊑-𝒰 ⊑-𝒰 conuv = ⊑-𝒰
+⊑-⊔ {Π U f} {Π V g} {p = acc rs} (⊑-Π u⊑w f⊑h) (⊑-Π v⊑w g⊑h) (conuv , (conPairs , conElems))
+  = ⊑-Π (⊑-⊔ u⊑w v⊑w conuv) (⊑-⊔ {p = rs _ (s≤s (m≤n⊔m _ _))} f⊑h g⊑h (cff {rs _ (s≤s (m≤n⊔m _ _))}))
+  where cff : ∀ {p} → con' (F (f ∪ g)) p
+        cff {acc rs} = (λ uv∈f u′v′∈f → wfIrrelevantPairs uv∈f u′v′∈f (conPairs uv∈f u′v′∈f))
+                     , λ uv∈f → wfIrrelevantElems uv∈f (conElems uv∈f)
+⊑-⊔ (⊑-bot _) ⊑-𝒰 _ = ⊑-𝒰
+⊑-⊔ ⊑-𝒰 ⊑-𝒰 _ = ⊑-𝒰
 
+{-
 ⊑-⊔-fst' : ∀ {i} → {f g : FinFun {i}} → {u v : Nbh {i}} →
            conFinFun (f ∪ g) → (u , v) ∈ f → ⊑-proof (f ∪ g) u v
 ⊑-⊔-fst' confg uv∈f = ⊑-refl' confg (∪-lemma₃ uv∈f)
