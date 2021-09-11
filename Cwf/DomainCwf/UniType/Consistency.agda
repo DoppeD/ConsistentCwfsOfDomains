@@ -21,22 +21,16 @@ con' ℕ _ = 𝟙
 con' (F f) (acc rs) = conFinFun' f (acc rs)
 con' (refl u) (acc rs) = con' u (rs _ (s≤s ≤-refl))
 con' (I U u u′) (acc rs) =
-  con' U (rs _ (s≤s (≤-trans (m≤m⊔n _ _) (m≤m⊔n _ _))))
-  ⊠
-  (con' u (rs _ (s≤s (≤-trans (m≤n⊔m (assignSize U) _) (m≤m⊔n _ _))))
-   ⊠
-   con' u′ (rs _ (s≤s (m≤n⊔m _ _)))
-  )
+  con' U (rs _ U<IUuu′) ⊠ (con' u (rs _ (u<IUuu′ {U})) ⊠ con' u′ (rs _ (u′<IUuu′ {U})))
 con' (Π U f) (acc rs) =
   con' U (rs _ (s≤s (m≤m⊔n _ _))) ⊠
     ((∀ {u v u′ v′} → (uv∈f : (u , v) ∈ f) → (u′v′∈f : (u′ , v′) ∈ f) →
-     con' (u ⊔ u′) (rs _ (s≤s (≤-trans {assignSize (u ⊔ u′)} {suc (assignSizeFun f)} (≤-trans (uvu′v′∈f⇒u⊔u′≤f uv∈f u′v′∈f) (n≤1+n _)) (m≤n⊔m _ _)))) →
-     con' (v ⊔ v′) (rs _ (s≤s (≤-trans {assignSize (v ⊔ v′)} {suc (assignSizeFun f)} (≤-trans (uvu′v′∈f⇒v⊔v′≤f uv∈f u′v′∈f) (n≤1+n _)) (m≤n⊔m _ _))))
-    ) ⊠
-   (∀ {u v} → (uv∈f : (u , v) ∈ f) →
-     con' u (rs _ (s≤s (≤-trans (uv∈f⇒u≤f f u v uv∈f) (≤-trans {assignSizeFun f} {suc (assignSizeFun f)} (n≤1+n _) (m≤n⊔m _ _))))) ⊠
-     con' v (rs _ (s≤s (≤-trans (uv∈f⇒v≤f f u v uv∈f) (≤-trans {assignSizeFun f} {suc (assignSizeFun f)} (n≤1+n _) (m≤n⊔m _ _))))))
-   )
+      con' (u ⊔ u′) (rs _ (u⊔u′<ΠUf uv∈f u′v′∈f)) → con' (v ⊔ v′) (rs _ (v⊔v′<ΠUf uv∈f u′v′∈f))
+     ) ⊠
+     (∀ {u v} → (uv∈f : (u , v) ∈ f) →
+      con' u (rs _ (uv∈f⇒u<ΠUf uv∈f)) ⊠ con' v (rs _ (uv∈f⇒v<ΠUf uv∈f))
+     )
+    )
 con' 𝒰 _ = 𝟙
 con' incons _ = 𝟘
 
@@ -46,7 +40,6 @@ conFinFun' f (acc rsf) =
     con' (v ⊔ v′) (rsf _ (s≤s (uvu′v′∈f⇒v⊔v′≤f uv∈f u′v′∈f)))
   ) ⊠
   (∀ {u v} → (uv∈f : (u , v) ∈ f) → con' u (rsf _ (s≤s (uv∈f⇒u≤f f u v uv∈f))) ⊠ con' v (rsf _ (s≤s (uv∈f⇒v≤f f u v uv∈f))))
-
 
 con : Nbh → Set
 con u = con' u (<-wellFounded (assignSize u))

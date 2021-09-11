@@ -198,3 +198,28 @@ uvu′v′∈f⇒u⊔u′≤f {u} {v} {u′} {v′} {f} uv∈f u′v′∈f
 uvu′v′∈f⇒v⊔v′≤f : ∀ {u v u′ v′ f} → (u , v) ∈ f → (u′ , v′) ∈ f → assignSize (v ⊔ v′) ≤ assignSizeFun f
 uvu′v′∈f⇒v⊔v′≤f {u} {v} {u′} {v′} {f} uv∈f u′v′∈f
   = ≤-trans (u⊔v≤maxuv v v′) (⊔-lub (uv∈f⇒v≤f f u v uv∈f) (uv∈f⇒v≤f f u′ v′ u′v′∈f))
+
+uv∈f⇒u<ΠUf : ∀ {U f u v} → (u , v) ∈ f → assignSize u < assignSize (Π U f)
+uv∈f⇒u<ΠUf {u = u} uv∈f
+  = s≤s (≤-trans {assignSize (u)} (≤-trans (uv∈f⇒u≤f _ _ _ uv∈f) (n≤1+n _)) (m≤n⊔m _ _))
+
+uv∈f⇒v<ΠUf : ∀ {U f u v} → (u , v) ∈ f → assignSize v < assignSize (Π U f)
+uv∈f⇒v<ΠUf {v = v} uv∈f
+  = s≤s (≤-trans {assignSize (v)} (≤-trans (uv∈f⇒v≤f _ _ _ uv∈f) (n≤1+n _)) (m≤n⊔m _ _))
+
+u⊔u′<ΠUf : ∀ {U f u v u′ v′} → (u , v) ∈ f → (u′ , v′) ∈ f → assignSize (u ⊔ u′) < assignSize (Π U f)
+u⊔u′<ΠUf {u = u} {u′ = u′} uv∈f u′v′∈f
+  = s≤s (≤-trans {assignSize (u ⊔ u′)} (≤-trans (uvu′v′∈f⇒u⊔u′≤f uv∈f u′v′∈f) (n≤1+n _)) (m≤n⊔m _ _))
+
+v⊔v′<ΠUf : ∀ {U f u v u′ v′} → (u , v) ∈ f → (u′ , v′) ∈ f → assignSize (v ⊔ v′) < assignSize (Π U f)
+v⊔v′<ΠUf {v = v} {v′ = v′} uv∈f u′v′∈f
+  = s≤s (≤-trans {assignSize (v ⊔ v′)} (≤-trans (uvu′v′∈f⇒v⊔v′≤f uv∈f u′v′∈f) (n≤1+n _)) (m≤n⊔m _ _))
+
+U<IUuu′ : ∀ {U u u′} → assignSize U < assignSize (I U u u′)
+U<IUuu′ {U} {u} {u′} = s≤s (≤-trans (m≤m⊔n _ _) (m≤m⊔n _ _))
+
+u<IUuu′ : ∀ {U u u′} → assignSize u < assignSize (I U u u′)
+u<IUuu′ {U} {u} {u′} = s≤s (≤-trans (m≤n⊔m (assignSize U) _) (m≤m⊔n _ _))
+
+u′<IUuu′ : ∀ {U u u′} → assignSize u′ < assignSize (I U u u′)
+u′<IUuu′ {U} {u} {u′} = s≤s (m≤n⊔m _ _)

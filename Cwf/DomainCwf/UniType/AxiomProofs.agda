@@ -4,12 +4,17 @@ module Cwf.DomainCwf.UniType.AxiomProofs where
 
 open import Base.Core
 open import Base.FinFun
+open import Cwf.DomainCwf.UniType.AssignSize
 open import Cwf.DomainCwf.UniType.Consistency
-open import Cwf.DomainCwf.UniType.ConsistencyLemmata
+--open import Cwf.DomainCwf.UniType.ConsistencyLemmata
 open import Cwf.DomainCwf.UniType.Definition
 open import Cwf.DomainCwf.UniType.Relation
 
-⊑-reflLemma₁ : ∀ {i} → {u v : Nbh {i}} → u ⊑ v → (u ⊔ ⊥) ⊑ v
+open import Data.Nat.Base hiding (ℕ) renaming (_⊔_ to max)
+open import Data.Nat.Properties
+open import Induction.WellFounded
+
+⊑-reflLemma₁ : ∀ {u v} → u ⊑ v → (u ⊔ ⊥) ⊑ v
 ⊑-reflLemma₁ (⊑-bot conv) = ⊑-bot conv
 ⊑-reflLemma₁ ⊑-0 = ⊑-0
 ⊑-reflLemma₁ (⊑-s u⊑v) = ⊑-s u⊑v
@@ -20,8 +25,8 @@ open import Cwf.DomainCwf.UniType.Relation
 ⊑-reflLemma₁ (⊑-Π u⊑v f⊑g) = ⊑-Π u⊑v f⊑g
 ⊑-reflLemma₁ ⊑-𝒰 = ⊑-𝒰
 
-⊑-reflLemma₂ : ∀ {i} → {u v : Nbh {i}} → u ⊑ v → u ⊑ (v ⊔ ⊥)
-⊑-reflLemma₂ {v = v} (⊑-bot conv) = ⊑-bot (conAssoc' {u = v} conv)
+⊑-reflLemma₂ : ∀ {u v} → u ⊑ v → u ⊑ (v ⊔ ⊥)
+⊑-reflLemma₂ {v = v} (⊑-bot conv) = {!!} -- ⊑-bot (conAssoc' {u = v} conv)
 ⊑-reflLemma₂ ⊑-0 = ⊑-0
 ⊑-reflLemma₂ (⊑-s u⊑v) = ⊑-s u⊑v
 ⊑-reflLemma₂ ⊑-ℕ = ⊑-ℕ
@@ -31,38 +36,50 @@ open import Cwf.DomainCwf.UniType.Relation
 ⊑-reflLemma₂ (⊑-Π u⊑v f⊑g) = ⊑-Π u⊑v f⊑g
 ⊑-reflLemma₂ ⊑-𝒰 = ⊑-𝒰
 
-⊑-refl : ∀ {i} → {u : Nbh {i}} → con u → u ⊑ u
-⊑-refl' : ∀ {i} → {f : FinFun {i}} → {u v : Nbh {i}} → conFinFun f → (u , v) ∈ f → ⊑-proof f u v
+⊑-refl : ∀ {u p} → con' u p → u ⊑ u
+⊑-refl {⊥} _ = ⊑-bot *
+⊑-refl {0ᵤ} _ = ⊑-0
+⊑-refl {s u} {acc rs} conu = ⊑-s (⊑-refl conu)
+⊑-refl {ℕ} _ = ⊑-ℕ
+⊑-refl {F f} {acc rs} (conPairsf , conElemsf) = ⊑-F cff cff f⊑f
+  where cff = (λ {u} {v} {u′} {v′} uv∈f u′v′∈f conuu′ → wfIrrelevant {u = v ⊔ v′} (conPairsf uv∈f u′v′∈f (wfIrrelevant {u = u ⊔ u′} conuu′)))
+            , λ {u} {v} uv∈f → (wfIrrelevant {u} (⊠-fst (conElemsf uv∈f))) , wfIrrelevant {v} (⊠-snd (conElemsf uv∈f))
+        f⊑f : ∀ {u v} → (u , v) ∈ f → ⊑-proof f u v
+        f⊑f {u} {v} uv∈f =
+          record { sub = (u , v) ∷ ∅
+                 ; sub⊆g = ⊆-lemma₅ uv∈f
+                 ; pre⊑u = ⊑-reflLemma₁ (⊑-refl {p = rs _ (s≤s (uv∈f⇒u≤f f u v uv∈f))} (wfIrrelevant {u} (⊠-fst (conElemsf uv∈f))))
+                 ; v⊑post = ⊑-reflLemma₂ (⊑-refl {p = rs _ (s≤s (uv∈f⇒v≤f f u v uv∈f))} (wfIrrelevant {v} (⊠-snd (conElemsf uv∈f))))
+                 }
+⊑-refl {refl u} {acc rs} conu = ⊑-rfl (⊑-refl conu)
+⊑-refl {I U u u′} {acc rs} (conU , (conu , conu′))
+  = ⊑-I (⊑-refl {p = rs _ U<IUuu′} (wfIrrelevant {U} conU))
+        (⊑-refl {p = rs _ (u<IUuu′ {U})} (wfIrrelevant {u} conu))
+        (⊑-refl {p = rs _ (u′<IUuu′ {U})} (wfIrrelevant {u′} conu′))
+⊑-refl {Π U f} {acc rs} (conU , (conPairsf , conElemsf))
+  = ⊑-Π (⊑-refl {U} {p = rs _ (s≤s (m≤m⊔n _ _))} (wfIrrelevant {U} conU))
+        (⊑-F cff cff f⊑f)
+  where cff = (λ {u} {v} {u′} {v′} uv∈f u′v′∈f conuu′ → wfIrrelevant {u = v ⊔ v′} (conPairsf uv∈f u′v′∈f (wfIrrelevant {u = u ⊔ u′} conuu′)))
+            , λ {u} {v} uv∈f → (wfIrrelevant {u} (⊠-fst (conElemsf uv∈f))) , wfIrrelevant {v} (⊠-snd (conElemsf uv∈f))
+        f⊑f : ∀ {u v} → (u , v) ∈ f → ⊑-proof f u v
+        f⊑f {u} {v} uv∈f =
+          record { sub = (u , v) ∷ ∅
+                 ; sub⊆g = ⊆-lemma₅ uv∈f
+                 ; pre⊑u = ⊑-reflLemma₁ (⊑-refl {p = rs _ (uv∈f⇒u<ΠUf uv∈f)} (wfIrrelevant {u} (⊠-fst (conElemsf uv∈f))))
+                 ; v⊑post = ⊑-reflLemma₂ (⊑-refl {p = rs _ (uv∈f⇒v<ΠUf uv∈f)} (wfIrrelevant {v} (⊠-snd (conElemsf uv∈f))))
+                 }
+⊑-refl {𝒰} _ = ⊑-𝒰
 
-⊑-refl {u = ⊥} conu = ⊑-bot *
-⊑-refl {u = 0ᵤ} conu = ⊑-0
-⊑-refl {u = s u} conu = ⊑-s (⊑-refl conu)
-⊑-refl {u = ℕ} conu = ⊑-ℕ
-⊑-refl {u = F f} conu = ⊑-F conu conu (⊑-refl' conu)
-⊑-refl {u = refl u} conu = ⊑-rfl (⊑-refl conu)
-⊑-refl {u = I U u v} (conU , (conu , conv))
-  = ⊑-I (⊑-refl conU) (⊑-refl conu) (⊑-refl conv)
-⊑-refl {u = Π u f} (conu , conf)
-  = ⊑-Π (⊑-refl conu) (⊑-F conf conf (⊑-refl' conf))
-⊑-refl {u = 𝒰} conu = ⊑-𝒰
-
-⊑-refl' (_ , conElemsf) uv∈f with (conElemsf uv∈f)
-⊑-refl' {u = u} {v} _ uv∈f | (conu , conv)
-  = record
-      { sub = (u , v) ∷ ∅
-      ; sub⊆g = ⊆-lemma₅ uv∈f
-      ; pre⊑u = ⊑-reflLemma₁ (⊑-refl conu)
-      ; v⊑post = ⊑-reflLemma₂ (⊑-refl conv)
-      }
-{-
-⊑-⊥ : ∀ {i} → {u : Nbh {i}} → con u → ⊥ ⊑ u
+⊑-⊥ : ∀ {u} → con u → ⊥ ⊑ u
 ⊑-⊥ conu = ⊑-bot conu
 
-⊑-⊔' : ∀ {i} → {f g h : FinFun {i}} → (F f) ⊑ (F h) → (F g) ⊑ (F h) →
+⊑-⊔' : ∀ {f g h} → (F f) ⊑ (F h) → (F g) ⊑ (F h) →
        ∀ {u v} → (u , v) ∈ (f ∪ g) → ⊑-proof h u v
 ⊑-⊔' {f = f} (⊑-F _ _ p₁) (⊑-F _ _ p₂) uv∈f∪g with (∪-lemma₂ {𝑓 = f} uv∈f∪g)
 ... | inl uv∈f = p₁ uv∈f
 ... | inr uv∈g = p₂ uv∈g
+
+{-
 
 ⊑-⊔ : ∀ {i} → {u v w : Nbh {i}} → u ⊑ w → v ⊑ w → con (u ⊔ v) → (u ⊔ v) ⊑ w
 ⊑-⊔ u⊑w (⊑-bot _) _ = ⊑-reflLemma₁ u⊑w
