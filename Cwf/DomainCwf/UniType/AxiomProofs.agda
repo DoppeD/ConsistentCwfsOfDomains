@@ -1,4 +1,4 @@
---{-# OPTIONS --safe #-}
+{-# OPTIONS --safe #-}
 
 module Cwf.DomainCwf.UniType.AxiomProofs where
 
@@ -86,7 +86,7 @@ open import Induction.WellFounded
 ⊑-⊔ (⊑-bot _) ⊑-0 _ = ⊑-0
 ⊑-⊔ ⊑-0 ⊑-0 _ = ⊑-0
 ⊑-⊔ (⊑-bot _) (⊑-s v⊑w) _ = ⊑-s v⊑w
-⊑-⊔ {u} {v} {p = acc rs} (⊑-s u⊑w) (⊑-s v⊑w) conuv
+⊑-⊔ {p = acc rs} (⊑-s u⊑w) (⊑-s v⊑w) conuv
   = ⊑-s (⊑-⊔ {p = rs _ (s≤s ≤-refl)} u⊑w v⊑w conuv)
 ⊑-⊔ (⊑-bot _) ⊑-ℕ _ = ⊑-ℕ
 ⊑-⊔ ⊑-ℕ ⊑-ℕ _ = ⊑-ℕ
@@ -132,11 +132,13 @@ open import Induction.WellFounded
         cff = (λ uv∈f u′v′∈f → wfIrrelevantPairs uv∈f u′v′∈f (conPairsf uv∈f u′v′∈f))
             , λ uv∈f → wfIrrelevantElems uv∈f (conElemsf uv∈f)
 ⊑-⊔-fst {F f} {F g} {acc rs} (conPairs , conElems)
-  = ⊑-F {!!} cff∪ (⊑-⊔-fst' {p = <-wellFounded _} cff∪)
-  -- ⊑-F (subsetIsCon ∪-lemma₃ conuv) conuv (⊑-⊔-fst' conuv)
+  = ⊑-F cfff cff∪ (⊑-⊔-fst' {p = <-wellFounded _} cff∪)
   where cff∪ : conFinFun (f ∪ g)
         cff∪ = (λ uv∈f u′v′∈f → wfIrrelevantPairs uv∈f u′v′∈f (conPairs uv∈f u′v′∈f))
             , λ uv∈f → wfIrrelevantElems uv∈f (conElems uv∈f)
+        cfff : conFinFun f
+        cfff = (λ uv∈f u′v′∈f → wfIrrelevantPairs uv∈f u′v′∈f (conPairs (∪-lemma₃ uv∈f) (∪-lemma₃ u′v′∈f)))
+             , λ uv∈f → wfIrrelevantElems uv∈f (conElems (∪-lemma₃ uv∈f))
 ⊑-⊔-fst {refl u} {⊥} {acc rs} conuv = ⊑-rfl (⊑-refl conuv)
 ⊑-⊔-fst {refl u} {refl v} {acc rs} conuv = ⊑-rfl (⊑-⊔-fst conuv)
 ⊑-⊔-fst {I U u u′} {⊥} {acc rs} (conU , (conu , conu′))
@@ -149,10 +151,13 @@ open import Induction.WellFounded
         cff = (λ uv∈f u′v′∈f → wfIrrelevantPairs uv∈f u′v′∈f (conPairsf uv∈f u′v′∈f))
             , λ uv∈f → wfIrrelevantElems uv∈f (conElemsf uv∈f)
 ⊑-⊔-fst {Π U f} {Π V g} {acc rs} (conU , (conPairs , conElems))
-  = ⊑-Π (⊑-⊔-fst conU) (⊑-F {!!} cff∪ (⊑-⊔-fst' {p = <-wellFounded _} cff∪))
+  = ⊑-Π (⊑-⊔-fst conU) (⊑-F cfff cff∪ (⊑-⊔-fst' {p = <-wellFounded _} cff∪))
   where cff∪ : conFinFun (f ∪ g)
         cff∪ = (λ uv∈f u′v′∈f → wfIrrelevantPairs uv∈f u′v′∈f (conPairs uv∈f u′v′∈f))
             , λ uv∈f → wfIrrelevantElems uv∈f (conElems uv∈f)
+        cfff : conFinFun f
+        cfff = (λ uv∈f u′v′∈f → wfIrrelevantPairs uv∈f u′v′∈f (conPairs (∪-lemma₃ uv∈f) (∪-lemma₃ u′v′∈f)))
+             , λ uv∈f → wfIrrelevantElems uv∈f (conElems (∪-lemma₃ uv∈f))
 ⊑-⊔-fst {𝒰} {⊥} conuv = ⊑-𝒰
 ⊑-⊔-fst {𝒰} {𝒰} conuv = ⊑-𝒰
 ⊑-⊔-fst {incons} {p = acc rs} ()
@@ -178,11 +183,13 @@ open import Induction.WellFounded
         cff = (λ uv∈f u′v′∈f → wfIrrelevantPairs uv∈f u′v′∈f (conPairsf uv∈f u′v′∈f))
             , λ uv∈f → wfIrrelevantElems uv∈f (conElemsf uv∈f)
 ⊑-⊔-snd {F f} {F g} {acc rs} (conPairs , conElems)
-  = ⊑-F {!!} cff∪ (⊑-⊔-snd' {p = <-wellFounded _} cff∪)
+  = ⊑-F cffg cff∪ (⊑-⊔-snd' {p = <-wellFounded _} cff∪)
   where cff∪ : conFinFun (f ∪ g)
         cff∪ = (λ uv∈f u′v′∈f → wfIrrelevantPairs uv∈f u′v′∈f (conPairs uv∈f u′v′∈f))
             , λ uv∈f → wfIrrelevantElems uv∈f (conElems uv∈f)
--- = ⊑-F (subsetIsCon ∪-lemma₄ conuv) conuv (⊑-⊔-snd' conuv)
+        cffg : conFinFun g
+        cffg = (λ uv∈g u′v′∈g → wfIrrelevantPairs uv∈g u′v′∈g (conPairs (∪-lemma₄ uv∈g) (∪-lemma₄ u′v′∈g)))
+             , λ uv∈g → wfIrrelevantElems uv∈g (conElems (∪-lemma₄ uv∈g))
 ⊑-⊔-snd {refl u} {⊥} {acc rs} conuv = ⊑-bot (wfIrrelevant {u} conuv)
 ⊑-⊔-snd {refl u} {refl v} {acc rs} conuv = ⊑-rfl (⊑-⊔-snd conuv)
 ⊑-⊔-snd {I U u u′} {⊥} {acc rs} (conU , (conu , conu′))
@@ -194,10 +201,12 @@ open import Induction.WellFounded
   where cff = ((λ {u} {v} {u′} {v′} uv∈f u′v′∈f conuu′ → wfIrrelevant {v ⊔ v′} (conPairsf uv∈f u′v′∈f (wfIrrelevant {u ⊔ u′} conuu′)))
             , (λ {u} {v} uv∈f → wfIrrelevant {u} (⊠-fst (conElemsf uv∈f)) , wfIrrelevant {v} (⊠-snd (conElemsf uv∈f))))
 ⊑-⊔-snd {Π U f} {Π V g} {acc rs} (conUV , (conPairs , conElems))
-  = ⊑-Π (⊑-⊔-snd conUV) (⊑-F {!!} cff∪ (⊑-⊔-snd' {p = <-wellFounded _} cff∪))
+  = ⊑-Π (⊑-⊔-snd conUV) (⊑-F cffg cff∪ (⊑-⊔-snd' {p = <-wellFounded _} cff∪))
   where cff∪ : conFinFun (f ∪ g)
         cff∪ = (λ uv∈f u′v′∈f → wfIrrelevantPairs uv∈f u′v′∈f (conPairs uv∈f u′v′∈f))
              , λ uv∈f → wfIrrelevantElems uv∈f (conElems uv∈f)
---   = ⊑-Π (⊑-⊔-snd conuv) (⊑-F (subsetIsCon ∪-lemma₄ confg) confg (⊑-⊔-snd' confg))
+        cffg : conFinFun g
+        cffg = (λ uv∈g u′v′∈g → wfIrrelevantPairs uv∈g u′v′∈g (conPairs (∪-lemma₄ uv∈g) (∪-lemma₄ u′v′∈g)))
+             , λ uv∈g → wfIrrelevantElems uv∈g (conElems (∪-lemma₄ uv∈g))
 ⊑-⊔-snd {𝒰} {⊥} conuv = ⊑-bot *
 ⊑-⊔-snd {𝒰} {𝒰} conuv = ⊑-𝒰

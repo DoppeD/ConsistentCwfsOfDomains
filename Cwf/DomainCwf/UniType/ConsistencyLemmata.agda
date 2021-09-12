@@ -3,65 +3,87 @@
 module Cwf.DomainCwf.UniType.ConsistencyLemmata where
 
 open import Base.Core
+open import Base.FinFun
 open import Cwf.DomainCwf.UniType.Consistency
 open import Cwf.DomainCwf.UniType.Definition
-open import Cwf.DomainCwf.UniType.FinFun
 
-open import Agda.Builtin.Equality
+open import Data.Nat.Induction
 
-subsetIsCon : ∀ {i} → {f g : FinFun {i}} → f ⊆ g → conFinFun g → conFinFun f
-subsetIsCon f⊆g (conPairsg , conElemsg)
-  = (λ uv∈f u′v′∈f conuu′ → conPairsg (f⊆g uv∈f) (f⊆g u′v′∈f) conuu′) ,
-    (λ uv∈f → conElemsg (f⊆g uv∈f))
+conLemma₁ : ∀ {u v p} → con' (u ⊔ v) p → con u
+conLemma₁ {⊥} _ = *
+conLemma₁ {0ᵤ} _ = *
+conLemma₁ {s u} {⊥} {acc rs} conuv = wfIrrelevant {u} conuv
+conLemma₁ {s u} {s v} {acc rs} conuv
+  = wfIrrelevant {u} (conLemma₁ {u} conuv)
+conLemma₁ {ℕ} _ = *
+conLemma₁ {F f} {⊥} {acc rs} (conPairsf , conElemsf)
+  = (λ uv∈f u′v′∈f → wfIrrelevantPairs uv∈f u′v′∈f (conPairsf uv∈f u′v′∈f))
+  , λ uv∈f → wfIrrelevantElems uv∈f (conElemsf uv∈f)
+conLemma₁ {F f} {F g} {acc rs} (conPairs , conElems)
+  = (λ uv∈f u′v′∈f → wfIrrelevantPairs uv∈f u′v′∈f (conPairs (∪-lemma₃ uv∈f) (∪-lemma₃ u′v′∈f)))
+  , λ uv∈f → wfIrrelevantElems uv∈f (conElems (∪-lemma₃ uv∈f))
+conLemma₁ {refl u} {⊥} {acc rs} conuv = wfIrrelevant {u} conuv
+conLemma₁ {refl u} {refl v} {acc rs} conuv
+  = wfIrrelevant {u} (conLemma₁ {u} conuv)
+conLemma₁ {I U u u′} {⊥} {acc rs} (conU , (conu , conu′))
+  = (wfIrrelevant {U} conU) , ((wfIrrelevant {u} conu) , (wfIrrelevant {u′} conu′))
+conLemma₁ {I U u u′} {I V v v′} {acc rs} (conUV , (conuv , conu′v′))
+  = wfIrrelevant {U} (conLemma₁ {U} conUV)
+  , (wfIrrelevant {u} (conLemma₁ {u} conuv)
+  , wfIrrelevant {u′} (conLemma₁ {u′} conu′v′)
+  )
+conLemma₁ {Π U f} {⊥} {acc rs} (conU , (conPairsf , conElemsf))
+  = wfIrrelevant {U} conU
+  , ((λ uv∈f u′v′∈f → wfIrrelevantPairs uv∈f u′v′∈f (conPairsf uv∈f u′v′∈f))
+  , λ uv∈f → wfIrrelevantElems uv∈f (conElemsf uv∈f))
+conLemma₁ {Π U f} {Π V g} {acc rs} (conUV , (conPairs , conElems))
+  = (wfIrrelevant {U} (conLemma₁ {U} conUV))
+  , ((λ uv∈f u′v′∈f → wfIrrelevantPairs uv∈f u′v′∈f (conPairs (∪-lemma₃ uv∈f) (∪-lemma₃ u′v′∈f)))
+  , λ uv∈f → wfIrrelevantElems uv∈f (conElems (∪-lemma₃ uv∈f)))
+conLemma₁ {𝒰} _ = *
+conLemma₁ {incons} ()
 
-conLemma₁ : ∀ {i} → {u v : Nbh {i}} → con (u ⊔ v) → con u
-conLemma₁ {u = ⊥} _ = *
-conLemma₁ {u = 0ᵤ} _ = *
-conLemma₁ {u = s _} {⊥} conuv = conuv
-conLemma₁ {u = s u} {s _} conuv = conLemma₁ {u = u} conuv
-conLemma₁ {u = ℕ} _ = *
-conLemma₁ {u = F _} {⊥} conuv = conuv
-conLemma₁ {u = F f} {F g} (conPairsfg , conElemsfg)
-  = (λ uv∈f u′v′∈f conuu′ → conPairsfg (∪-lemma₃ uv∈f) (∪-lemma₃ u′v′∈f) conuu′) ,
-    (λ uv∈f → conElemsfg (∪-lemma₃ uv∈f))
-conLemma₁ {u = refl _} {⊥} conuv = conuv
-conLemma₁ {u = refl u} {refl v} conuv = conLemma₁ {u = u} conuv
-conLemma₁ {u = I _ _ _} {⊥} conuv = conuv
-conLemma₁ {u = I U u v} {I U′ u′ v′} (conUU′ , (conuu′ , convv′))
-  = (conLemma₁ {u = U} conUU′) , (conLemma₁ {u = u} conuu′ , conLemma₁ {u = v} convv′)
-conLemma₁ {u = Π _ _} {⊥} conuv = conuv
-conLemma₁ {u = Π u f} {Π v g} (conuv , confg)
-  = conLemma₁ {u = u} conuv , subsetIsCon (∪-lemma₃ {𝑓′ = g}) confg
-conLemma₁ {u = 𝒰} _ = *
-
-conLemma₂ : ∀ {i} → {u v : Nbh {i}} → con (u ⊔ v) → con v
+conLemma₂ : ∀ {u v p} → con' (u ⊔ v) p → con v
 conLemma₂ {v = ⊥} _ = *
 conLemma₂ {v = 0ᵤ} _ = *
-conLemma₂ {u = ⊥} {s _} conuv = conuv
-conLemma₂ {u = s u} {s _} conuv = conLemma₂ {u = u} conuv
+conLemma₂ {⊥} {s v} {acc rs} conuv = wfIrrelevant {v} conuv
+conLemma₂ {s u} {s v} {acc rs} conuv
+  = wfIrrelevant {v} (conLemma₂ {u} conuv)
 conLemma₂ {v = ℕ} _ = *
-conLemma₂ {u = ⊥} {F _} conuv = conuv
-conLemma₂ {u = F f} {F g} (conPairsfg , conElemsfg)
-  = (λ uv∈g u′v′∈g conuu′ → conPairsfg (∪-lemma₄ uv∈g) (∪-lemma₄ u′v′∈g) conuu′) ,
-    (λ uv∈g → conElemsfg (∪-lemma₄ uv∈g))
-conLemma₂ {u = ⊥} {refl _} conuv = conuv
-conLemma₂ {u = refl u} {refl v} conuv = conLemma₂ {u = u} conuv
-conLemma₂ {u = ⊥} {I _ _ _} conuv = conuv
-conLemma₂ {u = I U u v} {I U′ u′ v′} (conUU′ , (conuu′ , convv′))
-  = conLemma₂ {u = U} conUU′ , (conLemma₂ {u = u} conuu′ , conLemma₂ {u = v} convv′)
-conLemma₂ {u = ⊥} {Π _ _} conuv = conuv
-conLemma₂ {u = Π u f} {Π v g} (conuv , confg)
-  = conLemma₂ {u = u} conuv , subsetIsCon (∪-lemma₄ {𝑓′ = g}) confg
+conLemma₂ {⊥} {F f} {acc rs} (conPairs , conElems)
+  = (λ uv∈f u′v′∈f → wfIrrelevantPairs uv∈f u′v′∈f (conPairs uv∈f u′v′∈f))
+  , λ uv∈f → wfIrrelevantElems uv∈f (conElems uv∈f)
+conLemma₂ {F f} {F g} {acc rs} (conPairs , conElems)
+  = (λ uv∈f u′v′∈f → wfIrrelevantPairs uv∈f u′v′∈f (conPairs (∪-lemma₄ uv∈f) (∪-lemma₄ u′v′∈f)))
+  , λ uv∈f → wfIrrelevantElems uv∈f (conElems (∪-lemma₄ uv∈f))
+conLemma₂ {⊥} {refl v} {acc rs} conuv = wfIrrelevant {v} conuv
+conLemma₂ {refl u} {refl v} {acc rs} conuv
+  = wfIrrelevant {v} (conLemma₂ {u} conuv)
+conLemma₂ {⊥} {I U u u′} {acc rs} (conU , (conu , conu′))
+  = wfIrrelevant {U} conU , (wfIrrelevant {u} conu , wfIrrelevant {u′} conu′)
+conLemma₂ {I U u u′} {I V v v′} {acc rs} (conUV , (conuv , conu′v′))
+  = (wfIrrelevant {V} (conLemma₂ {U} conUV))
+  , (wfIrrelevant {v} (conLemma₂ {u} conuv)
+  , wfIrrelevant {v′} (conLemma₂ {u′} conu′v′))
+conLemma₂ {⊥} {Π U f} {acc rs} (conU , (conPairsf , conElemsf))
+  = wfIrrelevant {U} conU
+  , ((λ uv∈f u′v′∈f → wfIrrelevantPairs uv∈f u′v′∈f (conPairsf uv∈f u′v′∈f))
+  , λ uv∈f → wfIrrelevantElems uv∈f (conElemsf uv∈f))
+conLemma₂ {Π U f} {Π V g} {acc rs} (conUV , (conPairs , conElems))
+  = (wfIrrelevant {V} (conLemma₂ {U} conUV))
+  , ((λ uv∈f u′v′∈f → wfIrrelevantPairs uv∈f u′v′∈f (conPairs (∪-lemma₄ uv∈f) (∪-lemma₄ u′v′∈f)))
+  , λ uv∈f → wfIrrelevantElems uv∈f (conElems (∪-lemma₄ uv∈f)))
 conLemma₂ {v = 𝒰} _ = *
-conLemma₂ {u = ⊥} {incons} conuv = conuv
-conLemma₂ {u = 0ᵤ} {incons} conuv = conuv
-conLemma₂ {u = s u} {incons} conuv = conuv
-conLemma₂ {u = ℕ} {incons} conuv = conuv
-conLemma₂ {u = F conuv₁} {incons} conuv = conuv
-conLemma₂ {u = Π u conuv₁} {incons} conuv = conuv
-conLemma₂ {u = 𝒰} {incons} conuv = conuv
-conLemma₂ {u = incons} {incons} conuv = conuv
+conLemma₂ {⊥} {incons} ()
+conLemma₂ {0ᵤ} {incons} ()
+conLemma₂ {s u} {incons} ()
+conLemma₂ {ℕ} {incons} ()
+conLemma₂ {F conuv₁} {incons} ()
+conLemma₂ {Π u conuv₁} {incons} ()
+conLemma₂ {𝒰} {incons} ()
+conLemma₂ {u = incons} {incons} ()
 
+{-
 conLemma₃' : ∀ {i} → {f : FinFun {i}} → conFinFun f → conFinFun (f ∪ f)
 conLemma₃' {f = f} (conPairs , conElems) = lemma₁ , lemma₂
   where lemma₁ : ∀ {u v u′ v′} → (u , v) ∈ (f ∪ f) → (u′ , v′) ∈ (f ∪ f) → con (u ⊔ u′) → con (v ⊔ v′)
@@ -215,3 +237,4 @@ conTrans {u = Π u f} {Π v g} {Π w h} (conuvw , confgh) | _ | _ | _ | _
 conTrans {u = u} {⊥} {𝒰} conuvw | _ | _ | _ | _ = conuvw
 conTrans {u = ⊥} {𝒰} {𝒰} _ | _ | _ | _ | _ = *
 conTrans {u = 𝒰} {𝒰} {𝒰} _ | _ | _ | _ | _ = *
+-}
