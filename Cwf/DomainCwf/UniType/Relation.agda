@@ -1,4 +1,4 @@
---{-# OPTIONS --safe #-}
+{-# OPTIONS --safe #-}
 
 module Cwf.DomainCwf.UniType.Relation where
 
@@ -45,10 +45,11 @@ orderOnlyCon' {s u} {s v} {acc _} {acc _} (⊑-s u⊑v)
 ... | conu , conv = wfIrrelevant {u} conu , wfIrrelevant {v} conv
 orderOnlyCon' ⊑-ℕ = * , *
 orderOnlyCon' {F f} {F g} {acc _} {acc _} (⊑-F (conPairsf , conElemsf) (conPairsg , conElemsg) p)
-  = ((λ {u} {v} {u′} {v′} uv∈f u′v′∈f conuu′ → wfIrrelevant {v ⊔ v′} (conPairsf uv∈f u′v′∈f (wfIrrelevant {u ⊔ u′} conuu′)))
-  , λ {u} {v} uv∈f → wfIrrelevant {u} (⊠-fst (conElemsf uv∈f)) , wfIrrelevant {v} (⊠-snd (conElemsf uv∈f)))
-  , ((λ {u} {v} {u′} {v′} uv∈f u′v′∈f conuu′ → wfIrrelevant {v ⊔ v′} (conPairsg uv∈f u′v′∈f (wfIrrelevant {u ⊔ u′} conuu′)))
-  , λ {u} {v} uv∈f → wfIrrelevant {u} (⊠-fst (conElemsg uv∈f)) , wfIrrelevant {v} (⊠-snd (conElemsg uv∈f)))
+  = cfff , cffg
+  where cfff = (λ {u} {v} {u′} {v′} uv∈f u′v′∈f → wfIrrelevantPairs uv∈f u′v′∈f (conPairsf uv∈f u′v′∈f))
+             , λ {u} {v} uv∈f → wfIrrelevantElems uv∈f (conElemsf uv∈f)
+        cffg = (λ {u} {v} {u′} {v′} uv∈g u′v′∈g → wfIrrelevantPairs uv∈g u′v′∈g (conPairsg uv∈g u′v′∈g))
+             , λ {u} {v} uv∈g → wfIrrelevantElems uv∈g (conElemsg uv∈g)
 orderOnlyCon' {refl u} {refl v} {acc _} {acc _} (⊑-rfl u⊑v)
   with (orderOnlyCon' {u} {v} {<-wellFounded _} {<-wellFounded _} u⊑v)
 ... | conu , conv = wfIrrelevant {u} conu , wfIrrelevant {v} conv
@@ -56,11 +57,11 @@ orderOnlyCon' {p = acc _} {acc _} (⊑-Π {u} {v} u⊑v (⊑-F (conPairsf , conE
   with (orderOnlyCon' {u} {v} {<-wellFounded _} {<-wellFounded _} u⊑v)
 ... | conu , conv
   = (wfIrrelevant {u} conu
-  , ((λ {u} {v} {u′} {v′} uv∈f u′v′∈f conuu′ → wfIrrelevant {v ⊔ v′} (conPairsf uv∈f u′v′∈f (wfIrrelevant {u ⊔ u′} conuu′)))
-  , λ {u} {v} uv∈f → (wfIrrelevant {u} (⊠-fst (conElemsf uv∈f))) , wfIrrelevant {v} (⊠-snd (conElemsf uv∈f))))
+  , ((λ {u} {v} {u′} {v′} uv∈f u′v′∈f → wfIrrelevantPairs uv∈f u′v′∈f (conPairsf uv∈f u′v′∈f))
+  , λ {u} {v} uv∈f → wfIrrelevantElems uv∈f (conElemsf uv∈f)))
   , (wfIrrelevant {v} conv
-  , ((λ {u} {v} {u′} {v′} uv∈g u′v′∈g conuu′ → wfIrrelevant {v ⊔ v′} (conPairsg uv∈g u′v′∈g (wfIrrelevant {u ⊔ u′} conuu′)))
-  , λ {u} {v} uv∈g → (wfIrrelevant {u} (⊠-fst (conElemsg uv∈g))) , (wfIrrelevant {v} (⊠-snd (conElemsg uv∈g)))))
+  , ((λ {u} {v} {u′} {v′} uv∈g u′v′∈g → wfIrrelevantPairs uv∈g u′v′∈g (conPairsg uv∈g u′v′∈g))
+  , λ {u} {v} uv∈g → wfIrrelevantElems uv∈g (conElemsg uv∈g)))
 orderOnlyCon' {p = acc _} {acc _} (⊑-I {U} {u} {u′} {V} {v} {v′} U⊑V u⊑v u′⊑v′)
   with (orderOnlyCon' {U} {V} {<-wellFounded _} {<-wellFounded _} U⊑V)
      | (orderOnlyCon' {u} {v} {<-wellFounded _} {<-wellFounded _} u⊑v)
