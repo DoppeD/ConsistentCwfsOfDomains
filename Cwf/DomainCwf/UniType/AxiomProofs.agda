@@ -37,39 +37,39 @@ open import Induction.WellFounded
 ⊑-reflLemma₂ (⊑-Π u⊑v f⊑g) = ⊑-Π u⊑v f⊑g
 ⊑-reflLemma₂ ⊑-𝒰 = ⊑-𝒰
 
+⊑-refl' : ∀ {f} → conFinFun f → (∀ {u p} → assignSize u < assignSize (F f) → con' u p → u ⊑ u) → (F f) ⊑ (F f)
+⊑-refl' {f} (conPairsf , conElemsf) ref = ⊑-F (conPairsf , conElemsf) (conPairsf , conElemsf) f⊑f
+  where f⊑f : ∀ {u v} → (u , v) ∈ f → ⊑-proof f u v
+        f⊑f {u} {v} uv∈f =
+          record { sub = (u , v) ∷ ∅
+                 ; sub⊆g = ⊆-lemma₅ uv∈f
+                 ; pre⊑u = ⊑-reflLemma₁ (ref {p = <-wellFounded (assignSize u)}
+                           (s≤s (uv∈f⇒u≤f f u v uv∈f)) (wfIrrelevant {u} (⊠-fst (conElemsf uv∈f))))
+                 ; v⊑post = ⊑-reflLemma₂ (ref {p = <-wellFounded (assignSize v)}
+                            (s≤s (uv∈f⇒v≤f f u v uv∈f)) (wfIrrelevant {v} (⊠-snd (conElemsf uv∈f))))
+                 }
+
 ⊑-refl : ∀ {u p} → con' u p → u ⊑ u
 ⊑-refl {⊥} _ = ⊑-bot *
 ⊑-refl {0ᵤ} _ = ⊑-0
 ⊑-refl {s u} {acc rs} conu = ⊑-s (⊑-refl conu)
 ⊑-refl {ℕ} _ = ⊑-ℕ
-⊑-refl {F f} {acc rs} (conPairsf , conElemsf) = ⊑-F cff cff f⊑f
+⊑-refl {F f} {acc rs} (conPairsf , conElemsf) =
+  ⊑-refl' {f} cff λ {u} u<Ff conu → ⊑-refl {u} {rs _ u<Ff} (wfIrrelevant {u} conu)
   where cff : conFinFun f
         cff = (λ uv∈f u′v′∈f → wfIrrelevantPairs uv∈f u′v′∈f (conPairsf uv∈f u′v′∈f))
             , λ uv∈f → wfIrrelevantElems uv∈f (conElemsf uv∈f)
-        f⊑f : ∀ {u v} → (u , v) ∈ f → ⊑-proof f u v
-        f⊑f {u} {v} uv∈f =
-          record { sub = (u , v) ∷ ∅
-                 ; sub⊆g = ⊆-lemma₅ uv∈f
-                 ; pre⊑u = ⊑-reflLemma₁ (⊑-refl {p = rs _ (s≤s (uv∈f⇒u≤f f u v uv∈f))} (wfIrrelevant {u} (⊠-fst (conElemsf uv∈f))))
-                 ; v⊑post = ⊑-reflLemma₂ (⊑-refl {p = rs _ (s≤s (uv∈f⇒v≤f f u v uv∈f))} (wfIrrelevant {v} (⊠-snd (conElemsf uv∈f))))
-                 }
 ⊑-refl {refl u} {acc rs} conu = ⊑-rfl (⊑-refl conu)
 ⊑-refl {I U u u′} {acc rs} (conU , (conu , conu′))
   = ⊑-I (⊑-refl {p = rs _ U<IUuu′} (wfIrrelevant {U} conU))
         (⊑-refl {p = rs _ (u<IUuu′ {U})} (wfIrrelevant {u} conu))
         (⊑-refl {p = rs _ (u′<IUuu′ {U})} (wfIrrelevant {u′} conu′))
 ⊑-refl {Π U f} {acc rs} (conU , (conPairsf , conElemsf))
-  = ⊑-Π (⊑-refl {U} {p = rs _ (s≤s (m≤m⊔n _ _))} (wfIrrelevant {U} conU)) (⊑-F cff cff f⊑f)
+  = ⊑-Π (⊑-refl {U} {p = rs _ (s≤s (m≤m⊔n _ _))} (wfIrrelevant {U} conU))
+    (⊑-refl' {f} cff λ {u} u<Ff conu → ⊑-refl {u} {rs _ (<-trans u<Ff (s≤s (m≤n⊔m _ _)))} (wfIrrelevant {u} conu))
   where cff : conFinFun f
         cff = (λ uv∈f u′v′∈f → wfIrrelevantPairs uv∈f u′v′∈f (conPairsf uv∈f u′v′∈f))
             , λ uv∈f → wfIrrelevantElems uv∈f (conElemsf uv∈f)
-        f⊑f : ∀ {u v} → (u , v) ∈ f → ⊑-proof f u v
-        f⊑f {u} {v} uv∈f =
-          record { sub = (u , v) ∷ ∅
-                 ; sub⊆g = ⊆-lemma₅ uv∈f
-                 ; pre⊑u = ⊑-reflLemma₁ (⊑-refl {p = rs _ (uv∈f⇒u<ΠUf uv∈f)} (wfIrrelevant {u} (⊠-fst (conElemsf uv∈f))))
-                 ; v⊑post = ⊑-reflLemma₂ (⊑-refl {p = rs _ (uv∈f⇒v<ΠUf uv∈f)} (wfIrrelevant {v} (⊠-snd (conElemsf uv∈f))))
-                 }
 ⊑-refl {𝒰} _ = ⊑-𝒰
 
 ⊑-⊥ : ∀ {u} → con u → ⊥ ⊑ u
@@ -111,8 +111,8 @@ open import Induction.WellFounded
 ⊑-⊔ (⊑-bot _) ⊑-𝒰 _ = ⊑-𝒰
 ⊑-⊔ ⊑-𝒰 ⊑-𝒰 _ = ⊑-𝒰
 
-⊑-⊔-fst' : ∀ {f g u v p} → conFinFun' (f ∪ g) p → (u , v) ∈ f → ⊑-proof (f ∪ g) u v
-⊑-⊔-fst' {u = u} {v} {p = acc rs} (_ , conElems) uv∈f
+⊑-⊔-fst' : ∀ {f g u v} → conFinFun (f ∪ g) → (u , v) ∈ f → ⊑-proof (f ∪ g) u v
+⊑-⊔-fst' {u = u} {v} (_ , conElems) uv∈f
   = record { sub = (u , v) ∷ ∅
            ; sub⊆g = ⊆-lemma₅ (∪-lemma₃ uv∈f)
            ; pre⊑u = ⊑-reflLemma₁ (⊑-refl (⊠-fst (conElems (∪-lemma₃ uv∈f))))
@@ -127,12 +127,13 @@ open import Induction.WellFounded
 ⊑-⊔-fst {s u} {s v} {acc rs} conuv = ⊑-s (⊑-⊔-fst conuv)
 ⊑-⊔-fst {ℕ} {⊥} _ = ⊑-ℕ
 ⊑-⊔-fst {ℕ} {ℕ} _ = ⊑-ℕ
-⊑-⊔-fst {F f} {⊥} {acc rs} (conPairsf , conElemsf) = ⊑-refl {p = <-wellFounded _} cff
+⊑-⊔-fst {F f} {⊥} {acc rs} (conPairsf , conElemsf)
+  = ⊑-refl' cff λ _ → ⊑-refl
   where cff : conFinFun f
         cff = (λ uv∈f u′v′∈f → wfIrrelevantPairs uv∈f u′v′∈f (conPairsf uv∈f u′v′∈f))
             , λ uv∈f → wfIrrelevantElems uv∈f (conElemsf uv∈f)
 ⊑-⊔-fst {F f} {F g} {acc rs} (conPairs , conElems)
-  = ⊑-F cfff cff∪ (⊑-⊔-fst' {p = <-wellFounded _} cff∪)
+  = ⊑-F cfff cff∪ (⊑-⊔-fst' cff∪)
   where cff∪ : conFinFun (f ∪ g)
         cff∪ = (λ uv∈f u′v′∈f → wfIrrelevantPairs uv∈f u′v′∈f (conPairs uv∈f u′v′∈f))
             , λ uv∈f → wfIrrelevantElems uv∈f (conElems uv∈f)
@@ -146,12 +147,12 @@ open import Induction.WellFounded
 ⊑-⊔-fst {I U u u′} {I V v v′} {acc rs} (conUV , (conuv , conu′v′))
   = ⊑-I (⊑-⊔-fst conUV) (⊑-⊔-fst conuv) (⊑-⊔-fst conu′v′)
 ⊑-⊔-fst {Π U f} {⊥} {acc rs} (conU , (conPairsf , conElemsf))
-  = ⊑-Π (⊑-refl conU) (⊑-refl {p = <-wellFounded _} cff)
+  = ⊑-Π (⊑-refl conU) (⊑-refl' cff λ _ → ⊑-refl)
   where cff : conFinFun f
         cff = (λ uv∈f u′v′∈f → wfIrrelevantPairs uv∈f u′v′∈f (conPairsf uv∈f u′v′∈f))
             , λ uv∈f → wfIrrelevantElems uv∈f (conElemsf uv∈f)
 ⊑-⊔-fst {Π U f} {Π V g} {acc rs} (conU , (conPairs , conElems))
-  = ⊑-Π (⊑-⊔-fst conU) (⊑-F cfff cff∪ (⊑-⊔-fst' {p = <-wellFounded _} cff∪))
+  = ⊑-Π (⊑-⊔-fst conU) (⊑-F cfff cff∪ (⊑-⊔-fst' cff∪))
   where cff∪ : conFinFun (f ∪ g)
         cff∪ = (λ uv∈f u′v′∈f → wfIrrelevantPairs uv∈f u′v′∈f (conPairs uv∈f u′v′∈f))
             , λ uv∈f → wfIrrelevantElems uv∈f (conElems uv∈f)
@@ -162,8 +163,8 @@ open import Induction.WellFounded
 ⊑-⊔-fst {𝒰} {𝒰} conuv = ⊑-𝒰
 ⊑-⊔-fst {incons} {p = acc rs} ()
 
-⊑-⊔-snd' : ∀ {f g u v p} → conFinFun' (f ∪ g) p → (u , v) ∈ g → ⊑-proof (f ∪ g) u v
-⊑-⊔-snd' {u = u} {v} {p = acc rs} (_ , conElems) uv∈f
+⊑-⊔-snd' : ∀ {f g u v} → conFinFun (f ∪ g) → (u , v) ∈ g → ⊑-proof (f ∪ g) u v
+⊑-⊔-snd' {u = u} {v}  (_ , conElems) uv∈f
   = record { sub = (u , v) ∷ ∅
            ; sub⊆g = ⊆-lemma₅ (∪-lemma₄ uv∈f)
            ; pre⊑u = ⊑-reflLemma₁ (⊑-refl (⊠-fst (conElems (∪-lemma₄ uv∈f))))
@@ -178,12 +179,12 @@ open import Induction.WellFounded
 ⊑-⊔-snd {s u} {s v} {p = acc rs} conuv = ⊑-s (⊑-⊔-snd conuv)
 ⊑-⊔-snd {ℕ} {⊥} conuv = ⊑-bot *
 ⊑-⊔-snd {ℕ} {ℕ} conuv = ⊑-ℕ
-⊑-⊔-snd {F f} {⊥} {acc rs} (conPairsf , conElemsf) = ⊑-bot cff
-  where cff : conFinFun f
-        cff = (λ uv∈f u′v′∈f → wfIrrelevantPairs uv∈f u′v′∈f (conPairsf uv∈f u′v′∈f))
-            , λ uv∈f → wfIrrelevantElems uv∈f (conElemsf uv∈f)
+⊑-⊔-snd {F f} {⊥} {acc rs} (conPairsf , conElemsf)
+  = ⊑-bot cff
+  where cff = (λ {u} {v} {u′} {v′} uv∈f u′v′∈f → wfIrrelevantPairs uv∈f u′v′∈f (conPairsf uv∈f u′v′∈f))
+            , λ {u} {v} uv∈f → wfIrrelevantElems uv∈f (conElemsf uv∈f)
 ⊑-⊔-snd {F f} {F g} {acc rs} (conPairs , conElems)
-  = ⊑-F cffg cff∪ (⊑-⊔-snd' {p = <-wellFounded _} cff∪)
+  = ⊑-F cffg cff∪ (⊑-⊔-snd' cff∪)
   where cff∪ : conFinFun (f ∪ g)
         cff∪ = (λ uv∈f u′v′∈f → wfIrrelevantPairs uv∈f u′v′∈f (conPairs uv∈f u′v′∈f))
             , λ uv∈f → wfIrrelevantElems uv∈f (conElems uv∈f)
@@ -198,10 +199,10 @@ open import Induction.WellFounded
   = ⊑-I (⊑-⊔-snd conUV) (⊑-⊔-snd conuv) (⊑-⊔-snd conu′v′)
 ⊑-⊔-snd {Π U f} {⊥} {acc rs} (conU , (conPairsf , conElemsf))
   = ⊑-bot ((wfIrrelevant {U} conU) , cff)
-  where cff = ((λ {u} {v} {u′} {v′} uv∈f u′v′∈f conuu′ → wfIrrelevant {v ⊔ v′} (conPairsf uv∈f u′v′∈f (wfIrrelevant {u ⊔ u′} conuu′)))
-            , (λ {u} {v} uv∈f → wfIrrelevant {u} (⊠-fst (conElemsf uv∈f)) , wfIrrelevant {v} (⊠-snd (conElemsf uv∈f))))
+  where cff = (λ {u} {v} {u′} {v′} uv∈f u′v′∈f → wfIrrelevantPairs uv∈f u′v′∈f (conPairsf uv∈f u′v′∈f))
+            , (λ {u} {v} uv∈f → wfIrrelevantElems uv∈f (conElemsf uv∈f))
 ⊑-⊔-snd {Π U f} {Π V g} {acc rs} (conUV , (conPairs , conElems))
-  = ⊑-Π (⊑-⊔-snd conUV) (⊑-F cffg cff∪ (⊑-⊔-snd' {p = <-wellFounded _} cff∪))
+  = ⊑-Π (⊑-⊔-snd conUV) (⊑-F cffg cff∪ (⊑-⊔-snd' cff∪))
   where cff∪ : conFinFun (f ∪ g)
         cff∪ = (λ uv∈f u′v′∈f → wfIrrelevantPairs uv∈f u′v′∈f (conPairs uv∈f u′v′∈f))
              , λ uv∈f → wfIrrelevantElems uv∈f (conElems uv∈f)

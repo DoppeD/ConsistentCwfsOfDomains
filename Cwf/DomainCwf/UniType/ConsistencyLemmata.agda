@@ -9,6 +9,11 @@ open import Cwf.DomainCwf.UniType.Definition
 
 open import Data.Nat.Induction
 
+cff⇒conFf : ∀ {f} → conFinFun f → con (F f)
+cff⇒conFf {f} (conPairsf , conElemsf)
+  = (λ {u} {v} {u′} {v′} uv∈f u′v′∈f → wfIrrelevantPairs uv∈f u′v′∈f (conPairsf uv∈f u′v′∈f))
+  , λ {u} {v} uv∈f → wfIrrelevantElems uv∈f (conElemsf uv∈f)
+
 conLemma₁ : ∀ {u v p} → con' (u ⊔ v) p → con u
 conLemma₁ {⊥} _ = *
 conLemma₁ {0ᵤ} _ = *
@@ -102,10 +107,10 @@ conLemma₃ {s u} {acc rs} conu
   = wfIrrelevant {u ⊔ u} (conLemma₃ {u} conu)
 conLemma₃ {ℕ} conu = *
 conLemma₃ {F f} {acc rs} (conPairs , conElems)
-  = conLemma₃' {f} cff
-  where  cff : conFinFun f
-         cff = (λ uv∈f u′v′∈f → wfIrrelevantPairs uv∈f u′v′∈f (conPairs uv∈f u′v′∈f))
-             , λ uv∈f → wfIrrelevantElems uv∈f (conElems uv∈f)
+  = cff⇒conFf {f ∪ f} (conLemma₃' {f} cff)
+  where cff : conFinFun f
+        cff = (λ uv∈f u′v′∈f → wfIrrelevantPairs uv∈f u′v′∈f (conPairs uv∈f u′v′∈f))
+            , λ uv∈f → wfIrrelevantElems uv∈f (conElems uv∈f)
 conLemma₃ {refl u} {acc rs} conu
   = wfIrrelevant {u ⊔ u} (conLemma₃ {u} conu)
 conLemma₃ {I U u u′} {acc rs} (conU , (conu , conu′))
