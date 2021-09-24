@@ -11,6 +11,10 @@ open import Data.Nat.Induction
 open import Data.Nat.Properties
 open import Induction.WellFounded
 
+-- We assign to each neighborhood a natural number, which corresponds to
+-- the maximum nesting depth of constructors. For finite functions, we take
+-- the maximum of the sizes assigned to its elements. For example, for a finite function
+-- (u , v) ∷ (u′ , v′) ∷ ∅, its size is the maximum of the sizes of u, v, u′, and v′.
 assignSize : Nbh → Nat
 assignSizeFun : FinFun Nbh Nbh → Nat
 

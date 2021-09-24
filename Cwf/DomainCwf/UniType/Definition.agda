@@ -5,6 +5,12 @@ module Cwf.DomainCwf.UniType.Definition where
 open import Base.Core
 open import Base.FinFun
 
+-- One of our "proto-neighborhoods" is incons, which represent an inconsistent
+-- neighborhood. Such a neighborhood is the result of taking the supremum
+-- of two neighborhoods that are not mutually consistent, such as 0ᵤ and 𝒰.
+-- When instantiating our neighborhood system in the Instance module, we
+-- only consider those neighborhoods below that are consistent as actual
+-- neighborhoods.
 data Nbh : Set where
   ⊥ : Nbh
   0ᵤ : Nbh
@@ -17,6 +23,8 @@ data Nbh : Set where
   𝒰 : Nbh
   incons : Nbh
 
+-- The supremum operator could also be defined as a constructor of the Nbh type,
+-- but that is arguably more difficult to work with.
 _⊔_ : Nbh → Nbh → Nbh
 ⊥ ⊔ u = u
 0ᵤ ⊔ ⊥ = 0ᵤ
@@ -101,10 +109,12 @@ _⊔_ : Nbh → Nbh → Nbh
 𝒰 ⊔ incons = incons
 incons ⊔ _ = incons
 
+-- The supremum of all first components of a finite function.
 pre : FinFun Nbh Nbh → Nbh
 pre ∅ = ⊥
 pre ((u , v) ∷ f) = u ⊔ pre f
 
+-- The supremum of all second components of a finite function.
 post : FinFun Nbh Nbh → Nbh
 post ∅ = ⊥
 post ((u , v) ∷ f) = v ⊔ post f

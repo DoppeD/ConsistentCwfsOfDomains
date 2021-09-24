@@ -1,5 +1,3 @@
-{-# OPTIONS --safe #-}
-
 module Cwf.DomainCwf.UniType.Transitivity where
 
 open import Base.Core

@@ -1,11 +1,9 @@
-{-# OPTIONS --safe --sized-types #-}
-
 module Cwf.DomainCwf.UniType.TypingAlgorithm where
 
 open import Base.Core
+open import Base.FinFun
 open import Cwf.DomainCwf.UniType.Consistency
 open import Cwf.DomainCwf.UniType.ConsistencyLemmata
-open import Cwf.DomainCwf.UniType.FinFun
 open import Cwf.DomainCwf.UniType.Decidable.RelationDecidable
 open import Cwf.DomainCwf.UniType.Definition
 open import Cwf.DomainCwf.UniType.Relation

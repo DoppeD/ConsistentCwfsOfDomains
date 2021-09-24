@@ -1,8 +1,7 @@
-{-# OPTIONS --safe --sized-types #-}
-
 module Cwf.DomainCwf.UniType.Decidable.RelationDecidable where
 
 open import Base.Core
+open import Base.FinFun
 open import Cwf.DomainCwf.UniType.AxiomProofs
 open import Cwf.DomainCwf.UniType.Coherence
 open import Cwf.DomainCwf.UniType.ConLub
@@ -11,13 +10,11 @@ open import Cwf.DomainCwf.UniType.ConsistencyLemmata
 open import Cwf.DomainCwf.UniType.Decidable.ConsistencyDecidable
 open import Cwf.DomainCwf.UniType.Decidable.EqualityDecidable
 open import Cwf.DomainCwf.UniType.Definition
-open import Cwf.DomainCwf.UniType.FinFun
 open import Cwf.DomainCwf.UniType.Relation
 open import Cwf.DomainCwf.UniType.RelationLemmata
-open import Cwf.DomainCwf.UniType.Transitivity
+--open import Cwf.DomainCwf.UniType.Transitivity
 
 open import Agda.Builtin.Equality
-open import Agda.Builtin.Size
 
 record Largest {i : Size} (f : FinFun {i}) (w : Nbh {i}) : Set where
   field

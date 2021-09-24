@@ -6,6 +6,8 @@ open import Base.Core
 open import Base.Variables
 open import NbhSys.Definition
 
+open import Agda.Builtin.Equality
+
 -- Finite functions are lists of pairs.
 data FinFun (A B : Set) : Set where
   ∅ : FinFun A B
@@ -49,6 +51,10 @@ _⊆_ : (𝑓 𝑓′ : FinFun A B) → Set
 
 ⊆-lemma₅ : ∀ {x} → x ∈ 𝑓 → (x ∷ ∅) ⊆ 𝑓
 ⊆-lemma₅ x∈𝑓 here = x∈𝑓
+
+⊆-lemma₆ : ∀ {x y} → (x ∷ 𝑓) ⊆ (x ∷ (y ∷ 𝑓))
+⊆-lemma₆ here = here
+⊆-lemma₆ (there x∈𝑓) = there (there x∈𝑓)
 
 -- Set union.
 _∪_ : FinFun A B → FinFun A B → FinFun A B
@@ -113,6 +119,10 @@ _∪_ : FinFun A B → FinFun A B → FinFun A B
 ∪-lemma₉ {𝑓 = 𝑓} x∈𝑓∪𝑓 with (∪-lemma₂ {𝑓 = 𝑓} x∈𝑓∪𝑓)
 ... | inl x∈𝑓 = x∈𝑓
 ... | inr x∈𝑓 = x∈𝑓
+
+∪-assoc : (𝑓 ∪ (𝑓′ ∪ 𝑓″)) ≡ ((𝑓 ∪ 𝑓′) ∪ 𝑓″)
+∪-assoc {𝑓 = ∅} {𝑓′} {𝑓″} = refl
+∪-assoc {𝑓 = _ ∷ 𝑓} {𝑓′} {𝑓″} rewrite (∪-assoc {𝑓 = 𝑓} {𝑓′} {𝑓″}) = refl
 
 -- From a proof that a pair of neighborhoods is in the
 -- empty set, anything.

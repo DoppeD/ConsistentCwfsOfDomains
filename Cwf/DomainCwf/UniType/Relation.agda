@@ -1,17 +1,9 @@
-{-# OPTIONS --safe #-}
-
 module Cwf.DomainCwf.UniType.Relation where
 
 open import Base.Core
 open import Base.FinFun
-open import Cwf.DomainCwf.UniType.AssignSize
 open import Cwf.DomainCwf.UniType.Consistency
 open import Cwf.DomainCwf.UniType.Definition
-
-open import Data.Nat.Base hiding (ℕ ; _⊔_)
-open import Data.Nat.Induction
-open import Data.Nat.Properties
-open import Induction.WellFounded
 
 record ⊑-proof (g : FinFun Nbh Nbh) (u v : Nbh) : Set
 data _⊑_ : (u v : Nbh) → Set
@@ -37,39 +29,18 @@ data _⊑_ where
   ⊑-Π : ∀ {u v f g} → u ⊑ v → F f ⊑ F g → Π u f ⊑ Π v g
   ⊑-𝒰 : 𝒰 ⊑ 𝒰
 
-orderOnlyCon' : ∀ {u v p q} → u ⊑ v → con' u p ⊠ con' v q
-orderOnlyCon' {v = v} (⊑-bot conv) = * , wfIrrelevant {v} conv
-orderOnlyCon' ⊑-0 = * , *
-orderOnlyCon' {s u} {s v} {acc _} {acc _} (⊑-s u⊑v)
-  with (orderOnlyCon' {u} {v} {<-wellFounded _} {<-wellFounded _} u⊑v)
-... | conu , conv = wfIrrelevant {u} conu , wfIrrelevant {v} conv
-orderOnlyCon' ⊑-ℕ = * , *
-orderOnlyCon' {F f} {F g} {acc _} {acc _} (⊑-F (conPairsf , conElemsf) (conPairsg , conElemsg) p)
-  = cfff , cffg
-  where cfff = (λ {u} {v} {u′} {v′} uv∈f u′v′∈f → wfIrrelevantPairs uv∈f u′v′∈f (conPairsf uv∈f u′v′∈f))
-             , λ {u} {v} uv∈f → wfIrrelevantElems uv∈f (conElemsf uv∈f)
-        cffg = (λ {u} {v} {u′} {v′} uv∈g u′v′∈g → wfIrrelevantPairs uv∈g u′v′∈g (conPairsg uv∈g u′v′∈g))
-             , λ {u} {v} uv∈g → wfIrrelevantElems uv∈g (conElemsg uv∈g)
-orderOnlyCon' {refl u} {refl v} {acc _} {acc _} (⊑-rfl u⊑v)
-  with (orderOnlyCon' {u} {v} {<-wellFounded _} {<-wellFounded _} u⊑v)
-... | conu , conv = wfIrrelevant {u} conu , wfIrrelevant {v} conv
-orderOnlyCon' {p = acc _} {acc _} (⊑-Π {u} {v} u⊑v (⊑-F (conPairsf , conElemsf) (conPairsg , conElemsg) p))
-  with (orderOnlyCon' {u} {v} {<-wellFounded _} {<-wellFounded _} u⊑v)
-... | conu , conv
-  = (wfIrrelevant {u} conu
-  , ((λ {u} {v} {u′} {v′} uv∈f u′v′∈f → wfIrrelevantPairs uv∈f u′v′∈f (conPairsf uv∈f u′v′∈f))
-  , λ {u} {v} uv∈f → wfIrrelevantElems uv∈f (conElemsf uv∈f)))
-  , (wfIrrelevant {v} conv
-  , ((λ {u} {v} {u′} {v′} uv∈g u′v′∈g → wfIrrelevantPairs uv∈g u′v′∈g (conPairsg uv∈g u′v′∈g))
-  , λ {u} {v} uv∈g → wfIrrelevantElems uv∈g (conElemsg uv∈g)))
-orderOnlyCon' {p = acc _} {acc _} (⊑-I {U} {u} {u′} {V} {v} {v′} U⊑V u⊑v u′⊑v′)
-  with (orderOnlyCon' {U} {V} {<-wellFounded _} {<-wellFounded _} U⊑V)
-     | (orderOnlyCon' {u} {v} {<-wellFounded _} {<-wellFounded _} u⊑v)
-     | (orderOnlyCon' {u′} {v′} {<-wellFounded _} {<-wellFounded _} u′⊑v′)
-... | conU , conV | conu , conv | conu′ , conv′
-  = (wfIrrelevant {U} conU , (wfIrrelevant {u} conu , wfIrrelevant {u′} conu′))
-  , (wfIrrelevant {V} conV , (wfIrrelevant {v} conv , wfIrrelevant {v′} conv′))
-orderOnlyCon' ⊑-𝒰 = * , *
-
-orderOnlyCon : ∀ {u v} → u ⊑ v → con u ⊠ con v
-orderOnlyCon = orderOnlyCon'
+-- The order above is only defined for mutually consistent pairs of neighborhoods
+orderOnlyCon : ∀ {u v : Nbh} → u ⊑ v → con u ⊠ con v
+orderOnlyCon (⊑-bot conu) = * , conu
+orderOnlyCon ⊑-0 = * , *
+orderOnlyCon (⊑-s u⊑v) = orderOnlyCon u⊑v
+orderOnlyCon ⊑-ℕ = * , *
+orderOnlyCon (⊑-F conf cong f) = conf , cong
+orderOnlyCon (⊑-rfl u⊑v) = orderOnlyCon u⊑v
+orderOnlyCon (⊑-Π u⊑v f⊑g) with (orderOnlyCon u⊑v) | orderOnlyCon f⊑g
+... | conu , conv | conf , cong = ( conu , conf ) , ( conv , cong )
+orderOnlyCon (⊑-I U⊑U′ u⊑u′ v⊑v′)
+  with (orderOnlyCon U⊑U′) | orderOnlyCon u⊑u′ | orderOnlyCon v⊑v′
+... | conU , conU′ | conu , conu′ | conv , conv′
+  = (conU , (conu , conv)) , (conU′ , (conu′ , conv′))
+orderOnlyCon ⊑-𝒰 = * , *
